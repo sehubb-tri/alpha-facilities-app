@@ -112,15 +112,15 @@ export const Home = () => {
   };
 
   return (
-    <div className="min-h-screen alpha-gradient text-white">
-      <div className="p-4 pt-6 pb-2">
+   <div className="p-4 pt-6 pb-2">
         <div className="flex items-center justify-center">
           <img
             src="/Alpha School Logo - Blue.png"
             alt="Alpha School"
-            className="h-8 w-auto brightness-0 invert"
+            className="h-6 max-w-[180px] w-auto brightness-0 invert"
           />
         </div>
+      </div>
       </div>
 
       <div className="px-6 space-y-3">
