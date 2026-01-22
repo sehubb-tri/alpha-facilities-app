@@ -122,7 +122,6 @@ export const Home = () => {
           />
         </div>
       </div>
-      </div>
 
       <div className="px-6 space-y-3">
         <button
