@@ -113,20 +113,15 @@ export const Home = () => {
 
   return (
     <div className="min-h-screen alpha-gradient text-white">
-      <div className="p-6 pt-8 pb-4">
-        <div className="flex items-center">
+      <div className="p-4 pt-6 pb-2">
+        <div className="flex items-center justify-center">
           <img
             src="/Alpha School Logo - Blue.png"
             alt="Alpha School"
-            className="h-12 w-auto brightness-0 invert"
-            onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'block';
-            }}
+            className="h-8 w-auto brightness-0 invert"
           />
-          <div className="text-2xl font-bold tracking-tight hidden">ALPHA</div>
-          <div className="ml-3 text-lg font-semibold opacity-90 tracking-wide">FACILITIES</div>
         </div>
+      </div>
       </div>
 
       <div className="px-6 space-y-3">
