@@ -157,7 +157,6 @@ export const Home = () => {
             <div className="text-3xl font-bold">{loading ? '...' : audits.length}</div>
             <div className="text-white/70 text-sm">QC Audits</div>
           </button>
-
           <button
             onClick={() => navigate('/reports')}
             className="bg-white/10 hover:bg-white/20 backdrop-blur p-4 rounded-xl text-left transition-colors"
