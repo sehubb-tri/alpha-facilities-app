@@ -8,7 +8,8 @@ export const CampusSelector = ({ value, onChange, id = 'campus' }) => {
       id={id}
       value={value || ''}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full border border-gray-300 rounded-lg p-3 text-lg bg-white"
+      className="w-full border-2 border-gray-300 rounded-xl p-4 bg-white"
+      style={{ fontSize: '18px', minHeight: '56px' }}
     >
       <option value="">Select campus...</option>
       {Object.keys(byState).sort().map(state => (
