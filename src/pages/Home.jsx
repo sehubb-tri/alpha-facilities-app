@@ -1,3 +1,4 @@
+// Alpha color palette applied
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAudits, getReports } from '../supabase/services';
