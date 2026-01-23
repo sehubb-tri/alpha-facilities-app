@@ -60,7 +60,7 @@ export const Home = () => {
           if (item.type === 'audit') {
             return (
               <div
-                key={'audit-' + (item.id || idx)}
+                key={`audit-${item.id || idx}`}
                 className="flex items-center p-3 bg-gray-50 rounded-lg"
               >
                 <span className="text-2xl mr-3">
@@ -86,7 +86,7 @@ export const Home = () => {
             };
             return (
               <div
-                key={'report-' + (item.id || idx)}
+                key={`report-${item.id || idx}`}
                 className="flex items-center p-3 bg-gray-50 rounded-lg"
               >
                 <span className="text-2xl mr-3">{cat.icon}</span>
@@ -95,7 +95,11 @@ export const Home = () => {
                   <div className="text-sm text-gray-500">{item.campus}</div>
                 </div>
                 <span
-                  className={'text-xs px-2 py-1 rounded ' + (item.status === 'open' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800')}
+                  className={`text-xs px-2 py-1 rounded ${
+                    item.status === 'open'
+                      ? 'bg-yellow-100 text-yellow-800'
+                      : 'bg-green-100 text-green-800'
+                  }`}
                 >
                   {item.status}
                 </span>
@@ -110,11 +114,11 @@ export const Home = () => {
   return (
     <div className="min-h-screen alpha-gradient text-white">
       <div className="px-6 pt-8 pb-0">
-        <div className="flex items-center justify-center mb-9">
+        <div className="flex items-center justify-center mb-[50px]">
           <img
             src="/Alpha School Logo - Blue.png"
             alt="Alpha School"
-            className="h-16 w-auto brightness-0 invert"
+            className="max-w-[200px] w-auto brightness-0 invert"
             onError={(e) => {
               e.target.style.display = 'none';
               e.target.nextSibling.style.display = 'block';
@@ -125,12 +129,12 @@ export const Home = () => {
       </div>
 
       <div className="px-6">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-[25px]">
           <button
             onClick={() => navigate('/report')}
             className="aspect-square bg-white/90 hover:bg-white text-gray-800 rounded-2xl text-lg font-bold shadow-lg flex flex-col items-center justify-center p-4 transition-colors"
           >
-            <span className="text-4xl mb-3">📸</span>
+            <span className="text-5xl mb-3">📸</span>
             <span className="text-center leading-tight">See It,<br/>Report It</span>
           </button>
 
@@ -138,14 +142,14 @@ export const Home = () => {
             onClick={() => navigate('/audit/setup')}
             className="aspect-square bg-white hover:bg-gray-50 text-alpha-500 rounded-2xl text-lg font-bold shadow-lg flex flex-col items-center justify-center p-4 transition-colors"
           >
-            <span className="text-4xl mb-3">✅</span>
-            <span className="text-center leading-tight">Daily QC<br/>Walkthrough</span>
+            <span className="text-5xl mb-3">✅</span>
+            <span className="text-center leading-tight">Daily<br/>Cleanliness Check</span>
           </button>
         </div>
       </div>
 
       <div className="px-6 py-4">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => navigate('/history')}
             className="bg-white/10 hover:bg-white/20 backdrop-blur p-4 rounded-xl text-left transition-colors"
