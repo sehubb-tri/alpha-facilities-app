@@ -113,7 +113,7 @@ export const Home = () => {
 
   return (
     <div className="min-h-screen alpha-gradient text-white">
-      <div className="px-6 pt-8 pb-0">
+      <div className="px-6 pt-[50px] pb-0">
         <div className="flex items-center justify-center mb-[50px]">
           <img
             src="/Alpha School Logo - Blue.png"
@@ -128,7 +128,7 @@ export const Home = () => {
         </div>
       </div>
 
-      <div className="px-6">
+      <div className="px-6 pb-[25px]">
         <div className="grid grid-cols-2 gap-[25px]">
           <button
             onClick={() => navigate('/report')}
