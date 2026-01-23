@@ -64,8 +64,8 @@ export const ReportsList = () => {
                         <span
                           className={`text-xs px-2 py-1 rounded ${
                             r.status === 'open'
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : 'bg-green-100 text-green-800'
+                              ? 'bg-[#C2ECFD] text-[#141685]'
+                              : 'bg-[#C2ECFD]/50 text-[#092849]'
                           }`}
                         >
                           {r.status}

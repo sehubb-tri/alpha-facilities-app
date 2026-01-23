@@ -9,8 +9,8 @@ export const ZoneCard = ({ zoneId, index, defects, isComplete, onClick }) => {
       className={`w-full ${
         isComplete
           ? defects === 0
-            ? 'bg-green-50'
-            : 'bg-red-50'
+            ? 'bg-[#C2ECFD]/30'
+            : 'bg-[#C2ECFD]/50'
           : 'bg-white'
       } p-4 rounded-lg border border-gray-200 flex items-center text-left`}
     >
@@ -18,8 +18,8 @@ export const ZoneCard = ({ zoneId, index, defects, isComplete, onClick }) => {
         className={`w-8 h-8 rounded-full ${
           isComplete
             ? defects === 0
-              ? 'bg-green-500'
-              : 'bg-red-500'
+              ? 'bg-[#47C4E6]'
+              : 'bg-[#141685]'
             : 'bg-gray-200'
         } text-white flex items-center justify-center mr-3 font-bold text-sm`}
       >
@@ -32,7 +32,7 @@ export const ZoneCard = ({ zoneId, index, defects, isComplete, onClick }) => {
         )}
       </div>
       {!zone.amberEligible && (
-        <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">
+        <span className="text-xs bg-[#C2ECFD] text-[#141685] px-2 py-1 rounded">
           ⚠️
         </span>
       )}

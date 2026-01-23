@@ -37,7 +37,7 @@ export const AuditCondition = ({ audit, camera }) => {
 
   return (
     <div className="min-h-screen bg-gray-100 pb-24">
-      <div className="bg-orange-500 text-white p-4">
+      <div className="bg-[#2B57D0] text-white p-4">
         <div className="flex items-center">
           <button
             onClick={() => navigate('/audit/zone')}
@@ -47,7 +47,7 @@ export const AuditCondition = ({ audit, camera }) => {
           </button>
           <div>
             <h1 className="text-xl font-bold">Building Check</h1>
-            <p className="text-orange-100 text-sm">{currentZone?.name}</p>
+            <p className="text-[#C2ECFD] text-sm">{currentZone?.name}</p>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@ export const AuditCondition = ({ audit, camera }) => {
               onClick={() => setConditionAlert(currentZoneId, false)}
               className={`w-full p-4 rounded-lg border-2 ${
                 alert?.hasIssue === false
-                  ? 'border-green-500 bg-green-50'
+                  ? 'border-[#47C4E6] bg-[#C2ECFD]/30'
                   : 'border-gray-200'
               } flex items-center`}
             >
@@ -79,7 +79,7 @@ export const AuditCondition = ({ audit, camera }) => {
               onClick={() => setConditionAlert(currentZoneId, true)}
               className={`w-full p-4 rounded-lg border-2 ${
                 alert?.hasIssue === true
-                  ? 'border-orange-500 bg-orange-50'
+                  ? 'border-[#2B57D0] bg-[#C2ECFD]/30'
                   : 'border-gray-200'
               } flex items-center`}
             >
@@ -141,8 +141,8 @@ export const AuditCondition = ({ audit, camera }) => {
           </div>
         )}
 
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-          <div className="text-sm text-blue-700">
+        <div className="bg-[#C2ECFD]/30 border border-[#47C4E6] rounded-lg p-3">
+          <div className="text-sm text-[#141685]">
             B&G alerts are separate from cleanliness and do NOT affect your
             score.
           </div>
@@ -155,7 +155,7 @@ export const AuditCondition = ({ audit, camera }) => {
           disabled={!canContinue}
           className={`w-full py-4 rounded-xl text-lg font-bold ${
             canContinue
-              ? 'bg-green-500 text-white'
+              ? 'bg-[#092849] text-white'
               : 'bg-gray-300 text-gray-500'
           }`}
         >

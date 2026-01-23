@@ -23,7 +23,7 @@ export const AuditTourReady = ({ audit }) => {
               onClick={() => setTourReady('yes')}
               className={`w-full p-4 rounded-lg border-2 ${
                 tourReady === 'yes'
-                  ? 'border-green-500 bg-green-50'
+                  ? 'border-[#47C4E6] bg-[#C2ECFD]/30'
                   : 'border-gray-200'
               } flex items-center`}
             >
@@ -35,14 +35,14 @@ export const AuditTourReady = ({ audit }) => {
               onClick={() => setTourReady('no')}
               className={`w-full p-4 rounded-lg border-2 ${
                 tourReady === 'no'
-                  ? 'border-red-500 bg-red-50'
+                  ? 'border-[#2B57D0] bg-[#C2ECFD]/30'
                   : 'border-gray-200'
               } flex items-center`}
             >
               <span className="text-2xl mr-3">✗</span>
               <div>
                 <div className="font-medium">No — Not Tour Ready</div>
-                <div className="text-sm text-red-600">⚠️ Automatic RED</div>
+                <div className="text-sm text-[#141685]">⚠️ Automatic RED</div>
               </div>
             </button>
           </div>

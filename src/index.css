@@ -34,22 +34,42 @@ body {
   font-weight: 700;
 }
 
-/* Custom Alpha gradient */
+/* Custom Alpha gradient - Prussian Blue to Electric Royal */
 .alpha-gradient {
-  background: linear-gradient(135deg, #1e3a5f 0%, #0a1628 100%);
+  background: linear-gradient(180deg, #092849 0%, #141685 100%);
 }
 
 /* Alpha color palette */
 .bg-alpha-500 {
-  background-color: #1e3a5f;
+  background-color: #092849;  /* Prussian Blue */
 }
 
 .bg-alpha-600 {
-  background-color: #1a3352;
+  background-color: #141685;  /* Electric Royal */
+}
+
+.bg-alpha-700 {
+  background-color: #2B57D0;  /* Royal Azure */
 }
 
 .text-alpha-500 {
-  color: #1e3a5f;
+  color: #092849;  /* Prussian Blue */
+}
+
+.text-alpha-600 {
+  color: #141685;  /* Electric Royal */
+}
+
+.text-alpha-700 {
+  color: #2B57D0;  /* Royal Azure */
+}
+
+.text-alpha-aqua {
+  color: #47C4E6;  /* Sky Aqua */
+}
+
+.text-alpha-light {
+  color: #C2ECFD;  /* Light Blue */
 }
 
 /* Slide up animation */

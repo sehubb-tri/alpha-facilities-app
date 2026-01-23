@@ -8,16 +8,16 @@ export default {
     extend: {
       colors: {
         alpha: {
-          50: '#f0f4f8',
-          100: '#d9e2ec',
-          200: '#bcccdc',
-          300: '#9fb3c8',
-          400: '#829ab1',
-          500: '#1e3a5f',
-          600: '#1a3352',
-          700: '#162b45',
-          800: '#102338',
-          900: '#0a1628',
+          50: '#C2ECFD',   // Light Blue
+          100: '#47C4E6',  // Sky Aqua
+          200: '#2B57D0',  // Royal Azure
+          300: '#141685',  // Electric Royal
+          400: '#092849',  // Prussian Blue
+          500: '#092849',  // Prussian Blue (primary)
+          600: '#141685',  // Electric Royal
+          700: '#2B57D0',  // Royal Azure
+          800: '#47C4E6',  // Sky Aqua
+          900: '#C2ECFD',  // Light Blue
         }
       }
     },

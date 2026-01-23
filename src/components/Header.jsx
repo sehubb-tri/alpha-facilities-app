@@ -7,9 +7,9 @@ export const Header = ({
 }) => {
   const bgClasses = {
     default: 'alpha-gradient text-white',
-    red: 'bg-red-500 text-white',
-    orange: 'bg-orange-500 text-white',
-    green: 'bg-green-500 text-white'
+    red: 'bg-[#2B57D0] text-white',
+    orange: 'bg-[#141685] text-white',
+    green: 'bg-[#47C4E6] text-white'
   };
 
   return (

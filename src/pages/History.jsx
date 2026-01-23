@@ -56,10 +56,10 @@ export const History = () => {
                     <div
                       className={`font-bold ${
                         a.status === 'GREEN'
-                          ? 'text-green-600'
+                          ? 'text-[#47C4E6]'
                           : a.status === 'AMBER'
-                          ? 'text-yellow-600'
-                          : 'text-red-600'
+                          ? 'text-[#2B57D0]'
+                          : 'text-[#141685]'
                       }`}
                     >
                       {a.status}

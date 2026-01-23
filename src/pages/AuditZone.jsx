@@ -50,8 +50,8 @@ export const AuditZone = ({ audit }) => {
       </div>
 
       {!currentZone?.amberEligible && (
-        <div className="bg-red-100 border-l-4 border-red-500 p-3 m-4 rounded">
-          <div className="font-medium text-red-800">⚠️ Any defect = RED status</div>
+        <div className="bg-[#C2ECFD]/50 border-l-4 border-[#2B57D0] p-3 m-4 rounded">
+          <div className="font-medium text-[#141685]">⚠️ Any defect = RED status</div>
         </div>
       )}
 
@@ -67,7 +67,7 @@ export const AuditZone = ({ audit }) => {
                   onClick={() => setResponse(currentZoneId, idx, 'yes')}
                   className={`flex-1 py-2 rounded font-medium ${
                     results[idx] === 'yes'
-                      ? 'bg-green-500 text-white'
+                      ? 'bg-[#47C4E6] text-white'
                       : 'bg-gray-100'
                   }`}
                 >
@@ -77,7 +77,7 @@ export const AuditZone = ({ audit }) => {
                   onClick={() => setResponse(currentZoneId, idx, 'no')}
                   className={`flex-1 py-2 rounded font-medium ${
                     results[idx] === 'no'
-                      ? 'bg-red-500 text-white'
+                      ? 'bg-[#141685] text-white'
                       : 'bg-gray-100'
                   }`}
                 >

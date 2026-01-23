@@ -13,7 +13,7 @@ export const ReportComplete = ({ report }) => {
   };
 
   return (
-    <div className="min-h-screen bg-green-500 flex flex-col items-center justify-center p-8 text-white text-center">
+    <div className="min-h-screen bg-[#2B57D0] flex flex-col items-center justify-center p-8 text-white text-center">
       <div className="text-8xl mb-6">✅</div>
       <h1 className="text-3xl font-bold mb-2">Submitted!</h1>
       <p className="text-lg opacity-90 mb-4">{cat?.team || 'Facilities'} notified</p>
@@ -29,7 +29,7 @@ export const ReportComplete = ({ report }) => {
 
       <button
         onClick={handleDone}
-        className="bg-white text-green-600 px-8 py-3 rounded-lg font-bold"
+        className="bg-white text-[#092849] px-8 py-3 rounded-lg font-bold"
       >
         Done
       </button>

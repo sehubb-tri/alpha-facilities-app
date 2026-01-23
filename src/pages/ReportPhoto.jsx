@@ -35,7 +35,7 @@ export const ReportPhoto = ({ report, camera }) => {
               </button>
               <button
                 onClick={() => navigate('/report/details')}
-                className="flex-1 bg-red-500 text-white py-3 rounded-lg font-medium"
+                className="flex-1 bg-[#092849] text-white py-3 rounded-lg font-medium"
               >
                 Continue →
               </button>
@@ -47,7 +47,7 @@ export const ReportPhoto = ({ report, camera }) => {
             <p>No photo captured</p>
             <button
               onClick={handleRetake}
-              className="mt-4 bg-red-500 text-white px-6 py-2 rounded-lg"
+              className="mt-4 bg-[#092849] text-white px-6 py-2 rounded-lg"
             >
               Take Photo
             </button>

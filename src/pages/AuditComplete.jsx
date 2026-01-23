@@ -7,9 +7,9 @@ export const AuditComplete = ({ audit }) => {
   const status = calculateStatus();
 
   const statusColors = {
-    GREEN: 'bg-green-500',
-    AMBER: 'bg-yellow-500',
-    RED: 'bg-red-500'
+    GREEN: 'bg-[#47C4E6]',
+    AMBER: 'bg-[#2B57D0]',
+    RED: 'bg-[#141685]'
   };
 
   const handleDone = () => {

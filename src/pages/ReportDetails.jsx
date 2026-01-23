@@ -71,7 +71,7 @@ export const ReportDetails = ({ report }) => {
                 onClick={() => setCategory(cat.id)}
                 className={`p-3 rounded-lg border-2 text-center ${
                   category === cat.id
-                    ? 'border-red-500 bg-red-50'
+                    ? 'border-[#2B57D0] bg-[#C2ECFD]/30'
                     : 'border-gray-200 bg-white'
                 }`}
               >
@@ -115,7 +115,7 @@ export const ReportDetails = ({ report }) => {
           >
             <div
               className={`w-12 h-6 rounded-full mr-3 ${
-                urgent ? 'bg-red-500' : 'bg-gray-300'
+                urgent ? 'bg-[#2B57D0]' : 'bg-gray-300'
               }`}
             >
               <div
@@ -135,8 +135,8 @@ export const ReportDetails = ({ report }) => {
         </div>
 
         {category && (
-          <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
-            <div className="text-sm text-blue-700">
+          <div className="bg-[#C2ECFD]/30 rounded-lg p-3 border border-[#47C4E6]">
+            <div className="text-sm text-[#141685]">
               <strong>Routes to:</strong> {selectedCategory?.team || 'Facilities'}
             </div>
           </div>
@@ -149,7 +149,7 @@ export const ReportDetails = ({ report }) => {
           disabled={!canSubmit || submitting}
           className={`w-full py-4 rounded-xl text-lg font-bold ${
             canSubmit && !submitting
-              ? 'bg-red-500 text-white'
+              ? 'bg-[#092849] text-white'
               : 'bg-gray-300 text-gray-500'
           }`}
         >

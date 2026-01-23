@@ -52,7 +52,7 @@ export const ReportStart = ({ report, camera }) => {
 
           <button
             onClick={handleOpenCamera}
-            className="w-full bg-red-500 text-white py-4 rounded-xl text-lg font-bold"
+            className="w-full bg-[#092849] text-white py-4 rounded-xl text-lg font-bold"
           >
             📷 Take Photo
           </button>

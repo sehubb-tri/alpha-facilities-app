@@ -24,9 +24,9 @@ export const AuditSummary = ({ audit }) => {
   const flaggedAlerts = conditionAlerts.filter(a => a.hasIssue).length;
 
   const statusColors = {
-    GREEN: 'bg-green-500',
-    AMBER: 'bg-yellow-500',
-    RED: 'bg-red-500'
+    GREEN: 'bg-[#47C4E6]',
+    AMBER: 'bg-[#2B57D0]',
+    RED: 'bg-[#141685]'
   };
 
   const statusIcons = {
@@ -68,7 +68,7 @@ export const AuditSummary = ({ audit }) => {
           <div className="bg-white p-3 rounded-lg shadow text-center">
             <div
               className={`text-xl font-bold ${
-                totalDefects > 0 ? 'text-red-500' : 'text-green-500'
+                totalDefects > 0 ? 'text-[#141685]' : 'text-[#47C4E6]'
               }`}
             >
               {totalDefects}
@@ -90,8 +90,8 @@ export const AuditSummary = ({ audit }) => {
                 <span
                   className={`w-7 h-7 rounded-full ${
                     defects === 0
-                      ? 'bg-green-100 text-green-600'
-                      : 'bg-red-100 text-red-600'
+                      ? 'bg-[#C2ECFD] text-[#2B57D0]'
+                      : 'bg-[#C2ECFD]/50 text-[#141685]'
                   } flex items-center justify-center mr-3 font-bold text-sm`}
                 >
                   {defects === 0 ? '✓' : defects}
@@ -103,11 +103,11 @@ export const AuditSummary = ({ audit }) => {
         </div>
 
         {flaggedAlerts > 0 && (
-          <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
-            <div className="font-bold text-orange-800 mb-1">
+          <div className="bg-[#C2ECFD]/30 border border-[#47C4E6] rounded-lg p-3">
+            <div className="font-bold text-[#092849] mb-1">
               🔧 {flaggedAlerts} B&G Issue(s) Flagged
             </div>
-            <div className="text-sm text-orange-700">
+            <div className="text-sm text-[#141685]">
               Will be sent to B&G team
             </div>
           </div>
