@@ -37,10 +37,11 @@ export const AuditSetup = ({ audit }) => {
         onBack={() => navigate('/')}
       />
 
-      <div className="p-4 space-y-5">
+      <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+
         {/* Campus Dropdown */}
         <div>
-          <label className="block text-base font-semibold text-gray-800 mb-2">
+          <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
             Campus *
           </label>
           <CampusSelector value={campusName} onChange={setCampusName} />
@@ -48,7 +49,7 @@ export const AuditSetup = ({ audit }) => {
 
         {/* Name Input */}
         <div>
-          <label className="block text-base font-semibold text-gray-800 mb-2">
+          <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
             Your Name *
           </label>
           <input
@@ -56,28 +57,50 @@ export const AuditSetup = ({ audit }) => {
             placeholder="Enter your name"
             value={auditorName}
             onChange={(e) => setAuditorName(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 text-base bg-white"
+            style={{
+              width: '100%',
+              border: '1px solid #ccc',
+              borderRadius: '10px',
+              padding: '14px 16px',
+              fontSize: '17px',
+              boxSizing: 'border-box',
+              backgroundColor: '#fff'
+            }}
           />
         </div>
 
         {/* Mandatory Zones */}
         <div>
-          <label className="block text-base font-semibold text-gray-800 mb-2">
+          <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
             Mandatory Zones (5)
           </label>
-          <div
-            className="rounded-lg p-4"
-            style={{ backgroundColor: 'rgba(194, 236, 253, 0.3)', border: '1px solid #47C4E6' }}
-          >
+          <div style={{
+            backgroundColor: 'rgba(194, 236, 253, 0.4)',
+            border: '1px solid #47C4E6',
+            borderRadius: '12px',
+            padding: '16px'
+          }}>
             {MANDATORY_ZONE_IDS.map((id, index) => (
               <div
                 key={id}
-                className={`flex items-center ${index !== MANDATORY_ZONE_IDS.length - 1 ? 'mb-3 pb-3 border-b border-[#47C4E6]/30' : ''}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '12px 0',
+                  borderBottom: index !== MANDATORY_ZONE_IDS.length - 1 ? '1px solid rgba(71, 196, 230, 0.3)' : 'none'
+                }}
               >
-                <span className="text-[#2B57D0] mr-3 text-lg">✓</span>
-                <span className="text-base flex-1">{ZONES[id].name}</span>
+                <span style={{ color: '#2B57D0', marginRight: '12px', fontSize: '20px' }}>✓</span>
+                <span style={{ fontSize: '17px', flex: 1 }}>{ZONES[id].name}</span>
                 {!ZONES[id].amberEligible && (
-                  <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded font-medium">
+                  <span style={{
+                    fontSize: '13px',
+                    backgroundColor: '#fee2e2',
+                    color: '#b91c1c',
+                    padding: '4px 10px',
+                    borderRadius: '6px',
+                    fontWeight: '500'
+                  }}>
                     ⚠️ RED
                   </span>
                 )}
@@ -88,25 +111,45 @@ export const AuditSetup = ({ audit }) => {
 
         {/* Optional Zones */}
         <div>
-          <label className="block text-base font-semibold text-gray-800 mb-2">
+          <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
             Optional Zones
           </label>
-          <div className="space-y-2">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {OPTIONAL_ZONE_IDS.map(id => (
               <label
                 key={id}
-                className="flex items-center p-4 bg-white rounded-lg border border-gray-200 cursor-pointer active:bg-gray-50"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '16px',
+                  backgroundColor: '#fff',
+                  borderRadius: '12px',
+                  border: '1px solid #ddd',
+                  cursor: 'pointer',
+                  minHeight: '56px'
+                }}
               >
                 <input
                   type="checkbox"
                   checked={selectedOptional.includes(id)}
                   onChange={() => handleOptionalToggle(id)}
-                  className="mr-3 accent-[#2B57D0]"
-                  style={{ width: '22px', height: '22px' }}
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    marginRight: '14px',
+                    accentColor: '#2B57D0'
+                  }}
                 />
-                <span className="flex-1 text-base">{ZONES[id].name}</span>
+                <span style={{ flex: 1, fontSize: '17px' }}>{ZONES[id].name}</span>
                 {!ZONES[id].amberEligible && (
-                  <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded font-medium">
+                  <span style={{
+                    fontSize: '13px',
+                    backgroundColor: '#fef3c7',
+                    color: '#92400e',
+                    padding: '4px 10px',
+                    borderRadius: '6px',
+                    fontWeight: '500'
+                  }}>
                     ⚠️
                   </span>
                 )}
@@ -118,8 +161,18 @@ export const AuditSetup = ({ audit }) => {
         {/* Begin Button */}
         <button
           onClick={handleBegin}
-          className="w-full text-white py-4 rounded-xl text-lg font-bold"
-          style={{ backgroundColor: '#092849' }}
+          style={{
+            width: '100%',
+            backgroundColor: '#092849',
+            color: '#fff',
+            padding: '18px',
+            borderRadius: '12px',
+            fontSize: '18px',
+            fontWeight: '700',
+            border: 'none',
+            cursor: 'pointer',
+            marginTop: '8px'
+          }}
         >
           Begin Walkthrough
         </button>
