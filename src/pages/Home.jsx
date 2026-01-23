@@ -128,7 +128,7 @@ export const Home = () => {
         </div>
       </div>
 
-      <div className="px-6 pb-[25px]">
+      <div className="px-[25px] pb-[25px]">
         <div className="grid grid-cols-2 gap-[25px]">
           <button
             onClick={() => navigate('/report')}
@@ -171,7 +171,7 @@ export const Home = () => {
       </div>
 
       <div className="bg-white text-gray-800 rounded-t-3xl mt-2 p-6 min-h-[280px]">
-        <h2 className="font-bold text-lg mb-4 text-alpha-500">Recent Activity</h2>
+        <h2 className="font-bold text-lg mb-4 text-white">Recent Activity</h2>
         {loading ? (
           <div className="text-center py-8 text-gray-400">Loading...</div>
         ) : (
