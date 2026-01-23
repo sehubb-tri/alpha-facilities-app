@@ -1,4 +1,3 @@
-// Alpha color palette applied
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAudits, getReports } from '../supabase/services';
@@ -62,7 +61,7 @@ export const Home = () => {
             return (
               <div
                 key={`audit-${item.id || idx}`}
-                className="flex items-center p-3 bg-gray-50 rounded-lg"
+                className="flex items-center p-3 bg-[#C2ECFD]/20 rounded-lg"
               >
                 <span className="text-2xl mr-3">
                   {item.status === 'GREEN'
@@ -72,8 +71,8 @@ export const Home = () => {
                     : '🔴'}
                 </span>
                 <div className="flex-1">
-                  <div className="font-medium">{item.campus}</div>
-                  <div className="text-sm text-gray-500">
+                  <div className="font-medium text-alpha-500">{item.campus}</div>
+                  <div className="text-sm text-alpha-600">
                     {item.date} • {item.defects} defect
                     {item.defects !== 1 ? 's' : ''}
                   </div>
@@ -88,18 +87,18 @@ export const Home = () => {
             return (
               <div
                 key={`report-${item.id || idx}`}
-                className="flex items-center p-3 bg-gray-50 rounded-lg"
+                className="flex items-center p-3 bg-[#C2ECFD]/20 rounded-lg"
               >
                 <span className="text-2xl mr-3">{cat.icon}</span>
                 <div className="flex-1">
-                  <div className="font-medium">{cat.name}</div>
-                  <div className="text-sm text-gray-500">{item.campus}</div>
+                  <div className="font-medium text-alpha-500">{cat.name}</div>
+                  <div className="text-sm text-alpha-600">{item.campus}</div>
                 </div>
                 <span
                   className={`text-xs px-2 py-1 rounded ${
                     item.status === 'open'
-                      ? 'bg-[#C2ECFD] text-[#141685]'
-                      : 'bg-[#C2ECFD]/50 text-[#092849]'
+                      ? 'bg-[#47C4E6] text-white'
+                      : 'bg-[#C2ECFD] text-alpha-500'
                   }`}
                 >
                   {item.status}
@@ -133,7 +132,7 @@ export const Home = () => {
         <div className="grid grid-cols-2 gap-[25px]">
           <button
             onClick={() => navigate('/report')}
-            className="aspect-square bg-white/90 hover:bg-white text-gray-800 rounded-2xl text-lg font-bold shadow-lg flex flex-col items-center justify-center p-4 transition-colors"
+            className="aspect-square bg-white hover:bg-[#C2ECFD] text-alpha-500 rounded-2xl text-lg font-bold shadow-lg flex flex-col items-center justify-center p-4 transition-colors"
           >
             <span className="text-5xl mb-3">📸</span>
             <span className="text-center leading-tight">See It,<br/>Report It</span>
@@ -141,7 +140,7 @@ export const Home = () => {
 
           <button
             onClick={() => navigate('/audit/setup')}
-            className="aspect-square bg-white hover:bg-gray-50 text-alpha-500 rounded-2xl text-lg font-bold shadow-lg flex flex-col items-center justify-center p-4 transition-colors"
+            className="aspect-square bg-white hover:bg-[#C2ECFD] text-alpha-500 rounded-2xl text-lg font-bold shadow-lg flex flex-col items-center justify-center p-4 transition-colors"
           >
             <span className="text-5xl mb-3">✅</span>
             <span className="text-center leading-tight">Daily<br/>Cleanliness Check</span>
@@ -156,14 +155,14 @@ export const Home = () => {
             className="bg-white/10 hover:bg-white/20 backdrop-blur p-4 rounded-xl text-left transition-colors"
           >
             <div className="text-3xl font-bold">{loading ? '...' : audits.length}</div>
-            <div className="text-white/70 text-sm">QC Audits</div>
+            <div className="text-[#C2ECFD] text-sm">QC Audits</div>
           </button>
           <button
             onClick={() => navigate('/reports')}
             className="bg-white/10 hover:bg-white/20 backdrop-blur p-4 rounded-xl text-left transition-colors"
           >
             <div className="text-3xl font-bold">{loading ? '...' : reports.length}</div>
-            <div className="text-white/70 text-sm">Issues Reported</div>
+            <div className="text-[#C2ECFD] text-sm">Issues Reported</div>
             {openReports > 0 && (
               <div className="text-[#47C4E6] text-xs mt-1">{openReports} open</div>
             )}
@@ -171,10 +170,10 @@ export const Home = () => {
         </div>
       </div>
 
-      <div className="bg-white text-gray-800 rounded-t-3xl mt-2 p-6 min-h-[280px]">
-        <h2 className="font-bold text-lg mb-4 text-[#092849]">Recent Activity</h2>
+      <div className="bg-white text-alpha-500 rounded-t-3xl mt-2 p-6 min-h-[280px]">
+        <h2 className="font-bold text-lg mb-4 text-alpha-500">Recent Activity</h2>
         {loading ? (
-          <div className="text-center py-8 text-gray-400">Loading...</div>
+          <div className="text-center py-8 text-alpha-600">Loading...</div>
         ) : (
           renderRecentActivity()
         )}
