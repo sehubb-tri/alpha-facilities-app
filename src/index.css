@@ -39,37 +39,62 @@ body {
   background: linear-gradient(180deg, #092849 0%, #141685 100%);
 }
 
-/* Alpha color palette */
-.bg-alpha-500 {
-  background-color: #092849;  /* Prussian Blue */
+/* Alpha color palette - EXACT hex codes */
+.bg-alpha-prussian {
+  background-color: #092849;
 }
 
-.bg-alpha-600 {
-  background-color: #141685;  /* Electric Royal */
+.bg-alpha-electric {
+  background-color: #141685;
 }
 
-.bg-alpha-700 {
-  background-color: #2B57D0;  /* Royal Azure */
+.bg-alpha-royal {
+  background-color: #2B57D0;
 }
 
-.text-alpha-500 {
-  color: #092849;  /* Prussian Blue */
+.bg-alpha-aqua {
+  background-color: #47C4E6;
 }
 
-.text-alpha-600 {
-  color: #141685;  /* Electric Royal */
+.bg-alpha-light {
+  background-color: #C2ECFD;
 }
 
-.text-alpha-700 {
-  color: #2B57D0;  /* Royal Azure */
+.text-alpha-prussian {
+  color: #092849;
+}
+
+.text-alpha-electric {
+  color: #141685;
+}
+
+.text-alpha-royal {
+  color: #2B57D0;
 }
 
 .text-alpha-aqua {
-  color: #47C4E6;  /* Sky Aqua */
+  color: #47C4E6;
 }
 
 .text-alpha-light {
-  color: #C2ECFD;  /* Light Blue */
+  color: #C2ECFD;
+}
+
+/* Legacy class names mapped to correct colors */
+.text-alpha-500 {
+  color: #092849 !important;
+}
+
+.text-alpha-600 {
+  color: #141685 !important;
+}
+
+.bg-alpha-500 {
+  background-color: #092849 !important;
+}
+
+.bg-alpha-600 {
+  background-color: #141685 !important;
 }
 
 /* Slide up animation */

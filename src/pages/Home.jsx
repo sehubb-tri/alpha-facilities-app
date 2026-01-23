@@ -47,7 +47,7 @@ export const Home = () => {
 
     if (combined.length === 0) {
       return (
-        <div className="text-center py-8 text-gray-400">
+        <div className="text-center py-8" style={{ color: '#141685' }}>
           <div className="text-4xl mb-2">📋</div>
           <p>No activity yet</p>
         </div>
@@ -61,7 +61,8 @@ export const Home = () => {
             return (
               <div
                 key={`audit-${item.id || idx}`}
-                className="flex items-center p-3 bg-[#C2ECFD]/20 rounded-lg"
+                className="flex items-center p-3 rounded-lg"
+                style={{ backgroundColor: '#C2ECFD33' }}
               >
                 <span className="text-2xl mr-3">
                   {item.status === 'GREEN'
@@ -71,8 +72,8 @@ export const Home = () => {
                     : '🔴'}
                 </span>
                 <div className="flex-1">
-                  <div className="font-medium text-alpha-500">{item.campus}</div>
-                  <div className="text-sm text-alpha-600">
+                  <div className="font-medium" style={{ color: '#092849' }}>{item.campus}</div>
+                  <div className="text-sm" style={{ color: '#141685' }}>
                     {item.date} • {item.defects} defect
                     {item.defects !== 1 ? 's' : ''}
                   </div>
@@ -87,19 +88,20 @@ export const Home = () => {
             return (
               <div
                 key={`report-${item.id || idx}`}
-                className="flex items-center p-3 bg-[#C2ECFD]/20 rounded-lg"
+                className="flex items-center p-3 rounded-lg"
+                style={{ backgroundColor: '#C2ECFD33' }}
               >
                 <span className="text-2xl mr-3">{cat.icon}</span>
                 <div className="flex-1">
-                  <div className="font-medium text-alpha-500">{cat.name}</div>
-                  <div className="text-sm text-alpha-600">{item.campus}</div>
+                  <div className="font-medium" style={{ color: '#092849' }}>{cat.name}</div>
+                  <div className="text-sm" style={{ color: '#141685' }}>{item.campus}</div>
                 </div>
                 <span
-                  className={`text-xs px-2 py-1 rounded ${
-                    item.status === 'open'
-                      ? 'bg-[#47C4E6] text-white'
-                      : 'bg-[#C2ECFD] text-alpha-500'
-                  }`}
+                  className="text-xs px-2 py-1 rounded"
+                  style={{
+                    backgroundColor: item.status === 'open' ? '#47C4E6' : '#C2ECFD',
+                    color: item.status === 'open' ? '#FFFFFF' : '#092849'
+                  }}
                 >
                   {item.status}
                 </span>
@@ -112,7 +114,10 @@ export const Home = () => {
   };
 
   return (
-    <div className="min-h-screen alpha-gradient text-white">
+    <div
+      className="min-h-screen text-white"
+      style={{ background: 'linear-gradient(180deg, #092849 0%, #141685 100%)' }}
+    >
       <div className="px-6 pt-[50px] pb-0">
         <div className="flex items-center justify-center mb-[50px]">
           <img
@@ -132,7 +137,8 @@ export const Home = () => {
         <div className="grid grid-cols-2 gap-[25px]">
           <button
             onClick={() => navigate('/report')}
-            className="aspect-square bg-white hover:bg-[#C2ECFD] text-alpha-500 rounded-2xl text-lg font-bold shadow-lg flex flex-col items-center justify-center p-4 transition-colors"
+            className="aspect-square bg-white hover:opacity-90 rounded-2xl text-lg font-bold shadow-lg flex flex-col items-center justify-center p-4 transition-opacity"
+            style={{ color: '#092849' }}
           >
             <span className="text-5xl mb-3">📸</span>
             <span className="text-center leading-tight">See It,<br/>Report It</span>
@@ -140,7 +146,8 @@ export const Home = () => {
 
           <button
             onClick={() => navigate('/audit/setup')}
-            className="aspect-square bg-white hover:bg-[#C2ECFD] text-alpha-500 rounded-2xl text-lg font-bold shadow-lg flex flex-col items-center justify-center p-4 transition-colors"
+            className="aspect-square bg-white hover:opacity-90 rounded-2xl text-lg font-bold shadow-lg flex flex-col items-center justify-center p-4 transition-opacity"
+            style={{ color: '#092849' }}
           >
             <span className="text-5xl mb-3">✅</span>
             <span className="text-center leading-tight">Daily<br/>Cleanliness Check</span>
@@ -155,25 +162,25 @@ export const Home = () => {
             className="bg-white/10 hover:bg-white/20 backdrop-blur p-4 rounded-xl text-left transition-colors"
           >
             <div className="text-3xl font-bold">{loading ? '...' : audits.length}</div>
-            <div className="text-[#C2ECFD] text-sm">QC Audits</div>
+            <div className="text-sm" style={{ color: '#C2ECFD' }}>QC Audits</div>
           </button>
           <button
             onClick={() => navigate('/reports')}
             className="bg-white/10 hover:bg-white/20 backdrop-blur p-4 rounded-xl text-left transition-colors"
           >
             <div className="text-3xl font-bold">{loading ? '...' : reports.length}</div>
-            <div className="text-[#C2ECFD] text-sm">Issues Reported</div>
+            <div className="text-sm" style={{ color: '#C2ECFD' }}>Issues Reported</div>
             {openReports > 0 && (
-              <div className="text-[#47C4E6] text-xs mt-1">{openReports} open</div>
+              <div className="text-xs mt-1" style={{ color: '#47C4E6' }}>{openReports} open</div>
             )}
           </button>
         </div>
       </div>
 
-      <div className="bg-white text-alpha-500 rounded-t-3xl mt-2 p-6 min-h-[280px]">
-        <h2 className="font-bold text-lg mb-4 text-alpha-500">Recent Activity</h2>
+      <div className="bg-white rounded-t-3xl mt-2 p-6 min-h-[280px]">
+        <h2 className="font-bold text-lg mb-4" style={{ color: '#092849' }}>Recent Activity</h2>
         {loading ? (
-          <div className="text-center py-8 text-alpha-600">Loading...</div>
+          <div className="text-center py-8" style={{ color: '#141685' }}>Loading...</div>
         ) : (
           renderRecentActivity()
         )}
