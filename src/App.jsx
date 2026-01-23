@@ -19,6 +19,7 @@ import { ReportPhoto } from './pages/ReportPhoto';
 import { ReportDetails } from './pages/ReportDetails';
 import { ReportComplete } from './pages/ReportComplete';
 import { ReportsList } from './pages/ReportsList';
+import { Settings } from './pages/Settings';
 
 function App() {
   const camera = useCamera();
@@ -41,6 +42,7 @@ function App() {
       <CameraModal
         isOpen={camera.isOpen}
         label={camera.label}
+        isVideoReady={camera.isVideoReady}
         videoRef={camera.videoRef}
         canvasRef={camera.canvasRef}
         onCapture={camera.capturePhoto}
@@ -71,6 +73,9 @@ function App() {
 
         {/* Reports List */}
         <Route path="/reports" element={<ReportsList />} />
+
+        {/* Settings */}
+        <Route path="/settings" element={<Settings />} />
       </Routes>
     </BrowserRouter>
   );

@@ -126,8 +126,29 @@ export const Home = () => {
       display: 'flex',
       flexDirection: 'column'
     }}>
+      {/* Header with Settings */}
+      <div style={{ padding: '20px 24px 0', display: 'flex', justifyContent: 'flex-end' }}>
+        <button
+          onClick={() => navigate('/settings')}
+          style={{
+            backgroundColor: 'rgba(255,255,255,0.15)',
+            border: 'none',
+            borderRadius: '50%',
+            width: '44px',
+            height: '44px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            fontSize: '22px'
+          }}
+        >
+          ⚙️
+        </button>
+      </div>
+
       {/* Logo Section */}
-      <div style={{ padding: '50px 24px 30px', textAlign: 'center' }}>
+      <div style={{ padding: '30px 24px 30px', textAlign: 'center' }}>
         <img
           src="/Alpha School Logo - Blue.png"
           alt="Alpha School"

@@ -1,6 +1,7 @@
 export const CameraModal = ({
   isOpen,
   label,
+  isVideoReady,
   videoRef,
   canvasRef,
   onCapture,
@@ -14,6 +15,7 @@ export const CameraModal = ({
         ref={videoRef}
         autoPlay
         playsInline
+        muted
         className="w-full h-full object-cover"
       />
       <canvas ref={canvasRef} className="hidden" />
@@ -24,13 +26,24 @@ export const CameraModal = ({
           </button>
           <span className="text-white text-sm">📷 {label}</span>
         </div>
-        <div className="flex-1" />
+        <div className="flex-1 flex items-center justify-center">
+          {!isVideoReady && (
+            <div className="text-white text-lg bg-black/50 px-4 py-2 rounded-lg">
+              Loading camera...
+            </div>
+          )}
+        </div>
         <div className="bg-black/50 p-6 flex justify-center">
           <button
             onClick={onCapture}
-            className="w-20 h-20 rounded-full border-4 border-white flex items-center justify-center bg-white/20 active:bg-white/40"
+            disabled={!isVideoReady}
+            className={`w-20 h-20 rounded-full border-4 border-white flex items-center justify-center transition-all ${
+              isVideoReady
+                ? 'bg-white/20 active:bg-white/40'
+                : 'bg-gray-500/50 opacity-50 cursor-not-allowed'
+            }`}
           >
-            <div className="w-16 h-16 rounded-full bg-white" />
+            <div className={`w-16 h-16 rounded-full ${isVideoReady ? 'bg-white' : 'bg-gray-400'}`} />
           </button>
         </div>
       </div>

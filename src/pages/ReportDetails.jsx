@@ -8,7 +8,7 @@ export const ReportDetails = ({ report }) => {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
 
-  const { campus, photo, category, location, note, urgent, setCategory, setLocation, setNote, setUrgent } = report;
+  const { campus, photo, category, location, note, urgent, aiAnalysis, setCategory, setLocation, setNote, setUrgent } = report;
 
   const canSubmit = photo && category && location;
   const selectedCategory = ISSUE_CATEGORIES.find(c => c.id === category);
@@ -18,17 +18,23 @@ export const ReportDetails = ({ report }) => {
 
     setSubmitting(true);
     try {
+      // Combine AI description with user notes
+      const fullNote = aiAnalysis
+        ? `[AI: ${aiAnalysis.description}]${note ? ' | ' + note : ''}`
+        : note;
+
       await saveReport({
         timestamp: new Date().toLocaleString(),
         campus: campus?.name || '',
         photo,
         category,
         location,
-        note,
+        note: fullNote,
         urgent,
         team: selectedCategory?.team || 'Facilities',
         status: 'open',
-        campusData: campus
+        campusData: campus,
+        aiAnalysis: aiAnalysis || null
       });
       navigate('/report/complete');
     } catch (error) {
@@ -49,28 +55,35 @@ export const ReportDetails = ({ report }) => {
       />
 
       <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {/* Photo Preview */}
+        {/* Photo Preview with AI Info */}
         {photo && (
           <div style={{
-            display: 'flex',
-            alignItems: 'center',
             backgroundColor: '#fff',
             borderRadius: '12px',
             padding: '14px',
             boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
           }}>
-            <img
-              src={photo}
-              alt="Issue"
-              style={{
-                width: '64px',
-                height: '64px',
-                objectFit: 'cover',
-                borderRadius: '8px',
-                marginRight: '14px'
-              }}
-            />
-            <div style={{ fontSize: '15px', color: '#666' }}>Photo captured ✓</div>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <img
+                src={photo}
+                alt="Issue"
+                style={{
+                  width: '64px',
+                  height: '64px',
+                  objectFit: 'cover',
+                  borderRadius: '8px',
+                  marginRight: '14px'
+                }}
+              />
+              <div>
+                <div style={{ fontSize: '15px', color: '#666' }}>Photo captured ✓</div>
+                {aiAnalysis && (
+                  <div style={{ fontSize: '13px', color: '#0369a1', marginTop: '4px' }}>
+                    🤖 AI: "{aiAnalysis.description}"
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
