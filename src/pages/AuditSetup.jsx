@@ -37,16 +37,18 @@ export const AuditSetup = ({ audit }) => {
         onBack={() => navigate('/')}
       />
 
-      <div className="p-5 space-y-6">
+      <div className="p-4 space-y-5">
+        {/* Campus Dropdown */}
         <div>
-          <label className="block text-lg font-semibold text-gray-800 mb-3">
+          <label className="block text-base font-semibold text-gray-800 mb-2">
             Campus *
           </label>
           <CampusSelector value={campusName} onChange={setCampusName} />
         </div>
 
+        {/* Name Input */}
         <div>
-          <label className="block text-lg font-semibold text-gray-800 mb-3">
+          <label className="block text-base font-semibold text-gray-800 mb-2">
             Your Name *
           </label>
           <input
@@ -54,22 +56,28 @@ export const AuditSetup = ({ audit }) => {
             placeholder="Enter your name"
             value={auditorName}
             onChange={(e) => setAuditorName(e.target.value)}
-            className="w-full border-2 border-gray-300 rounded-xl p-4 text-xl"
-            style={{ fontSize: '18px', minHeight: '56px' }}
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 text-base bg-white"
           />
         </div>
 
+        {/* Mandatory Zones */}
         <div>
-          <label className="block text-lg font-semibold text-gray-800 mb-3">
+          <label className="block text-base font-semibold text-gray-800 mb-2">
             Mandatory Zones (5)
           </label>
-          <div className="bg-[#C2ECFD]/30 border-2 border-[#47C4E6] rounded-xl p-4 space-y-3">
-            {MANDATORY_ZONE_IDS.map(id => (
-              <div key={id} className="flex items-center py-2">
-                <span className="text-[#2B57D0] mr-3 text-xl">✓</span>
-                <span className="text-lg">{ZONES[id].name}</span>
+          <div
+            className="rounded-lg p-4"
+            style={{ backgroundColor: 'rgba(194, 236, 253, 0.3)', border: '1px solid #47C4E6' }}
+          >
+            {MANDATORY_ZONE_IDS.map((id, index) => (
+              <div
+                key={id}
+                className={`flex items-center ${index !== MANDATORY_ZONE_IDS.length - 1 ? 'mb-3 pb-3 border-b border-[#47C4E6]/30' : ''}`}
+              >
+                <span className="text-[#2B57D0] mr-3 text-lg">✓</span>
+                <span className="text-base flex-1">{ZONES[id].name}</span>
                 {!ZONES[id].amberEligible && (
-                  <span className="ml-auto text-sm bg-red-100 text-red-700 px-3 py-1 rounded-lg font-medium">
+                  <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded font-medium">
                     ⚠️ RED
                   </span>
                 )}
@@ -78,27 +86,27 @@ export const AuditSetup = ({ audit }) => {
           </div>
         </div>
 
+        {/* Optional Zones */}
         <div>
-          <label className="block text-lg font-semibold text-gray-800 mb-3">
+          <label className="block text-base font-semibold text-gray-800 mb-2">
             Optional Zones
           </label>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {OPTIONAL_ZONE_IDS.map(id => (
               <label
                 key={id}
-                className="flex items-center p-4 bg-white rounded-xl border-2 border-gray-200 cursor-pointer active:bg-gray-50"
-                style={{ minHeight: '60px' }}
+                className="flex items-center p-4 bg-white rounded-lg border border-gray-200 cursor-pointer active:bg-gray-50"
               >
                 <input
                   type="checkbox"
                   checked={selectedOptional.includes(id)}
                   onChange={() => handleOptionalToggle(id)}
-                  className="mr-4 accent-[#2B57D0]"
-                  style={{ width: '24px', height: '24px', minWidth: '24px' }}
+                  className="mr-3 accent-[#2B57D0]"
+                  style={{ width: '22px', height: '22px' }}
                 />
-                <span className="flex-1 text-lg">{ZONES[id].name}</span>
+                <span className="flex-1 text-base">{ZONES[id].name}</span>
                 {!ZONES[id].amberEligible && (
-                  <span className="text-sm bg-yellow-100 text-yellow-700 px-3 py-1 rounded-lg font-medium">
+                  <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded font-medium">
                     ⚠️
                   </span>
                 )}
@@ -107,10 +115,11 @@ export const AuditSetup = ({ audit }) => {
           </div>
         </div>
 
+        {/* Begin Button */}
         <button
           onClick={handleBegin}
-          className="w-full text-white py-5 rounded-xl text-xl font-bold transition-colors"
-          style={{ backgroundColor: '#092849', fontSize: '20px' }}
+          className="w-full text-white py-4 rounded-xl text-lg font-bold"
+          style={{ backgroundColor: '#092849' }}
         >
           Begin Walkthrough
         </button>
