@@ -54,7 +54,7 @@ function App() {
         {/* Audit Flow */}
         <Route path="/audit/setup" element={<AuditSetup audit={audit} />} />
         <Route path="/audit/overview" element={<AuditOverview audit={audit} />} />
-        <Route path="/audit/zone" element={<AuditZone audit={audit} />} />
+        <Route path="/audit/zone" element={<AuditZone audit={audit} camera={camera} />} />
         <Route path="/audit/condition" element={<AuditCondition audit={audit} camera={camera} />} />
         <Route path="/audit/tour-ready" element={<AuditTourReady audit={audit} />} />
         <Route path="/audit/summary" element={<AuditSummary audit={audit} />} />

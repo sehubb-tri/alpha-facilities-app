@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-export const AuditZone = ({ audit }) => {
+export const AuditZone = ({ audit, camera }) => {
   const navigate = useNavigate();
   const {
     currentZoneIndex,
@@ -9,7 +9,10 @@ export const AuditZone = ({ audit }) => {
     allZones,
     zoneResults,
     setResponse,
-    isZoneComplete
+    isZoneComplete,
+    setConditionAlert,
+    getConditionAlert,
+    setCurrentZoneIndex
   } = audit;
 
   const results = zoneResults[currentZoneId] || {};
@@ -17,10 +20,25 @@ export const AuditZone = ({ audit }) => {
   const totalQuestions = currentZone?.cleanliness?.length || 0;
   const complete = isZoneComplete(currentZoneId);
 
+  // B&G condition alert state
+  const alert = getConditionAlert(currentZoneId);
+  const hasBGSelection = alert?.hasIssue !== undefined;
+
   const handleComplete = () => {
-    if (complete) {
-      navigate('/audit/condition');
+    if (complete && hasBGSelection) {
+      // Skip the condition page, go directly to next zone or overview
+      if (currentZoneIndex < allZones.length - 1) {
+        setCurrentZoneIndex(currentZoneIndex + 1);
+        navigate('/audit/zone');
+      } else {
+        navigate('/audit/overview');
+      }
     }
+  };
+
+  const handleReportIssue = () => {
+    // Navigate to See It Report It with context
+    navigate('/report');
   };
 
   return (
@@ -137,6 +155,76 @@ export const AuditZone = ({ audit }) => {
             </div>
           ))}
         </div>
+
+        {/* B&G Question - Inline */}
+        <div style={{
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          padding: '16px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+          marginTop: '20px',
+          borderLeft: '4px solid #2B57D0'
+        }}>
+          <div style={{ fontSize: '15px', fontWeight: '600', color: '#092849', marginBottom: '12px' }}>
+            Any building issues to flag for B&G?
+          </div>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button
+              onClick={() => setConditionAlert(currentZoneId, false)}
+              style={{
+                flex: 1,
+                padding: '12px',
+                borderRadius: '10px',
+                fontWeight: '600',
+                fontSize: '14px',
+                border: 'none',
+                cursor: 'pointer',
+                backgroundColor: alert?.hasIssue === false ? '#47C4E6' : '#f3f4f6',
+                color: alert?.hasIssue === false ? '#fff' : '#333'
+              }}
+            >
+              ✓ No
+            </button>
+            <button
+              onClick={() => setConditionAlert(currentZoneId, true)}
+              style={{
+                flex: 1,
+                padding: '12px',
+                borderRadius: '10px',
+                fontWeight: '600',
+                fontSize: '14px',
+                border: 'none',
+                cursor: 'pointer',
+                backgroundColor: alert?.hasIssue === true ? '#2B57D0' : '#f3f4f6',
+                color: alert?.hasIssue === true ? '#fff' : '#333'
+              }}
+            >
+              🔧 Yes
+            </button>
+          </div>
+
+          {/* See It Report It Link */}
+          <button
+            onClick={handleReportIssue}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              marginTop: '12px',
+              padding: '8px',
+              backgroundColor: 'transparent',
+              border: 'none',
+              color: '#2B57D0',
+              fontSize: '14px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              width: '100%'
+            }}
+          >
+            📷 See It, Report It
+          </button>
+        </div>
       </div>
 
       {/* Fixed Bottom Button */}
@@ -151,7 +239,7 @@ export const AuditZone = ({ audit }) => {
       }}>
         <button
           onClick={handleComplete}
-          disabled={!complete}
+          disabled={!complete || !hasBGSelection}
           style={{
             width: '100%',
             padding: '18px',
@@ -159,14 +247,16 @@ export const AuditZone = ({ audit }) => {
             fontSize: '18px',
             fontWeight: '700',
             border: 'none',
-            cursor: complete ? 'pointer' : 'not-allowed',
-            backgroundColor: complete ? '#092849' : '#d1d5db',
-            color: complete ? '#fff' : '#9ca3af'
+            cursor: (complete && hasBGSelection) ? 'pointer' : 'not-allowed',
+            backgroundColor: (complete && hasBGSelection) ? '#092849' : '#d1d5db',
+            color: (complete && hasBGSelection) ? '#fff' : '#9ca3af'
           }}
         >
-          {complete
-            ? 'Complete Zone →'
-            : `Answer all (${answeredCount}/${totalQuestions})`}
+          {!complete
+            ? `Answer all (${answeredCount}/${totalQuestions})`
+            : !hasBGSelection
+            ? 'Select B&G status'
+            : 'Complete Zone →'}
         </button>
       </div>
     </div>
