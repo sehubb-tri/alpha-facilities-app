@@ -7,9 +7,9 @@ export const AuditComplete = ({ audit }) => {
   const status = calculateStatus();
 
   const statusColors = {
-    GREEN: 'bg-[#47C4E6]',
-    AMBER: 'bg-[#2B57D0]',
-    RED: 'bg-[#141685]'
+    GREEN: '#47C4E6',
+    AMBER: '#2B57D0',
+    RED: '#141685'
   };
 
   const handleDone = () => {
@@ -18,16 +18,33 @@ export const AuditComplete = ({ audit }) => {
   };
 
   return (
-    <div
-      className={`min-h-screen ${statusColors[status]} flex flex-col items-center justify-center p-8 text-white text-center`}
-    >
-      <div className="text-8xl mb-6">✅</div>
-      <h1 className="text-3xl font-bold mb-2">Submitted!</h1>
-      <div className="text-5xl font-bold my-4">{status}</div>
-      <p className="opacity-90 mb-8">{campus?.name || ''}</p>
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: statusColors[status],
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '32px',
+      color: '#fff',
+      textAlign: 'center'
+    }}>
+      <div style={{ fontSize: '96px', marginBottom: '24px' }}>✅</div>
+      <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>Submitted!</h1>
+      <div style={{ fontSize: '56px', fontWeight: '700', margin: '16px 0' }}>{status}</div>
+      <p style={{ opacity: 0.9, marginBottom: '32px', fontSize: '18px' }}>{campus?.name || ''}</p>
       <button
         onClick={handleDone}
-        className="bg-white text-gray-800 px-8 py-3 rounded-lg font-bold"
+        style={{
+          backgroundColor: '#fff',
+          color: '#092849',
+          padding: '16px 40px',
+          borderRadius: '12px',
+          fontWeight: '700',
+          fontSize: '18px',
+          border: 'none',
+          cursor: 'pointer'
+        }}
       >
         Done
       </button>

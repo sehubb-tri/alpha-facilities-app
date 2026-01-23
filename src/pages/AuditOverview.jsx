@@ -43,31 +43,37 @@ export const AuditOverview = ({ audit }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 pb-24">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6', paddingBottom: '100px' }}>
       <Header
         title={campus?.name || 'Audit'}
         subtitle={`${campus?.city || ''}, ${campus?.state || ''}`}
         onBack={handleExit}
       />
 
-      <div className="bg-white p-4 border-b">
-        <div className="flex justify-between text-sm text-gray-600 mb-2">
+      {/* Progress Bar */}
+      <div style={{ backgroundColor: '#fff', padding: '16px 20px', borderBottom: '1px solid #e5e7eb' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '15px', color: '#666', marginBottom: '10px' }}>
           <span>Progress</span>
-          <span>
-            {completedCount} of {allZones.length} zones
-          </span>
+          <span>{completedCount} of {allZones.length} zones</span>
         </div>
-        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div style={{ height: '8px', backgroundColor: '#e5e7eb', borderRadius: '4px', overflow: 'hidden' }}>
           <div
-            className="h-full bg-alpha-500 transition-all"
-            style={{ width: `${(completedCount / allZones.length) * 100}%` }}
+            style={{
+              height: '100%',
+              backgroundColor: '#092849',
+              width: `${(completedCount / allZones.length) * 100}%`,
+              transition: 'width 0.3s ease'
+            }}
           />
         </div>
       </div>
 
-      <div className="p-4">
-        <h2 className="font-bold text-gray-700 mb-3">Mandatory Zones</h2>
-        <div className="space-y-2 mb-6">
+      {/* Zone Lists */}
+      <div style={{ padding: '20px' }}>
+        <h2 style={{ fontWeight: '700', fontSize: '17px', color: '#374151', marginBottom: '14px' }}>
+          Mandatory Zones
+        </h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
           {MANDATORY_ZONE_IDS.map((id, idx) => (
             <ZoneCard
               key={id}
@@ -82,8 +88,10 @@ export const AuditOverview = ({ audit }) => {
 
         {selectedOptionalZones.length > 0 && (
           <>
-            <h2 className="font-bold text-gray-700 mb-3">Optional Zones</h2>
-            <div className="space-y-2">
+            <h2 style={{ fontWeight: '700', fontSize: '17px', color: '#374151', marginBottom: '14px' }}>
+              Optional Zones
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {selectedOptionalZones.map((id, idx) => (
                 <ZoneCard
                   key={id}
@@ -99,17 +107,35 @@ export const AuditOverview = ({ audit }) => {
         )}
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+      {/* Fixed Bottom Button */}
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: '#fff',
+        borderTop: '1px solid #e5e7eb',
+        padding: '16px 20px'
+      }}>
         <button
           onClick={handleContinue}
-          className="w-full bg-alpha-500 text-white py-4 rounded-xl text-lg font-bold"
+          style={{
+            width: '100%',
+            backgroundColor: '#092849',
+            color: '#fff',
+            padding: '18px',
+            borderRadius: '12px',
+            fontSize: '18px',
+            fontWeight: '700',
+            border: 'none',
+            cursor: 'pointer'
+          }}
         >
           {completedCount === allZones.length
             ? 'Final Question →'
             : completedCount === 0
-            ? 'Start First Zone'
-            : 'Continue'}{' '}
-          →
+            ? 'Start First Zone →'
+            : 'Continue →'}
         </button>
       </div>
     </div>

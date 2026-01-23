@@ -6,58 +6,84 @@ export const AuditTourReady = ({ audit }) => {
   const { tourReady, setTourReady } = audit;
 
   return (
-    <div className="min-h-screen bg-gray-100 pb-24">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6', paddingBottom: '100px' }}>
       <Header
         title="Final Question"
         onBack={() => navigate('/audit/overview')}
       />
 
-      <div className="p-4">
-        <div className="bg-white rounded-lg p-6 shadow">
-          <div className="text-lg font-medium mb-4">
+      <div style={{ padding: '20px' }}>
+        <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+          <div style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#092849' }}>
             Could a parent tour happen right now?
           </div>
 
-          <div className="space-y-3">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <button
               onClick={() => setTourReady('yes')}
-              className={`w-full p-4 rounded-lg border-2 ${
-                tourReady === 'yes'
-                  ? 'border-[#47C4E6] bg-[#C2ECFD]/30'
-                  : 'border-gray-200'
-              } flex items-center`}
+              style={{
+                width: '100%',
+                padding: '18px',
+                borderRadius: '12px',
+                border: tourReady === 'yes' ? '2px solid #47C4E6' : '2px solid #e5e7eb',
+                backgroundColor: tourReady === 'yes' ? 'rgba(194, 236, 253, 0.3)' : '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer'
+              }}
             >
-              <span className="text-2xl mr-3">✓</span>
-              <div className="font-medium">Yes — Tour Ready</div>
+              <span style={{ fontSize: '28px', marginRight: '16px' }}>✓</span>
+              <div style={{ fontWeight: '600', fontSize: '18px' }}>Yes — Tour Ready</div>
             </button>
 
             <button
               onClick={() => setTourReady('no')}
-              className={`w-full p-4 rounded-lg border-2 ${
-                tourReady === 'no'
-                  ? 'border-[#2B57D0] bg-[#C2ECFD]/30'
-                  : 'border-gray-200'
-              } flex items-center`}
+              style={{
+                width: '100%',
+                padding: '18px',
+                borderRadius: '12px',
+                border: tourReady === 'no' ? '2px solid #2B57D0' : '2px solid #e5e7eb',
+                backgroundColor: tourReady === 'no' ? 'rgba(194, 236, 253, 0.3)' : '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                textAlign: 'left'
+              }}
             >
-              <span className="text-2xl mr-3">✗</span>
+              <span style={{ fontSize: '28px', marginRight: '16px' }}>✗</span>
               <div>
-                <div className="font-medium">No — Not Tour Ready</div>
-                <div className="text-sm text-[#141685]">⚠️ Automatic RED</div>
+                <div style={{ fontWeight: '600', fontSize: '18px' }}>No — Not Tour Ready</div>
+                <div style={{ fontSize: '15px', color: '#141685', marginTop: '4px' }}>⚠️ Automatic RED</div>
               </div>
             </button>
           </div>
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+      {/* Fixed Bottom Button */}
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: '#fff',
+        borderTop: '1px solid #e5e7eb',
+        padding: '16px 20px'
+      }}>
         <button
           onClick={() => navigate('/audit/summary')}
           disabled={tourReady === null}
-          className={`w-full py-4 rounded-xl text-lg font-bold ${
-            tourReady !== null
-              ? 'bg-alpha-500 text-white'
-              : 'bg-gray-300 text-gray-500'
-          }`}
+          style={{
+            width: '100%',
+            padding: '18px',
+            borderRadius: '12px',
+            fontSize: '18px',
+            fontWeight: '700',
+            border: 'none',
+            cursor: tourReady !== null ? 'pointer' : 'not-allowed',
+            backgroundColor: tourReady !== null ? '#092849' : '#d1d5db',
+            color: tourReady !== null ? '#fff' : '#9ca3af'
+          }}
         >
           Review Summary →
         </button>

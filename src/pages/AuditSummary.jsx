@@ -24,9 +24,9 @@ export const AuditSummary = ({ audit }) => {
   const flaggedAlerts = conditionAlerts.filter(a => a.hasIssue).length;
 
   const statusColors = {
-    GREEN: 'bg-[#47C4E6]',
-    AMBER: 'bg-[#2B57D0]',
-    RED: 'bg-[#141685]'
+    GREEN: '#47C4E6',
+    AMBER: '#2B57D0',
+    RED: '#141685'
   };
 
   const statusIcons = {
@@ -50,75 +50,143 @@ export const AuditSummary = ({ audit }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 pb-24">
-      <div
-        className={`${statusColors[status]} text-white p-6 text-center`}
-      >
-        <div className="text-5xl mb-2">{statusIcons[status]}</div>
-        <div className="text-3xl font-bold">{status}</div>
-        <div className="opacity-90">{campus?.name || ''}</div>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6', paddingBottom: '100px' }}>
+      {/* Status Header */}
+      <div style={{
+        backgroundColor: statusColors[status],
+        color: '#fff',
+        padding: '28px 20px',
+        textAlign: 'center'
+      }}>
+        <div style={{ fontSize: '56px', marginBottom: '8px' }}>{statusIcons[status]}</div>
+        <div style={{ fontSize: '32px', fontWeight: '700' }}>{status}</div>
+        <div style={{ opacity: 0.9, fontSize: '17px', marginTop: '4px' }}>{campus?.name || ''}</div>
       </div>
 
-      <div className="p-4 space-y-4">
-        <div className="grid grid-cols-3 gap-3">
-          <div className="bg-white p-3 rounded-lg shadow text-center">
-            <div className="text-xl font-bold">{allZones.length}</div>
-            <div className="text-xs text-gray-500">Zones</div>
+      <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* Stats Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+          <div style={{
+            backgroundColor: '#fff',
+            padding: '16px',
+            borderRadius: '12px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '24px', fontWeight: '700', color: '#092849' }}>{allZones.length}</div>
+            <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>Zones</div>
           </div>
-          <div className="bg-white p-3 rounded-lg shadow text-center">
-            <div
-              className={`text-xl font-bold ${
-                totalDefects > 0 ? 'text-[#141685]' : 'text-[#47C4E6]'
-              }`}
-            >
+          <div style={{
+            backgroundColor: '#fff',
+            padding: '16px',
+            borderRadius: '12px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            textAlign: 'center'
+          }}>
+            <div style={{
+              fontSize: '24px',
+              fontWeight: '700',
+              color: totalDefects > 0 ? '#141685' : '#47C4E6'
+            }}>
               {totalDefects}
             </div>
-            <div className="text-xs text-gray-500">Defects</div>
+            <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>Defects</div>
           </div>
-          <div className="bg-white p-3 rounded-lg shadow text-center">
-            <div className="text-xl font-bold">{duration}m</div>
-            <div className="text-xs text-gray-500">Duration</div>
+          <div style={{
+            backgroundColor: '#fff',
+            padding: '16px',
+            borderRadius: '12px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '24px', fontWeight: '700', color: '#092849' }}>{duration}m</div>
+            <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>Duration</div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow divide-y">
-          {allZones.map(zoneId => {
+        {/* Zone Results List */}
+        <div style={{
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+          overflow: 'hidden'
+        }}>
+          {allZones.map((zoneId, idx) => {
             const zone = ZONES[zoneId];
             const defects = countDefects(zoneId);
             return (
-              <div key={zoneId} className="p-3 flex items-center">
-                <span
-                  className={`w-7 h-7 rounded-full ${
-                    defects === 0
-                      ? 'bg-[#C2ECFD] text-[#2B57D0]'
-                      : 'bg-[#C2ECFD]/50 text-[#141685]'
-                  } flex items-center justify-center mr-3 font-bold text-sm`}
-                >
+              <div
+                key={zoneId}
+                style={{
+                  padding: '14px 16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  borderBottom: idx !== allZones.length - 1 ? '1px solid #e5e7eb' : 'none'
+                }}
+              >
+                <span style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  backgroundColor: defects === 0 ? '#C2ECFD' : 'rgba(194, 236, 253, 0.5)',
+                  color: defects === 0 ? '#2B57D0' : '#141685',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: '14px',
+                  fontWeight: '700',
+                  fontSize: '15px'
+                }}>
                   {defects === 0 ? '✓' : defects}
                 </span>
-                <span className="flex-1 text-sm">{zone.name}</span>
+                <span style={{ flex: 1, fontSize: '17px', color: '#374151' }}>{zone.name}</span>
               </div>
             );
           })}
         </div>
 
+        {/* B&G Issues Alert */}
         {flaggedAlerts > 0 && (
-          <div className="bg-[#C2ECFD]/30 border border-[#47C4E6] rounded-lg p-3">
-            <div className="font-bold text-[#092849] mb-1">
+          <div style={{
+            backgroundColor: 'rgba(194, 236, 253, 0.3)',
+            border: '1px solid #47C4E6',
+            borderRadius: '12px',
+            padding: '16px'
+          }}>
+            <div style={{ fontWeight: '700', color: '#092849', marginBottom: '4px', fontSize: '17px' }}>
               🔧 {flaggedAlerts} B&G Issue(s) Flagged
             </div>
-            <div className="text-sm text-[#141685]">
+            <div style={{ fontSize: '15px', color: '#141685' }}>
               Will be sent to B&G team
             </div>
           </div>
         )}
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+      {/* Fixed Bottom Button */}
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: '#fff',
+        borderTop: '1px solid #e5e7eb',
+        padding: '16px 20px'
+      }}>
         <button
           onClick={handleSubmit}
           disabled={submitting}
-          className="w-full bg-alpha-500 text-white py-4 rounded-xl text-lg font-bold disabled:bg-gray-400"
+          style={{
+            width: '100%',
+            backgroundColor: submitting ? '#9ca3af' : '#092849',
+            color: '#fff',
+            padding: '18px',
+            borderRadius: '12px',
+            fontSize: '18px',
+            fontWeight: '700',
+            border: 'none',
+            cursor: submitting ? 'not-allowed' : 'pointer'
+          }}
         >
           {submitting ? 'Submitting...' : '✓ Submit Audit'}
         </button>

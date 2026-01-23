@@ -12,7 +12,7 @@ export const ReportPhoto = ({ report, camera }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
       <Header
         title="Review Photo"
         subtitle={campus?.name || ''}
@@ -20,34 +20,77 @@ export const ReportPhoto = ({ report, camera }) => {
         onBack={() => navigate('/report')}
       />
 
-      <div className="p-4 space-y-4">
+      <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {photo ? (
           <>
-            <div className="rounded-lg overflow-hidden shadow">
-              <img src={photo} alt="Issue photo" className="w-full" />
+            <div style={{
+              borderRadius: '12px',
+              overflow: 'hidden',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }}>
+              <img
+                src={photo}
+                alt="Issue photo"
+                style={{ width: '100%', display: 'block' }}
+              />
             </div>
-            <div className="flex gap-3">
+            <div style={{ display: 'flex', gap: '12px' }}>
               <button
                 onClick={handleRetake}
-                className="flex-1 bg-gray-200 py-3 rounded-lg font-medium"
+                style={{
+                  flex: 1,
+                  backgroundColor: '#e5e7eb',
+                  color: '#374151',
+                  padding: '16px',
+                  borderRadius: '12px',
+                  fontWeight: '600',
+                  fontSize: '17px',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
               >
                 🔄 Retake
               </button>
               <button
                 onClick={() => navigate('/report/details')}
-                className="flex-1 bg-[#092849] text-white py-3 rounded-lg font-medium"
+                style={{
+                  flex: 1,
+                  backgroundColor: '#092849',
+                  color: '#fff',
+                  padding: '16px',
+                  borderRadius: '12px',
+                  fontWeight: '600',
+                  fontSize: '17px',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
               >
                 Continue →
               </button>
             </div>
           </>
         ) : (
-          <div className="bg-white rounded-lg p-12 text-center text-gray-400">
-            <div className="text-6xl mb-4">📷</div>
-            <p>No photo captured</p>
+          <div style={{
+            backgroundColor: '#fff',
+            borderRadius: '12px',
+            padding: '48px 24px',
+            textAlign: 'center',
+            color: '#9ca3af'
+          }}>
+            <div style={{ fontSize: '64px', marginBottom: '16px' }}>📷</div>
+            <p style={{ fontSize: '17px', marginBottom: '20px' }}>No photo captured</p>
             <button
               onClick={handleRetake}
-              className="mt-4 bg-[#092849] text-white px-6 py-2 rounded-lg"
+              style={{
+                backgroundColor: '#092849',
+                color: '#fff',
+                padding: '14px 28px',
+                borderRadius: '12px',
+                fontWeight: '600',
+                fontSize: '17px',
+                border: 'none',
+                cursor: 'pointer'
+              }}
             >
               Take Photo
             </button>

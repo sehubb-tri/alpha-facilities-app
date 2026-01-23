@@ -24,62 +24,112 @@ export const AuditZone = ({ audit }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 pb-24">
-      <div className="alpha-gradient text-white p-4">
-        <div className="flex items-center justify-between">
-          <button onClick={() => navigate('/audit/overview')} className="text-2xl">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6', paddingBottom: '100px' }}>
+      {/* Header */}
+      <div style={{
+        background: 'linear-gradient(180deg, #092849 0%, #141685 100%)',
+        color: '#fff',
+        padding: '20px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <button
+            onClick={() => navigate('/audit/overview')}
+            style={{
+              fontSize: '24px',
+              background: 'rgba(255,255,255,0.2)',
+              border: 'none',
+              borderRadius: '8px',
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#fff'
+            }}
+          >
             ←
           </button>
-          <div className="text-center">
-            <h1 className="text-lg font-bold">{currentZone?.name}</h1>
-            <p className="text-white/70 text-sm">
+          <div style={{ textAlign: 'center' }}>
+            <h1 style={{ fontSize: '20px', fontWeight: '700', margin: 0 }}>{currentZone?.name}</h1>
+            <p style={{ fontSize: '15px', opacity: 0.8, margin: '4px 0 0 0' }}>
               Zone {currentZoneIndex + 1} of {allZones.length}
             </p>
           </div>
-          <div className="w-8" />
+          <div style={{ width: '40px' }} />
         </div>
       </div>
 
-      <div className="h-1 bg-gray-200">
+      {/* Progress Bar */}
+      <div style={{ height: '6px', backgroundColor: '#e5e7eb' }}>
         <div
-          className="h-full bg-alpha-500"
           style={{
-            width: `${((currentZoneIndex + 1) / allZones.length) * 100}%`
+            height: '100%',
+            backgroundColor: '#092849',
+            width: `${((currentZoneIndex + 1) / allZones.length) * 100}%`,
+            transition: 'width 0.3s ease'
           }}
         />
       </div>
 
+      {/* Warning Banner */}
       {!currentZone?.amberEligible && (
-        <div className="bg-[#C2ECFD]/50 border-l-4 border-[#2B57D0] p-3 m-4 rounded">
-          <div className="font-medium text-[#141685]">⚠️ Any defect = RED status</div>
+        <div style={{
+          backgroundColor: 'rgba(194, 236, 253, 0.5)',
+          borderLeft: '4px solid #2B57D0',
+          padding: '14px 16px',
+          margin: '16px 20px',
+          borderRadius: '8px'
+        }}>
+          <div style={{ fontWeight: '600', color: '#141685', fontSize: '15px' }}>
+            ⚠️ Any defect = RED status
+          </div>
         </div>
       )}
 
-      <div className="p-4">
-        <div className="space-y-3">
+      {/* Questions */}
+      <div style={{ padding: '20px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           {currentZone?.cleanliness?.map((question, idx) => (
-            <div key={idx} className="bg-white rounded-lg p-4 shadow-sm">
-              <div className="text-sm mb-3">
+            <div key={idx} style={{
+              backgroundColor: '#fff',
+              borderRadius: '12px',
+              padding: '16px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+            }}>
+              <div style={{ fontSize: '16px', marginBottom: '14px', color: '#333', lineHeight: '1.4' }}>
                 {idx + 1}. {question}
               </div>
-              <div className="flex gap-2">
+              <div style={{ display: 'flex', gap: '10px' }}>
                 <button
                   onClick={() => setResponse(currentZoneId, idx, 'yes')}
-                  className={`flex-1 py-2 rounded font-medium ${
-                    results[idx] === 'yes'
-                      ? 'bg-[#47C4E6] text-white'
-                      : 'bg-gray-100'
-                  }`}
+                  style={{
+                    flex: 1,
+                    padding: '14px',
+                    borderRadius: '10px',
+                    fontWeight: '600',
+                    fontSize: '16px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    backgroundColor: results[idx] === 'yes' ? '#47C4E6' : '#f3f4f6',
+                    color: results[idx] === 'yes' ? '#fff' : '#333'
+                  }}
                 >
                   ✓ Yes
                 </button>
                 <button
                   onClick={() => setResponse(currentZoneId, idx, 'no')}
-                  className={`flex-1 py-2 rounded font-medium ${
-                    results[idx] === 'no'
-                      ? 'bg-[#141685] text-white'
-                      : 'bg-gray-100'
-                  }`}
+                  style={{
+                    flex: 1,
+                    padding: '14px',
+                    borderRadius: '10px',
+                    fontWeight: '600',
+                    fontSize: '16px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    backgroundColor: results[idx] === 'no' ? '#141685' : '#f3f4f6',
+                    color: results[idx] === 'no' ? '#fff' : '#333'
+                  }}
                 >
                   ✗ No
                 </button>
@@ -89,15 +139,30 @@ export const AuditZone = ({ audit }) => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+      {/* Fixed Bottom Button */}
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: '#fff',
+        borderTop: '1px solid #e5e7eb',
+        padding: '16px 20px'
+      }}>
         <button
           onClick={handleComplete}
           disabled={!complete}
-          className={`w-full py-4 rounded-xl text-lg font-bold ${
-            complete
-              ? 'bg-alpha-500 text-white'
-              : 'bg-gray-300 text-gray-500'
-          }`}
+          style={{
+            width: '100%',
+            padding: '18px',
+            borderRadius: '12px',
+            fontSize: '18px',
+            fontWeight: '700',
+            border: 'none',
+            cursor: complete ? 'pointer' : 'not-allowed',
+            backgroundColor: complete ? '#092849' : '#d1d5db',
+            color: complete ? '#fff' : '#9ca3af'
+          }}
         >
           {complete
             ? 'Complete Zone →'

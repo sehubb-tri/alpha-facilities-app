@@ -13,23 +13,50 @@ export const ReportComplete = ({ report }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#2B57D0] flex flex-col items-center justify-center p-8 text-white text-center">
-      <div className="text-8xl mb-6">✅</div>
-      <h1 className="text-3xl font-bold mb-2">Submitted!</h1>
-      <p className="text-lg opacity-90 mb-4">{cat?.team || 'Facilities'} notified</p>
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#2B57D0',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '32px',
+      color: '#fff',
+      textAlign: 'center'
+    }}>
+      <div style={{ fontSize: '96px', marginBottom: '24px' }}>✅</div>
+      <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '10px' }}>Submitted!</h1>
+      <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '20px' }}>{cat?.team || 'Facilities'} notified</p>
 
-      <div className="bg-white/20 rounded-lg p-4 mb-8 w-full max-w-sm text-left">
-        <div className="flex items-center mb-2">
-          <span className="text-2xl mr-2">{cat?.icon || '📋'}</span>
-          <span className="font-bold">{cat?.name || 'Issue'}</span>
+      <div style={{
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        borderRadius: '12px',
+        padding: '18px 20px',
+        marginBottom: '32px',
+        width: '100%',
+        maxWidth: '320px',
+        textAlign: 'left'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+          <span style={{ fontSize: '28px', marginRight: '10px' }}>{cat?.icon || '📋'}</span>
+          <span style={{ fontWeight: '700', fontSize: '18px' }}>{cat?.name || 'Issue'}</span>
         </div>
-        <div className="text-sm opacity-90">{campus?.name || ''}</div>
-        <div className="text-sm opacity-90">{location}</div>
+        <div style={{ fontSize: '16px', opacity: 0.9 }}>{campus?.name || ''}</div>
+        <div style={{ fontSize: '16px', opacity: 0.9, marginTop: '4px' }}>{location}</div>
       </div>
 
       <button
         onClick={handleDone}
-        className="bg-white text-[#092849] px-8 py-3 rounded-lg font-bold"
+        style={{
+          backgroundColor: '#fff',
+          color: '#092849',
+          padding: '16px 40px',
+          borderRadius: '12px',
+          fontWeight: '700',
+          fontSize: '18px',
+          border: 'none',
+          cursor: 'pointer'
+        }}
       >
         Done
       </button>

@@ -5,26 +5,60 @@ export const Header = ({
   variant = 'default',
   rightContent
 }) => {
-  const bgClasses = {
-    default: 'alpha-gradient text-white',
-    red: 'bg-[#2B57D0] text-white',
-    orange: 'bg-[#141685] text-white',
-    green: 'bg-[#47C4E6] text-white'
+  const backgrounds = {
+    default: 'linear-gradient(180deg, #092849 0%, #141685 100%)',
+    red: '#dc2626',
+    orange: '#f97316',
+    green: '#22c55e'
   };
 
   return (
-    <div className={`${bgClasses[variant]} p-4`}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center">
+    <div style={{
+      background: backgrounds[variant],
+      color: '#fff',
+      padding: '20px'
+    }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           {onBack && (
-            <button onClick={onBack} className="text-2xl mr-3">
+            <button
+              onClick={onBack}
+              style={{
+                fontSize: '24px',
+                marginRight: '14px',
+                background: 'rgba(255,255,255,0.2)',
+                border: 'none',
+                borderRadius: '8px',
+                width: '40px',
+                height: '40px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: '#fff'
+              }}
+            >
               ←
             </button>
           )}
           <div>
-            <h1 className="text-xl font-bold">{title}</h1>
+            <h1 style={{
+              fontSize: '24px',
+              fontWeight: '700',
+              margin: 0
+            }}>
+              {title}
+            </h1>
             {subtitle && (
-              <p className={`text-sm ${variant === 'default' ? 'text-white/70' : `text-${variant.replace('bg-', '')}-100`}`}>
+              <p style={{
+                fontSize: '15px',
+                opacity: 0.8,
+                margin: '4px 0 0 0'
+              }}>
                 {subtitle}
               </p>
             )}

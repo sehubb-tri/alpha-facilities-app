@@ -40,7 +40,7 @@ export const ReportDetails = ({ report }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 pb-24">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6', paddingBottom: '100px' }}>
       <Header
         title="Issue Details"
         subtitle={campus?.name || ''}
@@ -48,42 +48,73 @@ export const ReportDetails = ({ report }) => {
         onBack={() => navigate('/report/photo')}
       />
 
-      <div className="p-4 space-y-4">
+      <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* Photo Preview */}
         {photo && (
-          <div className="flex items-center bg-white rounded-lg p-3 shadow">
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: '#fff',
+            borderRadius: '12px',
+            padding: '14px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+          }}>
             <img
               src={photo}
               alt="Issue"
-              className="w-16 h-16 object-cover rounded mr-3"
+              style={{
+                width: '64px',
+                height: '64px',
+                objectFit: 'cover',
+                borderRadius: '8px',
+                marginRight: '14px'
+              }}
             />
-            <div className="text-sm text-gray-600">Photo captured ✓</div>
+            <div style={{ fontSize: '15px', color: '#666' }}>Photo captured ✓</div>
           </div>
         )}
 
+        {/* Issue Type Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label style={{
+            display: 'block',
+            fontSize: '17px',
+            fontWeight: '600',
+            color: '#333',
+            marginBottom: '10px'
+          }}>
             What type of issue? *
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
             {ISSUE_CATEGORIES.map(cat => (
               <button
                 key={cat.id}
                 onClick={() => setCategory(cat.id)}
-                className={`p-3 rounded-lg border-2 text-center ${
-                  category === cat.id
-                    ? 'border-[#2B57D0] bg-[#C2ECFD]/30'
-                    : 'border-gray-200 bg-white'
-                }`}
+                style={{
+                  padding: '14px 10px',
+                  borderRadius: '12px',
+                  border: category === cat.id ? '2px solid #2B57D0' : '2px solid #e5e7eb',
+                  backgroundColor: category === cat.id ? 'rgba(194, 236, 253, 0.3)' : '#fff',
+                  textAlign: 'center',
+                  cursor: 'pointer'
+                }}
               >
-                <div className="text-2xl mb-1">{cat.icon}</div>
-                <div className="text-xs">{cat.name}</div>
+                <div style={{ fontSize: '28px', marginBottom: '6px' }}>{cat.icon}</div>
+                <div style={{ fontSize: '14px', color: '#374151' }}>{cat.name}</div>
               </button>
             ))}
           </div>
         </div>
 
+        {/* Location Input */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label style={{
+            display: 'block',
+            fontSize: '17px',
+            fontWeight: '600',
+            color: '#333',
+            marginBottom: '10px'
+          }}>
             Location *
           </label>
           <input
@@ -91,67 +122,127 @@ export const ReportDetails = ({ report }) => {
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             placeholder="e.g., 2nd floor restroom, Room 204"
-            className="w-full border border-gray-300 rounded-lg p-3"
+            style={{
+              width: '100%',
+              border: '1px solid #ccc',
+              borderRadius: '10px',
+              padding: '14px 16px',
+              fontSize: '17px',
+              boxSizing: 'border-box',
+              backgroundColor: '#fff'
+            }}
           />
         </div>
 
+        {/* Notes Input */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label style={{
+            display: 'block',
+            fontSize: '17px',
+            fontWeight: '600',
+            color: '#333',
+            marginBottom: '10px'
+          }}>
             Notes (optional)
           </label>
           <textarea
             value={note}
             onChange={(e) => setNote(e.target.value)}
             placeholder="Any additional details..."
-            className="w-full border border-gray-300 rounded-lg p-3"
             rows={2}
+            style={{
+              width: '100%',
+              border: '1px solid #ccc',
+              borderRadius: '10px',
+              padding: '14px 16px',
+              fontSize: '17px',
+              boxSizing: 'border-box',
+              backgroundColor: '#fff',
+              resize: 'vertical'
+            }}
           />
         </div>
 
-        <div className="bg-white rounded-lg p-4 shadow">
+        {/* Urgent Toggle */}
+        <div style={{
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          padding: '16px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+        }}>
           <label
-            className="flex items-center cursor-pointer"
+            style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
             onClick={() => setUrgent(!urgent)}
           >
-            <div
-              className={`w-12 h-6 rounded-full mr-3 ${
-                urgent ? 'bg-[#2B57D0]' : 'bg-gray-300'
-              }`}
-            >
-              <div
-                className={`w-5 h-5 bg-white rounded-full shadow transform transition-transform ${
-                  urgent ? 'translate-x-6' : 'translate-x-1'
-                }`}
-                style={{ marginTop: '2px' }}
-              />
+            <div style={{
+              width: '52px',
+              height: '28px',
+              borderRadius: '14px',
+              marginRight: '14px',
+              backgroundColor: urgent ? '#2B57D0' : '#d1d5db',
+              position: 'relative',
+              transition: 'background-color 0.2s'
+            }}>
+              <div style={{
+                width: '24px',
+                height: '24px',
+                backgroundColor: '#fff',
+                borderRadius: '50%',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                position: 'absolute',
+                top: '2px',
+                left: urgent ? '26px' : '2px',
+                transition: 'left 0.2s'
+              }} />
             </div>
             <div>
-              <div className="font-medium">🚨 Urgent / Safety</div>
-              <div className="text-sm text-gray-500">
+              <div style={{ fontWeight: '600', fontSize: '17px', color: '#333' }}>🚨 Urgent / Safety</div>
+              <div style={{ fontSize: '15px', color: '#666', marginTop: '2px' }}>
                 Requires immediate attention
               </div>
             </div>
           </label>
         </div>
 
+        {/* Routes To Info */}
         {category && (
-          <div className="bg-[#C2ECFD]/30 rounded-lg p-3 border border-[#47C4E6]">
-            <div className="text-sm text-[#141685]">
+          <div style={{
+            backgroundColor: 'rgba(194, 236, 253, 0.3)',
+            borderRadius: '12px',
+            padding: '14px 16px',
+            border: '1px solid #47C4E6'
+          }}>
+            <div style={{ fontSize: '15px', color: '#141685' }}>
               <strong>Routes to:</strong> {selectedCategory?.team || 'Facilities'}
             </div>
           </div>
         )}
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+      {/* Fixed Bottom Button */}
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: '#fff',
+        borderTop: '1px solid #e5e7eb',
+        padding: '16px 20px'
+      }}>
         <button
           onClick={handleSubmit}
           disabled={!canSubmit || submitting}
-          className={`w-full py-4 rounded-xl text-lg font-bold ${
-            canSubmit && !submitting
-              ? 'bg-[#092849] text-white'
-              : 'bg-gray-300 text-gray-500'
-          }`}
+          style={{
+            width: '100%',
+            padding: '18px',
+            borderRadius: '12px',
+            fontSize: '18px',
+            fontWeight: '700',
+            border: 'none',
+            cursor: canSubmit && !submitting ? 'pointer' : 'not-allowed',
+            backgroundColor: canSubmit && !submitting ? '#092849' : '#d1d5db',
+            color: canSubmit && !submitting ? '#fff' : '#9ca3af'
+          }}
         >
           {submitting
             ? 'Submitting...'

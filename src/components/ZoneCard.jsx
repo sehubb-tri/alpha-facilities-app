@@ -3,36 +3,62 @@ import { ZONES } from '../data/zones';
 export const ZoneCard = ({ zoneId, index, defects, isComplete, onClick }) => {
   const zone = ZONES[zoneId];
 
+  const getBackgroundColor = () => {
+    if (!isComplete) return '#fff';
+    return defects === 0 ? 'rgba(194, 236, 253, 0.3)' : 'rgba(194, 236, 253, 0.5)';
+  };
+
+  const getBadgeColor = () => {
+    if (!isComplete) return '#e5e7eb';
+    return defects === 0 ? '#47C4E6' : '#141685';
+  };
+
   return (
     <button
       onClick={onClick}
-      className={`w-full ${
-        isComplete
-          ? defects === 0
-            ? 'bg-[#C2ECFD]/30'
-            : 'bg-[#C2ECFD]/50'
-          : 'bg-white'
-      } p-4 rounded-lg border border-gray-200 flex items-center text-left`}
+      style={{
+        width: '100%',
+        backgroundColor: getBackgroundColor(),
+        padding: '16px',
+        borderRadius: '12px',
+        border: '1px solid #e5e7eb',
+        display: 'flex',
+        alignItems: 'center',
+        textAlign: 'left',
+        cursor: 'pointer'
+      }}
     >
       <span
-        className={`w-8 h-8 rounded-full ${
-          isComplete
-            ? defects === 0
-              ? 'bg-[#47C4E6]'
-              : 'bg-[#141685]'
-            : 'bg-gray-200'
-        } text-white flex items-center justify-center mr-3 font-bold text-sm`}
+        style={{
+          width: '36px',
+          height: '36px',
+          borderRadius: '50%',
+          backgroundColor: getBadgeColor(),
+          color: isComplete ? '#fff' : '#666',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginRight: '14px',
+          fontWeight: '700',
+          fontSize: '15px'
+        }}
       >
         {isComplete ? (defects === 0 ? '✓' : defects) : index + 1}
       </span>
-      <div className="flex-1">
-        <div className="font-medium">{zone.name}</div>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontWeight: '600', fontSize: '17px', color: '#092849' }}>{zone.name}</div>
         {zone.description && (
-          <div className="text-xs text-gray-500">{zone.description}</div>
+          <div style={{ fontSize: '14px', color: '#666', marginTop: '2px' }}>{zone.description}</div>
         )}
       </div>
       {!zone.amberEligible && (
-        <span className="text-xs bg-[#C2ECFD] text-[#141685] px-2 py-1 rounded">
+        <span style={{
+          fontSize: '13px',
+          backgroundColor: '#C2ECFD',
+          color: '#141685',
+          padding: '4px 10px',
+          borderRadius: '6px'
+        }}>
           ⚠️
         </span>
       )}

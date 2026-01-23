@@ -47,35 +47,35 @@ export const Home = () => {
 
     if (combined.length === 0) {
       return (
-        <div className="text-center py-8" style={{ color: '#141685' }}>
-          <div className="text-4xl mb-2">📋</div>
-          <p>No activity yet</p>
+        <div style={{ textAlign: 'center', padding: '32px 0', color: '#666' }}>
+          <div style={{ fontSize: '48px', marginBottom: '12px' }}>📋</div>
+          <p style={{ fontSize: '17px' }}>No activity yet</p>
         </div>
       );
     }
 
     return (
-      <div className="space-y-3">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {combined.map((item, idx) => {
           if (item.type === 'audit') {
             return (
               <div
                 key={`audit-${item.id || idx}`}
-                className="flex items-center p-3 rounded-lg"
-                style={{ backgroundColor: '#C2ECFD33' }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '14px',
+                  backgroundColor: '#f5f5f5',
+                  borderRadius: '12px'
+                }}
               >
-                <span className="text-2xl mr-3">
-                  {item.status === 'GREEN'
-                    ? '🟢'
-                    : item.status === 'AMBER'
-                    ? '🟡'
-                    : '🔴'}
+                <span style={{ fontSize: '24px', marginRight: '14px' }}>
+                  {item.status === 'GREEN' ? '🟢' : item.status === 'AMBER' ? '🟡' : '🔴'}
                 </span>
-                <div className="flex-1">
-                  <div className="font-medium" style={{ color: '#092849' }}>{item.campus}</div>
-                  <div className="text-sm" style={{ color: '#141685' }}>
-                    {item.date} • {item.defects} defect
-                    {item.defects !== 1 ? 's' : ''}
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: '600', fontSize: '17px', color: '#092849' }}>{item.campus}</div>
+                  <div style={{ fontSize: '15px', color: '#666', marginTop: '2px' }}>
+                    {item.date} • {item.defects} defect{item.defects !== 1 ? 's' : ''}
                   </div>
                 </div>
               </div>
@@ -88,21 +88,27 @@ export const Home = () => {
             return (
               <div
                 key={`report-${item.id || idx}`}
-                className="flex items-center p-3 rounded-lg"
-                style={{ backgroundColor: '#C2ECFD33' }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '14px',
+                  backgroundColor: '#f5f5f5',
+                  borderRadius: '12px'
+                }}
               >
-                <span className="text-2xl mr-3">{cat.icon}</span>
-                <div className="flex-1">
-                  <div className="font-medium" style={{ color: '#092849' }}>{cat.name}</div>
-                  <div className="text-sm" style={{ color: '#141685' }}>{item.campus}</div>
+                <span style={{ fontSize: '24px', marginRight: '14px' }}>{cat.icon}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: '600', fontSize: '17px', color: '#092849' }}>{cat.name}</div>
+                  <div style={{ fontSize: '15px', color: '#666', marginTop: '2px' }}>{item.campus}</div>
                 </div>
-                <span
-                  className="text-xs px-2 py-1 rounded"
-                  style={{
-                    backgroundColor: item.status === 'open' ? '#47C4E6' : '#C2ECFD',
-                    color: item.status === 'open' ? '#FFFFFF' : '#092849'
-                  }}
-                >
+                <span style={{
+                  fontSize: '14px',
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  backgroundColor: item.status === 'open' ? '#47C4E6' : '#C2ECFD',
+                  color: item.status === 'open' ? '#fff' : '#092849',
+                  fontWeight: '500'
+                }}>
                   {item.status}
                 </span>
               </div>
@@ -114,73 +120,140 @@ export const Home = () => {
   };
 
   return (
-    <div
-      className="min-h-screen text-white"
-      style={{ background: 'linear-gradient(180deg, #092849 0%, #141685 100%)' }}
-    >
-      <div className="px-6 pt-[50px] pb-0">
-        <div className="flex items-center justify-center mb-[50px]">
-          <img
-            src="/Alpha School Logo - Blue.png"
-            alt="Alpha School"
-            className="max-w-[200px] w-auto brightness-0 invert"
-            onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'block';
-            }}
-          />
-          <div className="text-2xl font-bold tracking-tight hidden">ALPHA</div>
-        </div>
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(180deg, #092849 0%, #141685 100%)',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      {/* Logo Section */}
+      <div style={{ padding: '50px 24px 30px', textAlign: 'center' }}>
+        <img
+          src="/Alpha School Logo - Blue.png"
+          alt="Alpha School"
+          style={{
+            maxWidth: '200px',
+            width: 'auto',
+            filter: 'brightness(0) invert(1)'
+          }}
+          onError={(e) => {
+            e.target.style.display = 'none';
+          }}
+        />
       </div>
 
-      <div className="px-[25px] pb-[25px]">
-        <div className="grid grid-cols-2 gap-[25px]">
+      {/* Main Action Buttons */}
+      <div style={{ padding: '0 24px 24px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
           <button
             onClick={() => navigate('/report')}
-            className="aspect-square bg-white hover:opacity-90 rounded-2xl text-lg font-bold shadow-lg flex flex-col items-center justify-center p-4 transition-opacity"
-            style={{ color: '#092849' }}
+            style={{
+              aspectRatio: '1',
+              backgroundColor: '#fff',
+              color: '#092849',
+              borderRadius: '20px',
+              fontSize: '17px',
+              fontWeight: '700',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '16px',
+              cursor: 'pointer'
+            }}
           >
-            <span className="text-5xl mb-3">📸</span>
-            <span className="text-center leading-tight">See It,<br/>Report It</span>
+            <span style={{ fontSize: '48px', marginBottom: '12px' }}>📸</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.3' }}>See It,<br/>Report It</span>
           </button>
 
           <button
             onClick={() => navigate('/audit/setup')}
-            className="aspect-square bg-white hover:opacity-90 rounded-2xl text-lg font-bold shadow-lg flex flex-col items-center justify-center p-4 transition-opacity"
-            style={{ color: '#092849' }}
+            style={{
+              aspectRatio: '1',
+              backgroundColor: '#fff',
+              color: '#092849',
+              borderRadius: '20px',
+              fontSize: '17px',
+              fontWeight: '700',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '16px',
+              cursor: 'pointer'
+            }}
           >
-            <span className="text-5xl mb-3">✅</span>
-            <span className="text-center leading-tight">Daily<br/>Cleanliness Check</span>
+            <span style={{ fontSize: '48px', marginBottom: '12px' }}>✅</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.3' }}>Daily<br/>Cleanliness Check</span>
           </button>
         </div>
       </div>
 
-      <div className="px-6 py-4">
-        <div className="grid grid-cols-2 gap-3">
+      {/* Stats Row */}
+      <div style={{ padding: '0 24px 20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           <button
             onClick={() => navigate('/history')}
-            className="bg-white/10 hover:bg-white/20 backdrop-blur p-4 rounded-xl text-left transition-colors"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '16px',
+              borderRadius: '14px',
+              textAlign: 'left',
+              border: 'none',
+              cursor: 'pointer'
+            }}
           >
-            <div className="text-3xl font-bold">{loading ? '...' : audits.length}</div>
-            <div className="text-sm" style={{ color: '#C2ECFD' }}>QC Audits</div>
+            <div style={{ fontSize: '28px', fontWeight: '700', color: '#fff' }}>
+              {loading ? '...' : audits.length}
+            </div>
+            <div style={{ fontSize: '15px', color: '#C2ECFD', marginTop: '4px' }}>QC Audits</div>
           </button>
           <button
             onClick={() => navigate('/reports')}
-            className="bg-white/10 hover:bg-white/20 backdrop-blur p-4 rounded-xl text-left transition-colors"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.1)',
+              backdropFilter: 'blur(10px)',
+              padding: '16px',
+              borderRadius: '14px',
+              textAlign: 'left',
+              border: 'none',
+              cursor: 'pointer'
+            }}
           >
-            <div className="text-3xl font-bold">{loading ? '...' : reports.length}</div>
-            <div className="text-sm" style={{ color: '#C2ECFD' }}>Issues Reported</div>
+            <div style={{ fontSize: '28px', fontWeight: '700', color: '#fff' }}>
+              {loading ? '...' : reports.length}
+            </div>
+            <div style={{ fontSize: '15px', color: '#C2ECFD', marginTop: '4px' }}>Issues Reported</div>
             {openReports > 0 && (
-              <div className="text-xs mt-1" style={{ color: '#47C4E6' }}>{openReports} open</div>
+              <div style={{ fontSize: '14px', color: '#47C4E6', marginTop: '4px' }}>{openReports} open</div>
             )}
           </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-t-3xl mt-2 p-6 min-h-[280px]">
-        <h2 className="font-bold text-lg mb-4" style={{ color: '#092849' }}>Recent Activity</h2>
+      {/* Recent Activity Section */}
+      <div style={{
+        backgroundColor: '#fff',
+        borderRadius: '24px 24px 0 0',
+        padding: '24px',
+        flex: 1,
+        marginTop: '8px'
+      }}>
+        <h2 style={{
+          fontWeight: '700',
+          fontSize: '20px',
+          marginBottom: '20px',
+          color: '#092849'
+        }}>
+          Recent Activity
+        </h2>
         {loading ? (
-          <div className="text-center py-8" style={{ color: '#141685' }}>Loading...</div>
+          <div style={{ textAlign: 'center', padding: '32px 0', color: '#666' }}>Loading...</div>
         ) : (
           renderRecentActivity()
         )}

@@ -22,49 +22,61 @@ export const History = () => {
     loadAudits();
   }, []);
 
+  const statusColors = {
+    GREEN: '#47C4E6',
+    AMBER: '#2B57D0',
+    RED: '#141685'
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
       <Header title="Audit History" onBack={() => navigate('/')} />
 
-      <div className="p-4">
+      <div style={{ padding: '20px' }}>
         {loading ? (
-          <div className="text-center py-12 text-gray-400">Loading...</div>
+          <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: '17px' }}>
+            Loading...
+          </div>
         ) : audits.length === 0 ? (
-          <div className="text-center py-12 text-gray-400">
-            <div className="text-5xl mb-4">📋</div>
-            <p>No audits yet</p>
+          <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af' }}>
+            <div style={{ fontSize: '56px', marginBottom: '16px' }}>📋</div>
+            <p style={{ fontSize: '17px' }}>No audits yet</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {audits.map((a, idx) => (
-              <div key={a.id || idx} className="bg-white rounded-lg p-4 shadow">
-                <div className="flex items-center">
-                  <span className="text-2xl mr-3">
+              <div
+                key={a.id || idx}
+                style={{
+                  backgroundColor: '#fff',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <span style={{ fontSize: '28px', marginRight: '14px' }}>
                     {a.status === 'GREEN'
                       ? '🟢'
                       : a.status === 'AMBER'
                       ? '🟡'
                       : '🔴'}
                   </span>
-                  <div className="flex-1">
-                    <div className="font-bold">{a.campus}</div>
-                    <div className="text-sm text-gray-500">
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: '700', fontSize: '17px', color: '#092849' }}>{a.campus}</div>
+                    <div style={{ fontSize: '15px', color: '#666', marginTop: '2px' }}>
                       {a.date} • {a.auditor}
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div
-                      className={`font-bold ${
-                        a.status === 'GREEN'
-                          ? 'text-[#47C4E6]'
-                          : a.status === 'AMBER'
-                          ? 'text-[#2B57D0]'
-                          : 'text-[#141685]'
-                      }`}
-                    >
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{
+                      fontWeight: '700',
+                      fontSize: '17px',
+                      color: statusColors[a.status] || '#092849'
+                    }}>
                       {a.status}
                     </div>
-                    <div className="text-sm text-gray-500">
+                    <div style={{ fontSize: '15px', color: '#666', marginTop: '2px' }}>
                       {a.defects} defect{a.defects !== 1 ? 's' : ''}
                     </div>
                   </div>

@@ -36,57 +36,82 @@ export const AuditCondition = ({ audit, camera }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 pb-24">
-      <div className="bg-[#2B57D0] text-white p-4">
-        <div className="flex items-center">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6', paddingBottom: '100px' }}>
+      {/* Header */}
+      <div style={{ backgroundColor: '#2B57D0', color: '#fff', padding: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <button
             onClick={() => navigate('/audit/zone')}
-            className="text-2xl mr-3"
+            style={{
+              fontSize: '24px',
+              background: 'rgba(255,255,255,0.2)',
+              border: 'none',
+              borderRadius: '8px',
+              width: '40px',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              color: '#fff',
+              marginRight: '14px'
+            }}
           >
             ←
           </button>
           <div>
-            <h1 className="text-xl font-bold">Building Check</h1>
-            <p className="text-[#C2ECFD] text-sm">{currentZone?.name}</p>
+            <h1 style={{ fontSize: '22px', fontWeight: '700', margin: 0 }}>Building Check</h1>
+            <p style={{ fontSize: '15px', color: '#C2ECFD', margin: '4px 0 0 0' }}>{currentZone?.name}</p>
           </div>
         </div>
       </div>
 
-      <div className="p-4 space-y-4">
-        <div className="bg-white rounded-lg p-6 shadow">
-          <div className="text-lg font-medium mb-4">
+      <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* Main Question Card */}
+        <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+          <div style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#092849' }}>
             Any building issues to flag for B&G?
           </div>
-          <p className="text-sm text-gray-500 mb-4">
-            Examples: holes in walls, broken fixtures, damaged flooring, water
-            damage
+          <p style={{ fontSize: '15px', color: '#666', marginBottom: '20px' }}>
+            Examples: holes in walls, broken fixtures, damaged flooring, water damage
           </p>
 
-          <div className="space-y-3">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <button
               onClick={() => setConditionAlert(currentZoneId, false)}
-              className={`w-full p-4 rounded-lg border-2 ${
-                alert?.hasIssue === false
-                  ? 'border-[#47C4E6] bg-[#C2ECFD]/30'
-                  : 'border-gray-200'
-              } flex items-center`}
+              style={{
+                width: '100%',
+                padding: '16px',
+                borderRadius: '12px',
+                border: alert?.hasIssue === false ? '2px solid #47C4E6' : '2px solid #e5e7eb',
+                backgroundColor: alert?.hasIssue === false ? 'rgba(194, 236, 253, 0.3)' : '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer'
+              }}
             >
-              <span className="text-2xl mr-3">✓</span>
-              <div className="font-medium">No issues</div>
+              <span style={{ fontSize: '24px', marginRight: '14px' }}>✓</span>
+              <div style={{ fontWeight: '600', fontSize: '17px' }}>No issues</div>
             </button>
 
             <button
               onClick={() => setConditionAlert(currentZoneId, true)}
-              className={`w-full p-4 rounded-lg border-2 ${
-                alert?.hasIssue === true
-                  ? 'border-[#2B57D0] bg-[#C2ECFD]/30'
-                  : 'border-gray-200'
-              } flex items-center`}
+              style={{
+                width: '100%',
+                padding: '16px',
+                borderRadius: '12px',
+                border: alert?.hasIssue === true ? '2px solid #2B57D0' : '2px solid #e5e7eb',
+                backgroundColor: alert?.hasIssue === true ? 'rgba(194, 236, 253, 0.3)' : '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+                textAlign: 'left'
+              }}
             >
-              <span className="text-2xl mr-3">🔧</span>
-              <div className="text-left">
-                <div className="font-medium">Yes — flag for B&G</div>
-                <div className="text-sm text-gray-500">
+              <span style={{ fontSize: '24px', marginRight: '14px' }}>🔧</span>
+              <div>
+                <div style={{ fontWeight: '600', fontSize: '17px' }}>Yes — flag for B&G</div>
+                <div style={{ fontSize: '14px', color: '#666', marginTop: '2px' }}>
                   Photo + description required
                 </div>
               </div>
@@ -94,19 +119,31 @@ export const AuditCondition = ({ audit, camera }) => {
           </div>
         </div>
 
+        {/* Photo and Note Section */}
         {alert?.hasIssue === true && (
-          <div className="bg-white rounded-lg p-4 shadow animate-slide-up">
-            <div className="mb-4">
+          <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
+            <div style={{ marginBottom: '16px' }}>
               {alert.photo ? (
-                <div className="relative">
+                <div style={{ position: 'relative' }}>
                   <img
                     src={alert.photo}
                     alt="Issue"
-                    className="w-full rounded-lg"
+                    style={{ width: '100%', borderRadius: '12px' }}
                   />
                   <button
                     onClick={handleTakePhoto}
-                    className="absolute bottom-2 right-2 bg-white px-3 py-1 rounded-lg text-sm shadow"
+                    style={{
+                      position: 'absolute',
+                      bottom: '12px',
+                      right: '12px',
+                      backgroundColor: '#fff',
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      fontSize: '14px',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                      border: 'none',
+                      cursor: 'pointer'
+                    }}
                   >
                     🔄 Retake
                   </button>
@@ -114,50 +151,85 @@ export const AuditCondition = ({ audit, camera }) => {
               ) : (
                 <button
                   onClick={handleTakePhoto}
-                  className="w-full border-2 border-dashed border-gray-300 rounded-lg p-8 text-center"
+                  style={{
+                    width: '100%',
+                    border: '2px dashed #ccc',
+                    borderRadius: '12px',
+                    padding: '32px',
+                    textAlign: 'center',
+                    backgroundColor: '#fafafa',
+                    cursor: 'pointer'
+                  }}
                 >
-                  <div className="text-4xl mb-2">📷</div>
-                  <div className="font-medium">Tap to Take Photo</div>
+                  <div style={{ fontSize: '48px', marginBottom: '8px' }}>📷</div>
+                  <div style={{ fontWeight: '600', fontSize: '17px' }}>Tap to Take Photo</div>
                 </button>
               )}
             </div>
 
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label style={{ display: 'block', fontSize: '15px', fontWeight: '600', color: '#374151', marginBottom: '10px' }}>
               Describe the issue *
             </label>
             <input
               type="text"
               maxLength={100}
               placeholder="e.g., Hole in drywall near door"
-              className="w-full border border-gray-300 rounded-lg p-3"
+              style={{
+                width: '100%',
+                border: '1px solid #ccc',
+                borderRadius: '10px',
+                padding: '14px 16px',
+                fontSize: '17px',
+                boxSizing: 'border-box'
+              }}
               value={alert.note || ''}
               onChange={(e) =>
                 updateConditionAlertNote(currentZoneId, e.target.value)
               }
             />
-            <div className="text-xs text-gray-400 mt-1 text-right">
+            <div style={{ fontSize: '13px', color: '#9ca3af', marginTop: '6px', textAlign: 'right' }}>
               {(alert.note || '').length}/100
             </div>
           </div>
         )}
 
-        <div className="bg-[#C2ECFD]/30 border border-[#47C4E6] rounded-lg p-3">
-          <div className="text-sm text-[#141685]">
-            B&G alerts are separate from cleanliness and do NOT affect your
-            score.
+        {/* Info Banner */}
+        <div style={{
+          backgroundColor: 'rgba(194, 236, 253, 0.3)',
+          border: '1px solid #47C4E6',
+          borderRadius: '12px',
+          padding: '14px 16px'
+        }}>
+          <div style={{ fontSize: '15px', color: '#141685' }}>
+            B&G alerts are separate from cleanliness and do NOT affect your score.
           </div>
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
+      {/* Fixed Bottom Button */}
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: '#fff',
+        borderTop: '1px solid #e5e7eb',
+        padding: '16px 20px'
+      }}>
         <button
           onClick={handleFinish}
           disabled={!canContinue}
-          className={`w-full py-4 rounded-xl text-lg font-bold ${
-            canContinue
-              ? 'bg-[#092849] text-white'
-              : 'bg-gray-300 text-gray-500'
-          }`}
+          style={{
+            width: '100%',
+            padding: '18px',
+            borderRadius: '12px',
+            fontSize: '18px',
+            fontWeight: '700',
+            border: 'none',
+            cursor: canContinue ? 'pointer' : 'not-allowed',
+            backgroundColor: canContinue ? '#092849' : '#d1d5db',
+            color: canContinue ? '#fff' : '#9ca3af'
+          }}
         >
           {currentZoneIndex < allZones.length - 1
             ? 'Next Zone →'

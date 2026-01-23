@@ -24,56 +24,78 @@ export const ReportsList = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
       <Header
         title="Reported Issues"
         variant="red"
         onBack={() => navigate('/')}
       />
 
-      <div className="p-4">
+      <div style={{ padding: '20px' }}>
         {loading ? (
-          <div className="text-center py-12 text-gray-400">Loading...</div>
+          <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af', fontSize: '17px' }}>
+            Loading...
+          </div>
         ) : reports.length === 0 ? (
-          <div className="text-center py-12 text-gray-400">
-            <div className="text-5xl mb-4">📸</div>
-            <p>No issues reported</p>
+          <div style={{ textAlign: 'center', padding: '48px 0', color: '#9ca3af' }}>
+            <div style={{ fontSize: '56px', marginBottom: '16px' }}>📸</div>
+            <p style={{ fontSize: '17px' }}>No issues reported</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {reports.map((r, idx) => {
               const cat = ISSUE_CATEGORIES.find(c => c.id === r.category) || {
                 icon: '❓',
                 name: 'Issue'
               };
               return (
-                <div key={r.id || idx} className="bg-white rounded-lg p-4 shadow">
-                  <div className="flex items-start">
+                <div
+                  key={r.id || idx}
+                  style={{
+                    backgroundColor: '#fff',
+                    borderRadius: '12px',
+                    padding: '16px',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'flex-start' }}>
                     {r.photo && (
                       <img
                         src={r.photo}
                         alt="Issue"
-                        className="w-16 h-16 object-cover rounded mr-3"
+                        style={{
+                          width: '64px',
+                          height: '64px',
+                          objectFit: 'cover',
+                          borderRadius: '8px',
+                          marginRight: '14px'
+                        }}
                       />
                     )}
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-bold">
+                    <div style={{ flex: 1 }}>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginBottom: '6px'
+                      }}>
+                        <span style={{ fontWeight: '700', fontSize: '17px', color: '#092849' }}>
                           {cat.icon} {cat.name}
                         </span>
-                        <span
-                          className={`text-xs px-2 py-1 rounded ${
-                            r.status === 'open'
-                              ? 'bg-[#C2ECFD] text-[#141685]'
-                              : 'bg-[#C2ECFD]/50 text-[#092849]'
-                          }`}
-                        >
+                        <span style={{
+                          fontSize: '14px',
+                          padding: '5px 10px',
+                          borderRadius: '6px',
+                          backgroundColor: r.status === 'open' ? '#C2ECFD' : 'rgba(194, 236, 253, 0.5)',
+                          color: r.status === 'open' ? '#141685' : '#092849',
+                          fontWeight: '500'
+                        }}>
                           {r.status}
                         </span>
                       </div>
-                      <div className="text-sm text-gray-600">{r.campus}</div>
-                      <div className="text-sm text-gray-500">{r.location}</div>
-                      <div className="text-xs text-gray-400 mt-1">
+                      <div style={{ fontSize: '15px', color: '#666' }}>{r.campus}</div>
+                      <div style={{ fontSize: '15px', color: '#888', marginTop: '2px' }}>{r.location}</div>
+                      <div style={{ fontSize: '13px', color: '#aaa', marginTop: '6px' }}>
                         {r.timestamp}
                       </div>
                     </div>
