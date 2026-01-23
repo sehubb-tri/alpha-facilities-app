@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { ZoneCard } from '../components/ZoneCard';
@@ -5,6 +6,11 @@ import { ZONES, MANDATORY_ZONE_IDS } from '../data/zones';
 
 export const AuditOverview = ({ audit }) => {
   const navigate = useNavigate();
+
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const {
     campus,
     allZones,

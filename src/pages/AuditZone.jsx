@@ -27,13 +27,14 @@ export const AuditZone = ({ audit, camera }) => {
 
   const handleComplete = () => {
     if (complete && bgComplete) {
-      // Skip the condition page, go directly to next zone or overview
+      // Skip the condition page, go directly to next zone or tour-ready
       if (currentZoneIndex < allZones.length - 1) {
         setCurrentZoneIndex(currentZoneIndex + 1);
         window.scrollTo(0, 0);
         navigate('/audit/zone');
       } else {
-        navigate('/audit/overview');
+        window.scrollTo(0, 0);
+        navigate('/audit/tour-ready');
       }
     }
   };

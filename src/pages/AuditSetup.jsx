@@ -26,7 +26,9 @@ export const AuditSetup = ({ audit }) => {
     }
     const campus = CAMPUSES.find(c => c.name === campusName);
     audit.beginAudit(campus, auditorName, selectedOptional);
-    navigate('/audit/overview');
+    audit.setCurrentZoneIndex(0);
+    window.scrollTo(0, 0);
+    navigate('/audit/zone');
   };
 
   return (
