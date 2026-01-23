@@ -97,8 +97,8 @@ export const Home = () => {
                 <span
                   className={`text-xs px-2 py-1 rounded ${
                     item.status === 'open'
-                      ? 'bg-yellow-100 text-yellow-800'
-                      : 'bg-green-100 text-green-800'
+                      ? 'bg-[#C2ECFD] text-[#141685]'
+                      : 'bg-[#C2ECFD]/50 text-[#092849]'
                   }`}
                 >
                   {item.status}
@@ -157,6 +157,7 @@ export const Home = () => {
             <div className="text-3xl font-bold">{loading ? '...' : audits.length}</div>
             <div className="text-white/70 text-sm">QC Audits</div>
           </button>
+
           <button
             onClick={() => navigate('/reports')}
             className="bg-white/10 hover:bg-white/20 backdrop-blur p-4 rounded-xl text-left transition-colors"
@@ -164,14 +165,14 @@ export const Home = () => {
             <div className="text-3xl font-bold">{loading ? '...' : reports.length}</div>
             <div className="text-white/70 text-sm">Issues Reported</div>
             {openReports > 0 && (
-              <div className="text-yellow-300 text-xs mt-1">{openReports} open</div>
+              <div className="text-[#47C4E6] text-xs mt-1">{openReports} open</div>
             )}
           </button>
         </div>
       </div>
 
       <div className="bg-white text-gray-800 rounded-t-3xl mt-2 p-6 min-h-[280px]">
-        <h2 className="font-bold text-lg mb-4 text-white">Recent Activity</h2>
+        <h2 className="font-bold text-lg mb-4 text-[#092849]">Recent Activity</h2>
         {loading ? (
           <div className="text-center py-8 text-gray-400">Loading...</div>
         ) : (
