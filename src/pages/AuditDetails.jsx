@@ -45,6 +45,19 @@ export const AuditDetails = () => {
           condition_alert_details: data.condition_alert_details
         });
 
+        // Debug: Check condition alert photos
+        if (data.condition_alert_details) {
+          data.condition_alert_details.forEach((alert, idx) => {
+            console.log(`Condition Alert ${idx}:`, {
+              zoneId: alert.zoneId,
+              hasIssue: alert.hasIssue,
+              hasPhoto: !!alert.photo,
+              photoUrl: alert.photo,
+              note: alert.note
+            });
+          });
+        }
+
         // Map snake_case to camelCase
         setAudit({
           id: data.id,
@@ -276,14 +289,18 @@ export const AuditDetails = () => {
                         {alert.note}
                       </div>
                     )}
-                    {alert.photo && (
+                    {/* Debug: show photo status */}
+                    <div style={{ fontSize: '12px', color: '#999', marginBottom: '4px' }}>
+                      Photo: {alert.photo ? (alert.photo.substring(0, 50) + '...') : 'null'}
+                    </div>
+                    {alert.photo ? (
                       <img
                         src={alert.photo}
                         alt="Condition alert"
                         style={{
                           width: '100%',
                           maxHeight: '300px',
-                          objectFit: 'contain',
+                          objectFit: 'cover',
                           borderRadius: '8px',
                           backgroundColor: '#f3f4f6'
                         }}
@@ -292,6 +309,17 @@ export const AuditDetails = () => {
                           e.target.style.display = 'none';
                         }}
                       />
+                    ) : (
+                      <div style={{
+                        padding: '12px',
+                        backgroundColor: '#f3f4f6',
+                        borderRadius: '8px',
+                        fontSize: '14px',
+                        color: '#9ca3af',
+                        textAlign: 'center'
+                      }}>
+                        No photo attached
+                      </div>
                     )}
                   </div>
                 );
