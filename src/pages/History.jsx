@@ -47,11 +47,13 @@ export const History = () => {
             {audits.map((a, idx) => (
               <div
                 key={a.id || idx}
+                onClick={() => a.id && navigate(`/audit/${a.id}`)}
                 style={{
                   backgroundColor: '#fff',
                   borderRadius: '12px',
                   padding: '16px',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                  cursor: a.id ? 'pointer' : 'default'
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -68,7 +70,7 @@ export const History = () => {
                       {a.date} • {a.auditor}
                     </div>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
+                  <div style={{ textAlign: 'right', marginRight: '8px' }}>
                     <div style={{
                       fontWeight: '700',
                       fontSize: '17px',
@@ -80,6 +82,7 @@ export const History = () => {
                       {a.defects} defect{a.defects !== 1 ? 's' : ''}
                     </div>
                   </div>
+                  <span style={{ color: '#9ca3af', fontSize: '24px' }}>›</span>
                 </div>
               </div>
             ))}

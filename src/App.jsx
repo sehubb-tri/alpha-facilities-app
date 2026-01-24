@@ -14,6 +14,7 @@ import { AuditTourReady } from './pages/AuditTourReady';
 import { AuditSummary } from './pages/AuditSummary';
 import { AuditComplete } from './pages/AuditComplete';
 import { History } from './pages/History';
+import { AuditDetails } from './pages/AuditDetails';
 import { ReportStart } from './pages/ReportStart';
 import { ReportPhoto } from './pages/ReportPhoto';
 import { ReportDetails } from './pages/ReportDetails';
@@ -64,6 +65,7 @@ function App() {
 
         {/* History */}
         <Route path="/history" element={<History />} />
+        <Route path="/audit/:id" element={<AuditDetails />} />
 
         {/* Report Flow */}
         <Route path="/report" element={<ReportStart report={report} camera={camera} />} />

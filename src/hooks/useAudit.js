@@ -4,6 +4,7 @@ import { ZONES, MANDATORY_ZONE_IDS } from '../data/zones';
 export const useAudit = () => {
   const [campus, setCampus] = useState(null);
   const [auditorName, setAuditorName] = useState('');
+  const [auditorEmail, setAuditorEmail] = useState('');
   const [startTime, setStartTime] = useState(null);
   const [selectedOptionalZones, setSelectedOptionalZones] = useState([]);
   const [currentZoneIndex, setCurrentZoneIndex] = useState(0);
@@ -150,6 +151,7 @@ export const useAudit = () => {
   const resetAudit = useCallback(() => {
     setCampus(null);
     setAuditorName('');
+    setAuditorEmail('');
     setStartTime(null);
     setSelectedOptionalZones([]);
     setCurrentZoneIndex(0);
@@ -159,9 +161,10 @@ export const useAudit = () => {
     setZonePhotos({});
   }, []);
 
-  const beginAudit = useCallback((campusData, name, optionalZones) => {
+  const beginAudit = useCallback((campusData, name, email, optionalZones) => {
     setCampus(campusData);
     setAuditorName(name);
+    setAuditorEmail(email);
     setSelectedOptionalZones(optionalZones);
     setStartTime(Date.now());
   }, []);
@@ -188,6 +191,7 @@ export const useAudit = () => {
       time: new Date().toLocaleTimeString(),
       campus: campus?.name || '',
       auditor: auditorName,
+      auditorEmail: auditorEmail,
       status: calculateStatus(),
       defects: getTotalDefects(),
       zones: allZones.length,
@@ -199,12 +203,13 @@ export const useAudit = () => {
       campusData: campus,
       zonePhotos
     };
-  }, [campus, auditorName, calculateStatus, getTotalDefects, allZones, getDuration, tourReady, conditionAlerts, zoneResults, zonePhotos]);
+  }, [campus, auditorName, auditorEmail, calculateStatus, getTotalDefects, allZones, getDuration, tourReady, conditionAlerts, zoneResults, zonePhotos]);
 
   return {
     // State
     campus,
     auditorName,
+    auditorEmail,
     startTime,
     selectedOptionalZones,
     currentZoneIndex,
@@ -219,6 +224,7 @@ export const useAudit = () => {
     // Setters
     setCampus,
     setAuditorName,
+    setAuditorEmail,
     setSelectedOptionalZones,
     setCurrentZoneIndex,
     setTourReady,

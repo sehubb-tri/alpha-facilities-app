@@ -61,12 +61,14 @@ export const Home = () => {
             return (
               <div
                 key={`audit-${item.id || idx}`}
+                onClick={() => item.id && navigate(`/audit/${item.id}`)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   padding: '14px',
                   backgroundColor: '#f5f5f5',
-                  borderRadius: '12px'
+                  borderRadius: '12px',
+                  cursor: item.id ? 'pointer' : 'default'
                 }}
               >
                 <span style={{ fontSize: '24px', marginRight: '14px' }}>
@@ -78,6 +80,7 @@ export const Home = () => {
                     {item.date} • {item.defects} defect{item.defects !== 1 ? 's' : ''}
                   </div>
                 </div>
+                <span style={{ color: '#9ca3af', fontSize: '20px' }}>›</span>
               </div>
             );
           } else {

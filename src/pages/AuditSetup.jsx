@@ -9,6 +9,7 @@ export const AuditSetup = ({ audit }) => {
   const navigate = useNavigate();
   const [campusName, setCampusName] = useState('');
   const [auditorName, setAuditorName] = useState('');
+  const [auditorEmail, setAuditorEmail] = useState('');
   const [selectedOptional, setSelectedOptional] = useState([]);
 
   const handleOptionalToggle = (zoneId) => {
@@ -20,12 +21,17 @@ export const AuditSetup = ({ audit }) => {
   };
 
   const handleBegin = () => {
-    if (!campusName || !auditorName) {
-      alert('Please select campus and enter name');
+    if (!campusName || !auditorName || !auditorEmail) {
+      alert('Please select campus, enter name and email');
+      return;
+    }
+    // Basic email validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(auditorEmail)) {
+      alert('Please enter a valid email address');
       return;
     }
     const campus = CAMPUSES.find(c => c.name === campusName);
-    audit.beginAudit(campus, auditorName, selectedOptional);
+    audit.beginAudit(campus, auditorName, auditorEmail, selectedOptional);
     audit.setCurrentZoneIndex(0);
     window.scrollTo(0, 0);
     navigate('/audit/zone');
@@ -69,6 +75,31 @@ export const AuditSetup = ({ audit }) => {
               backgroundColor: '#fff'
             }}
           />
+        </div>
+
+        {/* Email Input */}
+        <div>
+          <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
+            Email for Report *
+          </label>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={auditorEmail}
+            onChange={(e) => setAuditorEmail(e.target.value)}
+            style={{
+              width: '100%',
+              border: '1px solid #ccc',
+              borderRadius: '10px',
+              padding: '14px 16px',
+              fontSize: '17px',
+              boxSizing: 'border-box',
+              backgroundColor: '#fff'
+            }}
+          />
+          <p style={{ fontSize: '14px', color: '#666', marginTop: '6px' }}>
+            A summary report will be sent to this email when the checklist is complete
+          </p>
         </div>
 
         {/* Mandatory Zones */}
