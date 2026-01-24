@@ -1,7 +1,13 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { PhotoCaptureModal } from '../components/PhotoCaptureModal';
+import { saveZonePhotos } from '../supabase/services';
 
 export const AuditZone = ({ audit, camera }) => {
   const navigate = useNavigate();
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
+  const [savingPhotos, setSavingPhotos] = useState(false);
+
   const {
     currentZoneIndex,
     currentZone,
@@ -12,8 +18,15 @@ export const AuditZone = ({ audit, camera }) => {
     isZoneComplete,
     setConditionAlert,
     getConditionAlert,
-    setCurrentZoneIndex
+    setCurrentZoneIndex,
+    campus,
+    auditorName,
+    addZonePhotos,
+    getZonePhotos
   } = audit;
+
+  // Get photos already taken for this zone
+  const currentZonePhotos = getZonePhotos(currentZoneId);
 
   const results = zoneResults[currentZoneId] || {};
   const answeredCount = Object.keys(results).length;
@@ -45,8 +58,31 @@ export const AuditZone = ({ audit, camera }) => {
   };
 
   const handleReportIssue = () => {
-    // Navigate to See It Report It with context
-    navigate('/report');
+    // Open the photo capture modal instead of navigating away
+    setShowPhotoModal(true);
+  };
+
+  const handleSavePhotos = async (photos) => {
+    setSavingPhotos(true);
+    try {
+      // Save photos to database with zone and campus tagging
+      await saveZonePhotos({
+        photos,
+        campus: campus?.name || '',
+        zoneId: currentZoneId,
+        zoneName: currentZone?.name || '',
+        auditor: auditorName,
+        campusData: campus
+      });
+
+      // Also store in local state for the audit
+      addZonePhotos(currentZoneId, photos);
+    } catch (error) {
+      console.error('Error saving photos:', error);
+      throw error;
+    } finally {
+      setSavingPhotos(false);
+    }
   };
 
   return (
@@ -251,9 +287,10 @@ export const AuditZone = ({ audit, camera }) => {
               justifyContent: 'center',
               gap: '6px',
               marginTop: '12px',
-              padding: '8px',
-              backgroundColor: 'transparent',
-              border: 'none',
+              padding: '10px',
+              backgroundColor: currentZonePhotos.length > 0 ? '#e8f4fd' : 'transparent',
+              border: currentZonePhotos.length > 0 ? '1px solid #2B57D0' : 'none',
+              borderRadius: '8px',
               color: '#2B57D0',
               fontSize: '14px',
               fontWeight: '500',
@@ -262,6 +299,18 @@ export const AuditZone = ({ audit, camera }) => {
             }}
           >
             📷 See It, Report It
+            {currentZonePhotos.length > 0 && (
+              <span style={{
+                backgroundColor: '#2B57D0',
+                color: '#fff',
+                padding: '2px 8px',
+                borderRadius: '12px',
+                fontSize: '12px',
+                marginLeft: '4px'
+              }}>
+                {currentZonePhotos.length} photo{currentZonePhotos.length !== 1 ? 's' : ''}
+              </span>
+            )}
           </button>
         </div>
       </div>
@@ -300,6 +349,16 @@ export const AuditZone = ({ audit, camera }) => {
             : 'Complete Zone →'}
         </button>
       </div>
+
+      {/* Photo Capture Modal */}
+      <PhotoCaptureModal
+        isOpen={showPhotoModal}
+        onClose={() => setShowPhotoModal(false)}
+        onSave={handleSavePhotos}
+        zoneName={currentZone?.name || ''}
+        campusName={campus?.name || ''}
+        maxPhotos={5}
+      />
     </div>
   );
 };

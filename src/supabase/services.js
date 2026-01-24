@@ -230,3 +230,106 @@ export const getOpenReports = async () => {
     return [];
   }
 };
+
+// ============================================
+// ZONE PHOTOS (See It, Report It from Checklist)
+// ============================================
+export const saveZonePhotos = async (photosData) => {
+  try {
+    const {
+      photos,       // Array of base64 photo strings
+      auditId,      // Optional - link to audit if available
+      campus,       // Campus name
+      zoneId,       // Zone ID
+      zoneName,     // Zone name for display
+      auditor,      // Auditor name
+      campusData    // Full campus metadata
+    } = photosData;
+
+    const savedPhotos = [];
+
+    // Upload each photo and save to database
+    for (let i = 0; i < photos.length; i++) {
+      const photo = photos[i];
+
+      // Upload photo to storage
+      let photoUrl = photo;
+      if (photo && photo.startsWith('data:')) {
+        photoUrl = await uploadPhoto(photo, 'zone-photos');
+      }
+
+      // Insert record
+      const { data, error } = await supabase
+        .from('zone_photos')
+        .insert([{
+          audit_id: auditId || null,
+          campus,
+          zone_id: zoneId,
+          zone_name: zoneName,
+          auditor,
+          photo_url: photoUrl,
+          photo_order: i + 1,
+          campus_data: campusData || {}
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+      savedPhotos.push(data);
+    }
+
+    return savedPhotos;
+  } catch (error) {
+    console.error('Error saving zone photos:', error);
+    throw error;
+  }
+};
+
+export const getZonePhotosByAudit = async (auditId) => {
+  try {
+    const { data, error } = await supabase
+      .from('zone_photos')
+      .select('*')
+      .eq('audit_id', auditId)
+      .order('created_at', { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error getting zone photos:', error);
+    return [];
+  }
+};
+
+export const getZonePhotosByCampus = async (campus, limitCount = 50) => {
+  try {
+    const { data, error } = await supabase
+      .from('zone_photos')
+      .select('*')
+      .eq('campus', campus)
+      .order('created_at', { ascending: false })
+      .limit(limitCount);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error getting zone photos by campus:', error);
+    return [];
+  }
+};
+
+export const getRecentZonePhotos = async (limitCount = 50) => {
+  try {
+    const { data, error } = await supabase
+      .from('zone_photos')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(limitCount);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error getting recent zone photos:', error);
+    return [];
+  }
+};

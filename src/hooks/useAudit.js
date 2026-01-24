@@ -10,6 +10,7 @@ export const useAudit = () => {
   const [zoneResults, setZoneResults] = useState({});
   const [conditionAlerts, setConditionAlerts] = useState([]);
   const [tourReady, setTourReady] = useState(null);
+  const [zonePhotos, setZonePhotos] = useState({}); // { zoneId: [photo1, photo2, ...] }
 
   const allZones = useMemo(() =>
     [...MANDATORY_ZONE_IDS, ...selectedOptionalZones],
@@ -123,6 +124,29 @@ export const useAudit = () => {
     return conditionAlerts.find(a => a.zoneId === zoneId);
   }, [conditionAlerts]);
 
+  // Zone photos functions
+  const addZonePhotos = useCallback((zoneId, photos) => {
+    setZonePhotos(prev => ({
+      ...prev,
+      [zoneId]: [...(prev[zoneId] || []), ...photos]
+    }));
+  }, []);
+
+  const getZonePhotos = useCallback((zoneId) => {
+    return zonePhotos[zoneId] || [];
+  }, [zonePhotos]);
+
+  const removeZonePhoto = useCallback((zoneId, photoIndex) => {
+    setZonePhotos(prev => ({
+      ...prev,
+      [zoneId]: (prev[zoneId] || []).filter((_, i) => i !== photoIndex)
+    }));
+  }, []);
+
+  const getAllZonePhotos = useCallback(() => {
+    return zonePhotos;
+  }, [zonePhotos]);
+
   const resetAudit = useCallback(() => {
     setCampus(null);
     setAuditorName('');
@@ -132,6 +156,7 @@ export const useAudit = () => {
     setZoneResults({});
     setConditionAlerts([]);
     setTourReady(null);
+    setZonePhotos({});
   }, []);
 
   const beginAudit = useCallback((campusData, name, optionalZones) => {
@@ -171,9 +196,10 @@ export const useAudit = () => {
       conditionAlerts: conditionAlerts.filter(a => a.hasIssue).length,
       zoneResults,
       conditionAlertDetails: conditionAlerts.filter(a => a.hasIssue),
-      campusData: campus
+      campusData: campus,
+      zonePhotos
     };
-  }, [campus, auditorName, calculateStatus, getTotalDefects, allZones, getDuration, tourReady, conditionAlerts, zoneResults]);
+  }, [campus, auditorName, calculateStatus, getTotalDefects, allZones, getDuration, tourReady, conditionAlerts, zoneResults, zonePhotos]);
 
   return {
     // State
@@ -188,6 +214,7 @@ export const useAudit = () => {
     allZones,
     currentZoneId,
     currentZone,
+    zonePhotos,
 
     // Setters
     setCampus,
@@ -199,6 +226,12 @@ export const useAudit = () => {
     setConditionAlert,
     updateConditionAlertPhoto,
     updateConditionAlertNote,
+
+    // Zone photos
+    addZonePhotos,
+    getZonePhotos,
+    removeZonePhoto,
+    getAllZonePhotos,
 
     // Computed
     countDefects,
