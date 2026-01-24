@@ -116,7 +116,7 @@ export const PhotoCaptureModal = ({
           ✕
         </button>
         <div style={{ textAlign: 'center', flex: 1 }}>
-          <div style={{ fontSize: '16px', fontWeight: '600' }}>See It, Report It</div>
+          <div style={{ fontSize: '16px', fontWeight: '600' }}>Report with Photo</div>
           <div style={{ fontSize: '13px', opacity: 0.8 }}>{zoneName} • {campusName}</div>
         </div>
         <div style={{ width: '40px' }} />

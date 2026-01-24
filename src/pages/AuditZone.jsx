@@ -278,39 +278,28 @@ export const AuditZone = ({ audit, camera }) => {
             </div>
           )}
 
-          {/* See It Report It Link */}
+          {/* Report with Photo Button */}
           <button
             onClick={handleReportIssue}
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '6px',
-              marginTop: '12px',
-              padding: '10px',
-              backgroundColor: currentZonePhotos.length > 0 ? '#e8f4fd' : 'transparent',
-              border: currentZonePhotos.length > 0 ? '1px solid #2B57D0' : 'none',
-              borderRadius: '8px',
-              color: '#2B57D0',
-              fontSize: '14px',
-              fontWeight: '500',
+              gap: '8px',
+              marginTop: '16px',
+              padding: '14px 20px',
+              backgroundColor: currentZonePhotos.length > 0 ? '#1a5f2a' : '#2B57D0',
+              border: 'none',
+              borderRadius: '10px',
+              color: '#fff',
+              fontSize: '16px',
+              fontWeight: '600',
               cursor: 'pointer',
-              width: '100%'
+              width: '100%',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.15)'
             }}
           >
-            📷 See It, Report It
-            {currentZonePhotos.length > 0 && (
-              <span style={{
-                backgroundColor: '#2B57D0',
-                color: '#fff',
-                padding: '2px 8px',
-                borderRadius: '12px',
-                fontSize: '12px',
-                marginLeft: '4px'
-              }}>
-                {currentZonePhotos.length} photo{currentZonePhotos.length !== 1 ? 's' : ''}
-              </span>
-            )}
+            📸 {currentZonePhotos.length > 0 ? `${currentZonePhotos.length} Photo${currentZonePhotos.length !== 1 ? 's' : ''} Added` : 'Report with Photo'}
           </button>
         </div>
       </div>
