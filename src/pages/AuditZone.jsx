@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PhotoCaptureModal } from '../components/PhotoCaptureModal';
 import { saveZonePhotos } from '../supabase/services';
+import { useI18n } from '../i18n';
 
 export const AuditZone = ({ audit, camera }) => {
   const navigate = useNavigate();
+  const { t, getChecklist, getZoneName } = useI18n();
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [savingPhotos, setSavingPhotos] = useState(false);
 
@@ -30,7 +32,11 @@ export const AuditZone = ({ audit, camera }) => {
 
   const results = zoneResults[currentZoneId] || {};
   const answeredCount = Object.keys(results).length;
-  const totalQuestions = currentZone?.cleanliness?.length || 0;
+
+  // Get translated checklist questions for current zone
+  const zoneType = currentZone?.type === 'restroom' ? 'restroom' : currentZoneId;
+  const translatedQuestions = getChecklist(zoneType);
+  const totalQuestions = translatedQuestions?.length || currentZone?.cleanliness?.length || 0;
   const complete = isZoneComplete(currentZoneId);
 
   // B&G condition alert state
@@ -113,9 +119,11 @@ export const AuditZone = ({ audit, camera }) => {
             ←
           </button>
           <div style={{ textAlign: 'center' }}>
-            <h1 style={{ fontSize: '20px', fontWeight: '700', margin: 0 }}>{currentZone?.name}</h1>
+            <h1 style={{ fontSize: '20px', fontWeight: '700', margin: 0 }}>
+              {currentZone?.type === 'restroom' ? currentZone?.name : getZoneName(currentZoneId)}
+            </h1>
             <p style={{ fontSize: '15px', opacity: 0.8, margin: '4px 0 0 0' }}>
-              Zone {currentZoneIndex + 1} of {allZones.length}
+              {t('audit.walkthrough.zone')} {currentZoneIndex + 1} {t('audit.walkthrough.of')} {allZones.length}
             </p>
           </div>
           <div style={{ width: '40px' }} />
@@ -152,7 +160,7 @@ export const AuditZone = ({ audit, camera }) => {
       {/* Questions */}
       <div style={{ padding: '20px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          {currentZone?.cleanliness?.map((question, idx) => (
+          {translatedQuestions?.map((question, idx) => (
             <div key={idx} style={{
               backgroundColor: '#fff',
               borderRadius: '12px',
@@ -177,7 +185,7 @@ export const AuditZone = ({ audit, camera }) => {
                     color: results[idx] === 'yes' ? '#fff' : '#333'
                   }}
                 >
-                  ✓ Yes
+                  ✓ {t('common.yes')}
                 </button>
                 <button
                   onClick={() => setResponse(currentZoneId, idx, 'no')}
@@ -193,7 +201,7 @@ export const AuditZone = ({ audit, camera }) => {
                     color: results[idx] === 'no' ? '#fff' : '#333'
                   }}
                 >
-                  ✗ No
+                  ✗ {t('common.no')}
                 </button>
               </div>
             </div>
@@ -299,7 +307,7 @@ export const AuditZone = ({ audit, camera }) => {
               boxShadow: '0 2px 4px rgba(0,0,0,0.15)'
             }}
           >
-            📸 {currentZonePhotos.length > 0 ? `${currentZonePhotos.length} Photo${currentZonePhotos.length !== 1 ? 's' : ''} Added` : 'Report with Photo'}
+            📸 {currentZonePhotos.length > 0 ? `${currentZonePhotos.length} ${currentZonePhotos.length !== 1 ? t('audit.walkthrough.photosAdded') : t('audit.walkthrough.photoAdded')}` : t('audit.walkthrough.takePhoto')}
           </button>
         </div>
       </div>

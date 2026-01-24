@@ -1,0 +1,246 @@
+{
+  "common": {
+    "yes": "Sí",
+    "no": "No",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "submit": "Enviar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "required": "Requerido",
+    "optional": "Opcional",
+    "select": "Seleccionar",
+    "language": "Idioma",
+    "english": "Inglés",
+    "spanish": "Español"
+  },
+  "nav": {
+    "home": "Inicio",
+    "audit": "Inspección Diaria QC",
+    "report": "Ver y Reportar",
+    "history": "Historial",
+    "settings": "Configuración"
+  },
+  "audit": {
+    "title": "Inspección Diaria QC",
+    "setup": {
+      "title": "Configuración de Inspección",
+      "campus": "Campus",
+      "campusPlaceholder": "Seleccione un campus",
+      "yourName": "Su Nombre",
+      "namePlaceholder": "Ingrese su nombre",
+      "email": "Correo para el Reporte",
+      "emailPlaceholder": "Ingrese su correo electrónico",
+      "restroomCount": "Número de Baños",
+      "optionalZones": "Zonas Opcionales",
+      "selectOptionalZones": "Seleccione zonas adicionales para inspeccionar",
+      "beginWalkthrough": "Comenzar Inspección"
+    },
+    "walkthrough": {
+      "zone": "Zona",
+      "of": "de",
+      "question": "Pregunta",
+      "takePhoto": "Tomar Foto",
+      "addNote": "Agregar Nota",
+      "notePlaceholder": "Ingrese notas sobre esta zona...",
+      "photoAdded": "Foto agregada",
+      "photosAdded": "fotos agregadas",
+      "nextZone": "Siguiente Zona",
+      "previousZone": "Zona Anterior",
+      "finishAudit": "Finalizar Inspección"
+    },
+    "summary": {
+      "title": "Resumen de Inspección",
+      "overallStatus": "Estado General",
+      "zonesInspected": "Zonas Inspeccionadas",
+      "defectsFound": "Defectos Encontrados",
+      "photosAttached": "Fotos Adjuntas",
+      "submitAudit": "Enviar Inspección",
+      "tourReady": "¿Está esta instalación lista para visitas?",
+      "tourReadyYes": "Sí, lista para visitas",
+      "tourReadyNo": "No, necesita atención"
+    },
+    "status": {
+      "green": "VERDE - Todo en Orden",
+      "amber": "AMARILLO - Problemas Menores",
+      "red": "ROJO - Necesita Atención"
+    },
+    "validation": {
+      "selectCampus": "Por favor seleccione un campus",
+      "enterName": "Por favor ingrese su nombre",
+      "enterEmail": "Por favor ingrese su correo electrónico",
+      "completeAllQuestions": "Por favor responda todas las preguntas antes de continuar"
+    }
+  },
+  "report": {
+    "title": "Ver y Reportar",
+    "setup": {
+      "campus": "Campus",
+      "campusPlaceholder": "Seleccione un campus",
+      "takePhoto": "Tomar Foto",
+      "photoRequired": "La foto ayuda a identificar el problema",
+      "category": "Categoría del Problema",
+      "categoryPlaceholder": "Seleccione una categoría",
+      "location": "Ubicación",
+      "locationPlaceholder": "¿Dónde está el problema? (ej., Salón 101, Pasillo Principal)",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Describa el problema...",
+      "urgent": "Urgente / Problema de Seguridad",
+      "urgentDescription": "Marque si esto requiere atención inmediata",
+      "submitReport": "Enviar Reporte"
+    },
+    "categories": {
+      "cleaning": "Limpieza Necesaria",
+      "maintenance": "Mantenimiento / Reparación",
+      "safety": "Peligro de Seguridad",
+      "supplies": "Suministros Necesarios",
+      "pest": "Problema de Plagas",
+      "odor": "Problema de Olor",
+      "lighting": "Problema de Iluminación",
+      "hvac": "HVAC / Temperatura",
+      "plumbing": "Problema de Plomería",
+      "electrical": "Problema Eléctrico",
+      "exterior": "Exterior / Terrenos",
+      "other": "Otro"
+    },
+    "validation": {
+      "selectCampus": "Por favor seleccione un campus",
+      "selectCategory": "Por favor seleccione una categoría",
+      "enterLocation": "Por favor ingrese la ubicación"
+    },
+    "success": {
+      "title": "Reporte Enviado",
+      "message": "Su reporte ha sido enviado exitosamente.",
+      "reference": "Referencia #"
+    }
+  },
+  "zones": {
+    "names": {
+      "entry": "Entrada y Vestíbulo",
+      "hallway": "Pasillo / Corredor",
+      "commons": "Área Común",
+      "supply_closet": "Armario de Suministros",
+      "classroom": "Salón de Clases",
+      "office": "Oficina / Sala de Trabajo",
+      "gym": "Gimnasio / Multiusos",
+      "cafeteria": "Cafetería",
+      "restroom": "Baño"
+    },
+    "descriptions": {
+      "entry": "Zona visible para padres",
+      "supply_closet": "Mínimo de 1 semana de suministros",
+      "restroom": "Cualquier defecto = ROJO"
+    }
+  },
+  "checklist": {
+    "restroom": [
+      "¿Los inodoros y urinarios están limpios (sin suciedad, manchas o residuos)?",
+      "¿Los lavabos y mostradores están secos y limpios (sin manchas de agua o residuos)?",
+      "¿Los espejos están limpios (sin manchas o rayas)?",
+      "¿El piso está limpio (sin escombros, agua o manchas)?",
+      "¿Los dispensadores de jabón funcionan y están abastecidos (suficiente para un día completo)?",
+      "¿Las toallas de papel o secadores de manos funcionan y están abastecidos (suficiente para un día completo)?",
+      "¿El papel higiénico está completamente abastecido (rollos nuevos en su lugar)?",
+      "¿Los botes de basura están vacíos con bolsas en su lugar (sin desbordamiento)?",
+      "¿Libre de malos olores (sin olor a orina, moho, aguas residuales o basura)?",
+      "¿El área es segura (sin pisos mojados, accesorios rotos o peligros)?"
+    ],
+    "entry": [
+      "¿El piso está limpio (sin escombros, derrames o manchas)?",
+      "¿El tapete de entrada está limpio y plano (sin bordes doblados o peligros de tropiezo)?",
+      "¿El vidrio de la puerta exterior está limpio (sin manchas o huellas)?",
+      "¿El vidrio interior está limpio (sin manchas o rayas)?",
+      "¿Las superficies de recepción están libres de polvo (mostradores, escritorios, estantes)?",
+      "¿Las superficies de alto contacto están limpias (manijas de puertas, bordes de mostradores)?",
+      "¿Los botes de basura están vacíos con bolsas en su lugar (sin desbordamiento)?",
+      "¿Libre de malos olores (sin olor a moho, basura o humedad)?",
+      "¿El área es segura (sin pisos mojados, objetos sueltos o peligros)?"
+    ],
+    "hallway": [
+      "¿El piso está limpio (sin escombros, derrames o manchas)?",
+      "¿Los bordes, esquinas y zócalos están libres de polvo (sin acumulación)?",
+      "¿Las paredes están libres de marcas de rozaduras (sin marcas negras o rasguños)?",
+      "¿Los vidrios y puertas están limpios (sin manchas o huellas)?",
+      "¿Las superficies de alto contacto están limpias (manijas de puertas, pasamanos, interruptores de luz)?",
+      "¿Los botes de basura están vacíos con bolsas en su lugar (sin desbordamiento)?",
+      "¿El área es segura (sin pisos mojados, obstáculos o peligros)?"
+    ],
+    "commons": [
+      "¿El piso está limpio (sin escombros, derrames o manchas)?",
+      "¿Las mesas y superficies están limpias y secas (sin áreas pegajosas o residuos)?",
+      "¿Los muebles están correctamente ordenados (sillas acomodadas, no dispersas)?",
+      "¿Las superficies de alto contacto están limpias (manijas de puertas, bordes de mesas, respaldos de sillas)?",
+      "¿Los botes de basura están vacíos con bolsas en su lugar (sin desbordamiento)?",
+      "¿Libre de malos olores (sin olor a comida, moho o basura)?",
+      "¿El área es segura (sin pisos mojados, muebles rotos o peligros)?"
+    ],
+    "supply_closet": [
+      "¿El suministro de papel higiénico es suficiente (suficiente para una semana)?",
+      "¿El suministro de toallas de papel es suficiente (suficiente para una semana)?",
+      "¿El suministro de jabón y desinfectante es suficiente (suficiente para una semana)?",
+      "¿El suministro de bolsas de basura es suficiente (suficiente para una semana)?",
+      "¿Los suministros de limpieza están presentes y abastecidos (químicos, trapeadores, trapos)?",
+      "¿El armario está organizado (artículos en estantes, nada bloqueando el paso)?"
+    ],
+    "classroom": [
+      "¿El piso está limpio (sin escombros, derrames o manchas)?",
+      "¿Los bordes, esquinas y zócalos están libres de polvo (sin acumulación)?",
+      "¿Los escritorios y mesas de estudiantes están limpios (sin escritura, calcomanías o residuos)?",
+      "¿El escritorio y superficies del maestro están limpios (sin polvo o desorden)?",
+      "¿El área del pizarrón está limpia (bandeja limpia, repisa sin polvo)?",
+      "¿Las superficies de alto contacto están limpias (manija de puerta, interruptores de luz)?",
+      "¿Los botes de basura están vacíos con bolsas en su lugar (sin desbordamiento)?",
+      "¿El área es segura (sin peligros de tropiezo, cables sueltos o artículos rotos)?"
+    ],
+    "office": [
+      "¿El piso está limpio (sin escombros, derrames o manchas)?",
+      "¿Las superficies de escritorios y trabajo están libres de polvo (sin acumulación o desorden)?",
+      "¿Las superficies de alto contacto están limpias (manijas de puertas, interruptores de luz, equipo compartido)?",
+      "¿Los botes de basura están vacíos con bolsas en su lugar (sin desbordamiento)?",
+      "¿El área es segura (sin peligros de tropiezo, cables sueltos o salidas bloqueadas)?"
+    ],
+    "gym": [
+      "¿El piso está limpio (sin escombros, derrames o manchas)?",
+      "¿El acabado del piso está intacto (sin raspaduras excesivas, descascaramiento o daño)?",
+      "¿Las gradas y asientos están limpios (sin polvo, escombros o áreas pegajosas)?",
+      "¿El área de almacenamiento de equipo está organizada (artículos guardados, nada en el piso)?",
+      "¿Las superficies de alto contacto están limpias (manijas de puertas, equipo, pasamanos)?",
+      "¿Los botes de basura están vacíos con bolsas en su lugar (sin desbordamiento)?",
+      "¿Libre de malos olores (sin olor a sudor, moho o humedad)?",
+      "¿El área es segura (sin equipo suelto, pisos mojados o peligros)?"
+    ],
+    "cafeteria": [
+      "¿El piso está limpio (sin escombros, derrames o manchas)?",
+      "¿Las mesas y asientos están limpios y secos (sin áreas pegajosas o residuos de comida)?",
+      "¿El área de servicio y mostrador está limpia (sin migajas, derrames o acumulación)?",
+      "¿Las superficies de alto contacto están limpias (manijas de puertas, rieles de bandejas, respaldos de sillas)?",
+      "¿Los botes de basura están vacíos con bolsas en su lugar (sin desbordamiento)?",
+      "¿Libre de malos olores (sin olor a comida echada a perder, basura o drenaje)?",
+      "¿El área es segura (sin pisos mojados, sillas rotas o peligros)?"
+    ]
+  },
+  "history": {
+    "title": "Historial",
+    "audits": "Inspecciones",
+    "reports": "Reportes",
+    "noAudits": "Sin inspecciones todavía",
+    "noReports": "Sin reportes todavía",
+    "viewDetails": "Ver Detalles",
+    "date": "Fecha",
+    "campus": "Campus",
+    "auditor": "Inspector",
+    "status": "Estado"
+  },
+  "settings": {
+    "title": "Configuración",
+    "language": "Idioma",
+    "apiKey": "Clave API de OpenAI",
+    "apiKeyDescription": "Usada para análisis de fotos con IA (opcional)",
+    "apiKeyPlaceholder": "Ingrese su clave API",
+    "saveSettings": "Guardar Configuración",
+    "saved": "Configuración guardada"
+  }
+}

@@ -2,9 +2,12 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAudits, getReports } from '../supabase/services';
 import { ISSUE_CATEGORIES } from '../data/issueCategories';
+import { useI18n } from '../i18n';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 export const Home = () => {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [audits, setAudits] = useState([]);
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,7 +52,7 @@ export const Home = () => {
       return (
         <div style={{ textAlign: 'center', padding: '32px 0', color: '#666' }}>
           <div style={{ fontSize: '48px', marginBottom: '12px' }}>📋</div>
-          <p style={{ fontSize: '17px' }}>No activity yet</p>
+          <p style={{ fontSize: '17px' }}>{t('history.noAudits')}</p>
         </div>
       );
     }
@@ -129,8 +132,15 @@ export const Home = () => {
       display: 'flex',
       flexDirection: 'column'
     }}>
-      {/* Header with Settings */}
-      <div style={{ padding: '20px 24px 0', display: 'flex', justifyContent: 'flex-end' }}>
+      {/* Header with Language Switcher and Settings */}
+      <div style={{ padding: '20px 24px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{
+          backgroundColor: 'rgba(255,255,255,0.95)',
+          borderRadius: '10px',
+          padding: '4px 8px'
+        }}>
+          <LanguageSwitcher style="dropdown" />
+        </div>
         <button
           onClick={() => navigate('/settings')}
           style={{
@@ -189,7 +199,7 @@ export const Home = () => {
             }}
           >
             <span style={{ fontSize: '48px', marginBottom: '12px' }}>📸</span>
-            <span style={{ textAlign: 'center', lineHeight: '1.3' }}>See It,<br/>Report It</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.3' }}>{t('nav.report')}</span>
           </button>
 
           <button
@@ -212,7 +222,7 @@ export const Home = () => {
             }}
           >
             <span style={{ fontSize: '48px', marginBottom: '12px' }}>✅</span>
-            <span style={{ textAlign: 'center', lineHeight: '1.3' }}>Daily<br/>Cleanliness Check</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.3' }}>{t('nav.audit')}</span>
           </button>
         </div>
       </div>
@@ -235,7 +245,7 @@ export const Home = () => {
             <div style={{ fontSize: '28px', fontWeight: '700', color: '#fff' }}>
               {loading ? '...' : audits.length}
             </div>
-            <div style={{ fontSize: '15px', color: '#C2ECFD', marginTop: '4px' }}>QC Audits</div>
+            <div style={{ fontSize: '15px', color: '#C2ECFD', marginTop: '4px' }}>{t('history.audits')}</div>
           </button>
           <button
             onClick={() => navigate('/reports')}
@@ -252,7 +262,7 @@ export const Home = () => {
             <div style={{ fontSize: '28px', fontWeight: '700', color: '#fff' }}>
               {loading ? '...' : reports.length}
             </div>
-            <div style={{ fontSize: '15px', color: '#C2ECFD', marginTop: '4px' }}>Issues Reported</div>
+            <div style={{ fontSize: '15px', color: '#C2ECFD', marginTop: '4px' }}>{t('history.reports')}</div>
             {openReports > 0 && (
               <div style={{ fontSize: '14px', color: '#47C4E6', marginTop: '4px' }}>{openReports} open</div>
             )}
@@ -274,10 +284,10 @@ export const Home = () => {
           marginBottom: '20px',
           color: '#092849'
         }}>
-          Recent Activity
+          {t('history.title')}
         </h2>
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '32px 0', color: '#666' }}>Loading...</div>
+          <div style={{ textAlign: 'center', padding: '32px 0', color: '#666' }}>{t('common.loading')}</div>
         ) : (
           renderRecentActivity()
         )}

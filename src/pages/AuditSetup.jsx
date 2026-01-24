@@ -4,9 +4,11 @@ import { CampusSelector } from '../components/CampusSelector';
 import { Header } from '../components/Header';
 import { CAMPUSES } from '../data/campuses';
 import { ZONES, TOUR_ROUTE_ZONE_IDS, OPTIONAL_ZONE_IDS } from '../data/zones';
+import { useI18n } from '../i18n';
 
 export const AuditSetup = ({ audit }) => {
   const navigate = useNavigate();
+  const { t, getZoneName } = useI18n();
   const [campusName, setCampusName] = useState('');
   const [auditorName, setAuditorName] = useState('');
   const [auditorEmail, setAuditorEmail] = useState('');
@@ -23,12 +25,12 @@ export const AuditSetup = ({ audit }) => {
 
   const handleBegin = () => {
     if (!campusName || !auditorName || !auditorEmail) {
-      alert('Please select campus, enter name and email');
+      alert(t('audit.validation.selectCampus') + ', ' + t('audit.validation.enterName').toLowerCase() + ', ' + t('audit.validation.enterEmail').toLowerCase());
       return;
     }
     // Basic email validation
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(auditorEmail)) {
-      alert('Please enter a valid email address');
+      alert(t('audit.validation.enterEmail'));
       return;
     }
     const campus = CAMPUSES.find(c => c.name === campusName);
@@ -41,8 +43,8 @@ export const AuditSetup = ({ audit }) => {
   return (
     <div className="min-h-screen bg-gray-100">
       <Header
-        title="Daily QC Setup"
-        subtitle="Select campus and zones"
+        title={t('audit.setup.title')}
+        subtitle={t('audit.setup.selectOptionalZones')}
         onBack={() => navigate('/')}
       />
 
@@ -51,19 +53,19 @@ export const AuditSetup = ({ audit }) => {
         {/* Campus Dropdown */}
         <div>
           <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
-            Campus *
+            {t('audit.setup.campus')} *
           </label>
-          <CampusSelector value={campusName} onChange={setCampusName} />
+          <CampusSelector value={campusName} onChange={setCampusName} placeholder={t('audit.setup.campusPlaceholder')} />
         </div>
 
         {/* Name Input */}
         <div>
           <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
-            Your Name *
+            {t('audit.setup.yourName')} *
           </label>
           <input
             type="text"
-            placeholder="Enter your name"
+            placeholder={t('audit.setup.namePlaceholder')}
             value={auditorName}
             onChange={(e) => setAuditorName(e.target.value)}
             style={{
@@ -81,11 +83,11 @@ export const AuditSetup = ({ audit }) => {
         {/* Email Input */}
         <div>
           <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
-            Email for Report *
+            {t('audit.setup.email')} *
           </label>
           <input
             type="email"
-            placeholder="Enter your email"
+            placeholder={t('audit.setup.emailPlaceholder')}
             value={auditorEmail}
             onChange={(e) => setAuditorEmail(e.target.value)}
             style={{
@@ -98,15 +100,12 @@ export const AuditSetup = ({ audit }) => {
               backgroundColor: '#fff'
             }}
           />
-          <p style={{ fontSize: '14px', color: '#666', marginTop: '6px' }}>
-            A summary report will be sent to this email when the checklist is complete
-          </p>
         </div>
 
         {/* Number of Restrooms */}
         <div>
           <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
-            Number of Restrooms *
+            {t('audit.setup.restroomCount')} *
           </label>
           <select
             value={restroomCount}
@@ -127,12 +126,9 @@ export const AuditSetup = ({ audit }) => {
             }}
           >
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
-              <option key={num} value={num}>{num} restroom{num > 1 ? 's' : ''}</option>
+              <option key={num} value={num}>{num} {getZoneName('restroom')}{num > 1 ? 's' : ''}</option>
             ))}
           </select>
-          <p style={{ fontSize: '14px', color: '#666', marginTop: '6px' }}>
-            All restrooms will be checked as part of the walkthrough
-          </p>
         </div>
 
         {/* Tour Route Zones */}
@@ -157,7 +153,7 @@ export const AuditSetup = ({ audit }) => {
                 }}
               >
                 <span style={{ color: '#2B57D0', marginRight: '12px', fontSize: '20px' }}>✓</span>
-                <span style={{ fontSize: '17px', flex: 1 }}>{ZONES[id].name}</span>
+                <span style={{ fontSize: '17px', flex: 1 }}>{getZoneName(id)}</span>
                 {!ZONES[id].amberEligible && (
                   <span style={{
                     fontSize: '13px',
@@ -178,7 +174,7 @@ export const AuditSetup = ({ audit }) => {
         {/* Restrooms Preview */}
         <div>
           <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
-            Restrooms ({restroomCount})
+            {getZoneName('restroom')}s ({restroomCount})
           </label>
           <div style={{
             backgroundColor: 'rgba(254, 226, 226, 0.4)',
@@ -197,7 +193,7 @@ export const AuditSetup = ({ audit }) => {
                 }}
               >
                 <span style={{ color: '#b91c1c', marginRight: '12px', fontSize: '20px' }}>✓</span>
-                <span style={{ fontSize: '17px', flex: 1 }}>Restroom {i + 1}</span>
+                <span style={{ fontSize: '17px', flex: 1 }}>{getZoneName('restroom')} {i + 1}</span>
                 <span style={{
                   fontSize: '13px',
                   backgroundColor: '#fee2e2',
@@ -206,20 +202,17 @@ export const AuditSetup = ({ audit }) => {
                   borderRadius: '6px',
                   fontWeight: '500'
                 }}>
-                  ⚠️ RED
+                  ⚠️ {t('audit.status.red').split(' ')[0]}
                 </span>
               </div>
             ))}
           </div>
-          <p style={{ fontSize: '14px', color: '#b91c1c', marginTop: '6px' }}>
-            Any restroom defect results in RED status
-          </p>
         </div>
 
         {/* Optional Zones */}
         <div>
           <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
-            Optional Zones
+            {t('audit.setup.optionalZones')}
           </label>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {OPTIONAL_ZONE_IDS.map(id => (
@@ -247,7 +240,7 @@ export const AuditSetup = ({ audit }) => {
                     accentColor: '#2B57D0'
                   }}
                 />
-                <span style={{ flex: 1, fontSize: '17px' }}>{ZONES[id].name}</span>
+                <span style={{ flex: 1, fontSize: '17px' }}>{getZoneName(id)}</span>
                 {!ZONES[id].amberEligible && (
                   <span style={{
                     fontSize: '13px',
@@ -281,7 +274,7 @@ export const AuditSetup = ({ audit }) => {
             marginTop: '8px'
           }}
         >
-          Begin Walkthrough
+          {t('audit.setup.beginWalkthrough')}
         </button>
       </div>
     </div>

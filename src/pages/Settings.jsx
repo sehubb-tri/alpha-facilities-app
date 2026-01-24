@@ -2,9 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { hasOpenAIKey, setOpenAIKey } from '../services/openai';
+import { useI18n } from '../i18n';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 export const Settings = () => {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [apiKey, setApiKey] = useState('');
   const [hasKey, setHasKey] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -36,13 +39,39 @@ export const Settings = () => {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
       <Header
-        title="Settings"
-        subtitle="Configure your app"
+        title={t('settings.title')}
+        subtitle=""
         variant="red"
         onBack={() => navigate('/')}
       />
 
       <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* Language Selection */}
+        <div style={{
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          padding: '20px',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '16px',
+            gap: '10px'
+          }}>
+            <span style={{ fontSize: '28px' }}>🌐</span>
+            <div>
+              <div style={{ fontSize: '18px', fontWeight: '700', color: '#333' }}>
+                {t('settings.language')}
+              </div>
+              <div style={{ fontSize: '14px', color: '#666' }}>
+                {t('common.english')} / {t('common.spanish')}
+              </div>
+            </div>
+          </div>
+          <LanguageSwitcher style="buttons" />
+        </div>
+
         {/* OpenAI API Key Section */}
         <div style={{
           backgroundColor: '#fff',
@@ -59,10 +88,10 @@ export const Settings = () => {
             <span style={{ fontSize: '28px' }}>🤖</span>
             <div>
               <div style={{ fontSize: '18px', fontWeight: '700', color: '#333' }}>
-                OpenAI API Key
+                {t('settings.apiKey')}
               </div>
               <div style={{ fontSize: '14px', color: '#666' }}>
-                Required for AI photo analysis
+                {t('settings.apiKeyDescription')}
               </div>
             </div>
             {hasKey && (
@@ -114,7 +143,7 @@ export const Settings = () => {
                 cursor: (!apiKey || apiKey.startsWith('••')) ? 'not-allowed' : 'pointer'
               }}
             >
-              {saved ? '✓ Saved!' : 'Save Key'}
+              {saved ? `✓ ${t('settings.saved')}` : t('settings.saveSettings')}
             </button>
             {hasKey && (
               <button

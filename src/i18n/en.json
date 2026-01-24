@@ -1,0 +1,246 @@
+{
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "required": "Required",
+    "optional": "Optional",
+    "select": "Select",
+    "language": "Language",
+    "english": "English",
+    "spanish": "Spanish"
+  },
+  "nav": {
+    "home": "Home",
+    "audit": "Daily QC Walkthrough",
+    "report": "See It, Report It",
+    "history": "History",
+    "settings": "Settings"
+  },
+  "audit": {
+    "title": "Daily QC Walkthrough",
+    "setup": {
+      "title": "Audit Setup",
+      "campus": "Campus",
+      "campusPlaceholder": "Select a campus",
+      "yourName": "Your Name",
+      "namePlaceholder": "Enter your name",
+      "email": "Email for Report",
+      "emailPlaceholder": "Enter your email",
+      "restroomCount": "Number of Restrooms",
+      "optionalZones": "Optional Zones",
+      "selectOptionalZones": "Select additional zones to inspect",
+      "beginWalkthrough": "Begin Walkthrough"
+    },
+    "walkthrough": {
+      "zone": "Zone",
+      "of": "of",
+      "question": "Question",
+      "takePhoto": "Take Photo",
+      "addNote": "Add Note",
+      "notePlaceholder": "Enter notes about this zone...",
+      "photoAdded": "Photo added",
+      "photosAdded": "photos added",
+      "nextZone": "Next Zone",
+      "previousZone": "Previous Zone",
+      "finishAudit": "Finish Audit"
+    },
+    "summary": {
+      "title": "Audit Summary",
+      "overallStatus": "Overall Status",
+      "zonesInspected": "Zones Inspected",
+      "defectsFound": "Defects Found",
+      "photosAttached": "Photos Attached",
+      "submitAudit": "Submit Audit",
+      "tourReady": "Is this facility tour-ready?",
+      "tourReadyYes": "Yes, tour-ready",
+      "tourReadyNo": "No, needs attention"
+    },
+    "status": {
+      "green": "GREEN - All Clear",
+      "amber": "AMBER - Minor Issues",
+      "red": "RED - Needs Attention"
+    },
+    "validation": {
+      "selectCampus": "Please select a campus",
+      "enterName": "Please enter your name",
+      "enterEmail": "Please enter your email",
+      "completeAllQuestions": "Please answer all questions before proceeding"
+    }
+  },
+  "report": {
+    "title": "See It, Report It",
+    "setup": {
+      "campus": "Campus",
+      "campusPlaceholder": "Select a campus",
+      "takePhoto": "Take Photo",
+      "photoRequired": "Photo helps identify the issue",
+      "category": "Issue Category",
+      "categoryPlaceholder": "Select a category",
+      "location": "Location",
+      "locationPlaceholder": "Where is the issue? (e.g., Room 101, Main Hallway)",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe the issue...",
+      "urgent": "Urgent / Safety Issue",
+      "urgentDescription": "Mark if this requires immediate attention",
+      "submitReport": "Submit Report"
+    },
+    "categories": {
+      "cleaning": "Cleaning Needed",
+      "maintenance": "Maintenance / Repair",
+      "safety": "Safety Hazard",
+      "supplies": "Supplies Needed",
+      "pest": "Pest Issue",
+      "odor": "Odor Problem",
+      "lighting": "Lighting Issue",
+      "hvac": "HVAC / Temperature",
+      "plumbing": "Plumbing Issue",
+      "electrical": "Electrical Issue",
+      "exterior": "Exterior / Grounds",
+      "other": "Other"
+    },
+    "validation": {
+      "selectCampus": "Please select a campus",
+      "selectCategory": "Please select a category",
+      "enterLocation": "Please enter the location"
+    },
+    "success": {
+      "title": "Report Submitted",
+      "message": "Your report has been submitted successfully.",
+      "reference": "Reference #"
+    }
+  },
+  "zones": {
+    "names": {
+      "entry": "Entry & Lobby",
+      "hallway": "Hallway / Corridor",
+      "commons": "Commons Area",
+      "supply_closet": "Supply Closet",
+      "classroom": "Classroom",
+      "office": "Office / Workroom",
+      "gym": "Gym / Multi-Purpose",
+      "cafeteria": "Cafeteria",
+      "restroom": "Restroom"
+    },
+    "descriptions": {
+      "entry": "Parent-facing zone",
+      "supply_closet": "1-week minimum threshold",
+      "restroom": "Any defect = RED"
+    }
+  },
+  "checklist": {
+    "restroom": [
+      "Toilets and urinals are clean (no soil, stains, or residue)?",
+      "Sinks and counters are dry and clean (no water spots or residue)?",
+      "Mirrors are clean (no smudges or streaks)?",
+      "Floor is clean (no debris, water, or stains)?",
+      "Soap dispensers are working and stocked (enough for one full day)?",
+      "Paper towels or hand dryers are working and stocked (enough for one full day)?",
+      "Toilet paper is fully stocked (fresh rolls in place)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Free of bad odors (no urine, mold, sewage, or garbage smell)?",
+      "Area is safe (no wet floors, broken fixtures, or hazards)?"
+    ],
+    "entry": [
+      "Floor is clean (no debris, spills, or stains)?",
+      "Entry mat is clean and flat (no curled edges or trip hazards)?",
+      "Exterior door glass is clean (no smudges or fingerprints)?",
+      "Interior glass is clean (no smudges or streaks)?",
+      "Reception surfaces are dust-free (counters, desks, shelves)?",
+      "High-touch surfaces are clean (door handles, counter edges)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Free of bad odors (no mold, garbage, or musty smell)?",
+      "Area is safe (no wet floors, loose items, or hazards)?"
+    ],
+    "hallway": [
+      "Floor is clean (no debris, spills, or stains)?",
+      "Edges, corners, and baseboards are dust-free (no buildup)?",
+      "Walls are free of scuff marks (no black marks or scrapes)?",
+      "Glass and doors are clean (no smudges or fingerprints)?",
+      "High-touch surfaces are clean (door handles, railings, light switches)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Area is safe (no wet floors, obstacles, or hazards)?"
+    ],
+    "commons": [
+      "Floor is clean (no debris, spills, or stains)?",
+      "Tables and surfaces are clean and dry (no sticky spots or residue)?",
+      "Furniture is properly arranged (chairs pushed in, not scattered)?",
+      "High-touch surfaces are clean (door handles, table edges, chair backs)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Free of bad odors (no food, mold, or garbage smell)?",
+      "Area is safe (no wet floors, broken furniture, or hazards)?"
+    ],
+    "supply_closet": [
+      "Toilet paper supply is sufficient (enough for one week)?",
+      "Paper towel supply is sufficient (enough for one week)?",
+      "Soap and sanitizer supply is sufficient (enough for one week)?",
+      "Trash liner supply is sufficient (enough for one week)?",
+      "Cleaning supplies are present and stocked (chemicals, mops, rags)?",
+      "Closet is organized (items on shelves, nothing blocking walkway)?"
+    ],
+    "classroom": [
+      "Floor is clean (no debris, spills, or stains)?",
+      "Edges, corners, and baseboards are dust-free (no buildup)?",
+      "Student desks and tables are clean (no writing, stickers, or residue)?",
+      "Teacher desk and surfaces are clean (no dust or clutter)?",
+      "Whiteboard area is clean (tray wiped, ledge dust-free)?",
+      "High-touch surfaces are clean (door handle, light switches)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Area is safe (no tripping hazards, loose wires, or broken items)?"
+    ],
+    "office": [
+      "Floor is clean (no debris, spills, or stains)?",
+      "Desk and work surfaces are dust-free (no buildup or clutter)?",
+      "High-touch surfaces are clean (door handles, light switches, shared equipment)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Area is safe (no tripping hazards, loose wires, or blocked exits)?"
+    ],
+    "gym": [
+      "Floor is clean (no debris, spills, or stains)?",
+      "Floor finish is intact (no excessive scuffing, peeling, or damage)?",
+      "Bleachers and seating are clean (no dust, debris, or sticky spots)?",
+      "Equipment storage area is organized (items put away, nothing on floor)?",
+      "High-touch surfaces are clean (door handles, equipment, railings)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Free of bad odors (no sweat, mold, or musty smell)?",
+      "Area is safe (no loose equipment, wet floors, or hazards)?"
+    ],
+    "cafeteria": [
+      "Floor is clean (no debris, spills, or stains)?",
+      "Tables and seating are clean and dry (no sticky spots or food residue)?",
+      "Service and counter area is clean (no crumbs, spills, or buildup)?",
+      "High-touch surfaces are clean (door handles, tray rails, chair backs)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Free of bad odors (no spoiled food, garbage, or drain smell)?",
+      "Area is safe (no wet floors, broken chairs, or hazards)?"
+    ]
+  },
+  "history": {
+    "title": "History",
+    "audits": "Audits",
+    "reports": "Reports",
+    "noAudits": "No audits yet",
+    "noReports": "No reports yet",
+    "viewDetails": "View Details",
+    "date": "Date",
+    "campus": "Campus",
+    "auditor": "Auditor",
+    "status": "Status"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "apiKey": "OpenAI API Key",
+    "apiKeyDescription": "Used for AI photo analysis (optional)",
+    "apiKeyPlaceholder": "Enter your API key",
+    "saveSettings": "Save Settings",
+    "saved": "Settings saved"
+  }
+}
