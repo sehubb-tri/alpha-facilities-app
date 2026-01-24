@@ -19,9 +19,18 @@ export const AuditCondition = ({ audit, camera }) => {
   const canContinue = canCompleteCondition(currentZoneId);
 
   const handleTakePhoto = () => {
+    const zoneIdAtCapture = currentZoneId; // Capture zone ID before async operation
+    console.log('[AuditCondition] handleTakePhoto called for zone:', zoneIdAtCapture);
+
     camera.openCamera((imageData) => {
-      updateConditionAlertPhoto(currentZoneId, imageData);
-    }, 'B&G Issue');
+      console.log('[AuditCondition] Photo callback received, data length:', imageData?.length);
+      console.log('[AuditCondition] Updating photo for zone:', zoneIdAtCapture);
+      if (imageData) {
+        updateConditionAlertPhoto(zoneIdAtCapture, imageData);
+      } else {
+        console.error('[AuditCondition] ERROR: No image data received!');
+      }
+    });
   };
 
   const handleFinish = () => {

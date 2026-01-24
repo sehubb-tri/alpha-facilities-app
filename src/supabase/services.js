@@ -45,15 +45,31 @@ export const uploadPhoto = async (base64Data, folder = 'reports') => {
 // ============================================
 export const saveAudit = async (auditData) => {
   try {
+    console.log('[saveAudit] Starting save...');
+    console.log('[saveAudit] conditionAlertDetails from auditData:', auditData.conditionAlertDetails);
+
     // Upload condition alert photos if any
     const conditionAlertDetails = [];
     for (const alert of (auditData.conditionAlertDetails || [])) {
+      console.log('[saveAudit] Processing alert:', {
+        zoneId: alert.zoneId,
+        hasPhoto: !!alert.photo,
+        photoLength: alert.photo?.length,
+        photoStart: alert.photo?.substring(0, 50)
+      });
+
       let photoUrl = alert.photo;
       if (alert.photo && alert.photo.startsWith('data:')) {
+        console.log('[saveAudit] Uploading photo for zone:', alert.zoneId);
         photoUrl = await uploadPhoto(alert.photo, 'condition-alerts');
+        console.log('[saveAudit] Upload result:', photoUrl?.substring(0, 80));
+      } else {
+        console.log('[saveAudit] No photo to upload for zone:', alert.zoneId);
       }
       conditionAlertDetails.push({ ...alert, photo: photoUrl });
     }
+
+    console.log('[saveAudit] Final conditionAlertDetails:', conditionAlertDetails);
 
     const { data, error } = await supabase
       .from('audits')
