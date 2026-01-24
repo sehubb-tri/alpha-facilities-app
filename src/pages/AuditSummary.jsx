@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ZONES } from '../data/zones';
 import { saveAudit } from '../supabase/services';
 
 export const AuditSummary = ({ audit }) => {
@@ -15,7 +14,8 @@ export const AuditSummary = ({ audit }) => {
     countDefects,
     getTotalDefects,
     getDuration,
-    buildAuditData
+    buildAuditData,
+    getZoneConfig
   } = audit;
 
   const status = calculateStatus();
@@ -112,7 +112,7 @@ export const AuditSummary = ({ audit }) => {
           overflow: 'hidden'
         }}>
           {allZones.map((zoneId, idx) => {
-            const zone = ZONES[zoneId];
+            const zone = getZoneConfig(zoneId);
             const defects = countDefects(zoneId);
             return (
               <div
@@ -139,7 +139,7 @@ export const AuditSummary = ({ audit }) => {
                 }}>
                   {defects === 0 ? '✓' : defects}
                 </span>
-                <span style={{ flex: 1, fontSize: '17px', color: '#374151' }}>{zone.name}</span>
+                <span style={{ flex: 1, fontSize: '17px', color: '#374151' }}>{zone?.name || zoneId}</span>
               </div>
             );
           })}
