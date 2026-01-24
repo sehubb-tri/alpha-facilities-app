@@ -4,16 +4,16 @@ export const RESTROOM_TEMPLATE = {
   amberEligible: false,
   description: "Any defect = RED",
   cleanliness: [
-    "Toilets/urinals sanitary (no visible soil, stains, residue)?",
-    "Sinks and counters dry and clean?",
-    "Mirrors smudge-free?",
-    "Floor free of debris, water, and stains?",
-    "Soap dispensers functional and stocked for a full day?",
-    "Paper towels/hand dryers functional and stocked for a full day?",
-    "Toilet paper fully stocked with fresh rolls?",
-    "Trash cans empty with liners intact?",
-    "Odor-free from doorway?",
-    "All clear — no safety hazards?"
+    "Toilets and urinals are clean (no soil, stains, or residue)?",
+    "Sinks and counters are dry and clean (no water spots or residue)?",
+    "Mirrors are clean (no smudges or streaks)?",
+    "Floor is clean (no debris, water, or stains)?",
+    "Soap dispensers are working and stocked (enough for one full day)?",
+    "Paper towels or hand dryers are working and stocked (enough for one full day)?",
+    "Toilet paper is fully stocked (fresh rolls in place)?",
+    "Trash cans are empty with liners in place (no overflow)?",
+    "Free of bad odors (no urine, mold, sewage, or garbage smell)?",
+    "Area is safe (no wet floors, broken fixtures, or hazards)?"
   ]
 };
 
@@ -30,15 +30,15 @@ export const ZONES = {
     amberEligible: true,
     description: "Parent-facing zone",
     cleanliness: [
-      "Floor free of debris, spills, and stains?",
-      "Entry mat clean and flat (no trip hazard)?",
-      "Exterior door glass smudge-free?",
-      "Interior glass smudge-free?",
-      "Reception surfaces dust-free?",
-      "High-touch surfaces clean (door handles, counter)?",
-      "Trash cans empty with liners intact?",
-      "Odor-free from doorway?",
-      "All clear — no safety hazards?"
+      "Floor is clean (no debris, spills, or stains)?",
+      "Entry mat is clean and flat (no curled edges or trip hazards)?",
+      "Exterior door glass is clean (no smudges or fingerprints)?",
+      "Interior glass is clean (no smudges or streaks)?",
+      "Reception surfaces are dust-free (counters, desks, shelves)?",
+      "High-touch surfaces are clean (door handles, counter edges)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Free of bad odors (no mold, garbage, or musty smell)?",
+      "Area is safe (no wet floors, loose items, or hazards)?"
     ]
   },
   hallway: {
@@ -46,13 +46,13 @@ export const ZONES = {
     type: "mandatory",
     amberEligible: true,
     cleanliness: [
-      "Floor free of debris, spills, and stains?",
-      "Edges, corners, and baseboards dust-free?",
-      "No visible scuff marks on walls?",
-      "Glass and doors smudge-free?",
-      "High-touch surfaces clean (door handles, railings)?",
-      "Trash cans empty with liners intact?",
-      "All clear — no safety hazards?"
+      "Floor is clean (no debris, spills, or stains)?",
+      "Edges, corners, and baseboards are dust-free (no buildup)?",
+      "Walls are free of scuff marks (no black marks or scrapes)?",
+      "Glass and doors are clean (no smudges or fingerprints)?",
+      "High-touch surfaces are clean (door handles, railings, light switches)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Area is safe (no wet floors, obstacles, or hazards)?"
     ]
   },
   commons: {
@@ -60,13 +60,13 @@ export const ZONES = {
     type: "mandatory",
     amberEligible: true,
     cleanliness: [
-      "Floor free of debris, spills, and stains?",
-      "Tables and surfaces clean and dry?",
-      "Furniture properly arranged (not scattered)?",
-      "High-touch surfaces clean?",
-      "Trash cans empty with liners intact?",
-      "No detectable odor?",
-      "All clear — no safety hazards?"
+      "Floor is clean (no debris, spills, or stains)?",
+      "Tables and surfaces are clean and dry (no sticky spots or residue)?",
+      "Furniture is properly arranged (chairs pushed in, not scattered)?",
+      "High-touch surfaces are clean (door handles, table edges, chair backs)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Free of bad odors (no food, mold, or garbage smell)?",
+      "Area is safe (no wet floors, broken furniture, or hazards)?"
     ]
   },
   supply_closet: {
@@ -76,12 +76,12 @@ export const ZONES = {
     description: "1-week minimum threshold",
     isSupplyCheck: true,
     cleanliness: [
-      "Toilet paper: 1-week supply available?",
-      "Paper towels: 1-week supply available?",
-      "Soap/sanitizer: 1-week supply available?",
-      "Trash liners: 1-week supply available?",
-      "Cleaning supplies present and stocked?",
-      "Closet organized (not cluttered/hazardous)?"
+      "Toilet paper supply is sufficient (enough for one week)?",
+      "Paper towel supply is sufficient (enough for one week)?",
+      "Soap and sanitizer supply is sufficient (enough for one week)?",
+      "Trash liner supply is sufficient (enough for one week)?",
+      "Cleaning supplies are present and stocked (chemicals, mops, rags)?",
+      "Closet is organized (items on shelves, nothing blocking walkway)?"
     ],
     supplyItems: [0, 1, 2, 3]
   },
@@ -90,14 +90,14 @@ export const ZONES = {
     type: "optional",
     amberEligible: true,
     cleanliness: [
-      "Floor free of debris, spills, and stains?",
-      "Edges, corners, and baseboards dust-free?",
-      "Student desks/tables clean?",
-      "Teacher desk/surfaces clean?",
-      "Whiteboard/board area clean (tray, ledge)?",
-      "High-touch surfaces clean (door handle, light switches)?",
-      "Trash cans empty with liners intact?",
-      "All clear — no safety hazards?"
+      "Floor is clean (no debris, spills, or stains)?",
+      "Edges, corners, and baseboards are dust-free (no buildup)?",
+      "Student desks and tables are clean (no writing, stickers, or residue)?",
+      "Teacher desk and surfaces are clean (no dust or clutter)?",
+      "Whiteboard area is clean (tray wiped, ledge dust-free)?",
+      "High-touch surfaces are clean (door handle, light switches)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Area is safe (no tripping hazards, loose wires, or broken items)?"
     ]
   },
   office: {
@@ -105,11 +105,11 @@ export const ZONES = {
     type: "optional",
     amberEligible: true,
     cleanliness: [
-      "Floor free of debris and stains?",
-      "Desk and work surfaces dust-free?",
-      "High-touch surfaces clean?",
-      "Trash cans empty with liners intact?",
-      "All clear — no safety hazards?"
+      "Floor is clean (no debris, spills, or stains)?",
+      "Desk and work surfaces are dust-free (no buildup or clutter)?",
+      "High-touch surfaces are clean (door handles, light switches, shared equipment)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Area is safe (no tripping hazards, loose wires, or blocked exits)?"
     ]
   },
   gym: {
@@ -117,14 +117,14 @@ export const ZONES = {
     type: "optional",
     amberEligible: true,
     cleanliness: [
-      "Floor free of debris, spills, and stains?",
-      "Floor finish intact (no excessive scuffing/peeling)?",
-      "Bleachers/seating clean?",
-      "Equipment storage area organized?",
-      "High-touch surfaces clean (door handles, equipment)?",
-      "Trash cans empty with liners intact?",
-      "No detectable odor?",
-      "All clear — no safety hazards?"
+      "Floor is clean (no debris, spills, or stains)?",
+      "Floor finish is intact (no excessive scuffing, peeling, or damage)?",
+      "Bleachers and seating are clean (no dust, debris, or sticky spots)?",
+      "Equipment storage area is organized (items put away, nothing on floor)?",
+      "High-touch surfaces are clean (door handles, equipment, railings)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Free of bad odors (no sweat, mold, or musty smell)?",
+      "Area is safe (no loose equipment, wet floors, or hazards)?"
     ]
   },
   cafeteria: {
@@ -132,13 +132,13 @@ export const ZONES = {
     type: "optional",
     amberEligible: true,
     cleanliness: [
-      "Floor free of debris, spills, and stains?",
-      "Tables and seating clean and dry?",
-      "Service/counter area clean?",
-      "High-touch surfaces clean?",
-      "Trash cans empty with liners intact?",
-      "No detectable odor?",
-      "All clear — no safety hazards?"
+      "Floor is clean (no debris, spills, or stains)?",
+      "Tables and seating are clean and dry (no sticky spots or food residue)?",
+      "Service and counter area is clean (no crumbs, spills, or buildup)?",
+      "High-touch surfaces are clean (door handles, tray rails, chair backs)?",
+      "Trash cans are empty with liners in place (no overflow)?",
+      "Free of bad odors (no spoiled food, garbage, or drain smell)?",
+      "Area is safe (no wet floors, broken chairs, or hazards)?"
     ]
   }
 };
