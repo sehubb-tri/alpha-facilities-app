@@ -1,3 +1,28 @@
+// Restroom checklist template - used to generate dynamic restroom zones
+export const RESTROOM_TEMPLATE = {
+  type: "restroom",
+  amberEligible: false,
+  description: "Any defect = RED",
+  cleanliness: [
+    "Toilets/urinals sanitary (no visible soil, stains, residue)?",
+    "Sinks and counters dry and clean?",
+    "Mirrors smudge-free?",
+    "Floor free of debris, water, and stains?",
+    "Soap dispensers functional and stocked for a full day?",
+    "Paper towels/hand dryers functional and stocked for a full day?",
+    "Toilet paper fully stocked with fresh rolls?",
+    "Trash cans empty with liners intact?",
+    "Odor-free from doorway?",
+    "All clear — no safety hazards?"
+  ]
+};
+
+// Helper to generate restroom zone for a given number
+export const createRestroomZone = (num) => ({
+  ...RESTROOM_TEMPLATE,
+  name: `Restroom ${num}`,
+});
+
 export const ZONES = {
   entry: {
     name: "Entry & Lobby",
@@ -12,7 +37,7 @@ export const ZONES = {
       "Reception surfaces dust-free?",
       "High-touch surfaces clean (door handles, counter)?",
       "Trash cans empty with liners intact?",
-      "No detectable odor from doorway?",
+      "Odor-free from doorway?",
       "All clear — no safety hazards?"
     ]
   },
@@ -27,24 +52,6 @@ export const ZONES = {
       "Glass and doors smudge-free?",
       "High-touch surfaces clean (door handles, railings)?",
       "Trash cans empty with liners intact?",
-      "All clear — no safety hazards?"
-    ]
-  },
-  restroom_primary: {
-    name: "Restroom (Primary)",
-    type: "mandatory",
-    amberEligible: false,
-    description: "Any defect = RED",
-    cleanliness: [
-      "Toilets/urinals sanitary (no visible soil, stains, residue)?",
-      "Sinks and counters dry and clean?",
-      "Mirrors smudge-free?",
-      "Floor free of debris, water, and stains?",
-      "Soap dispensers functional and stocked?",
-      "Paper towels/hand dryers functional and stocked?",
-      "Toilet paper stocked (not empty)?",
-      "Trash cans empty with liners intact?",
-      "No detectable odor from doorway?",
       "All clear — no safety hazards?"
     ]
   },
@@ -77,24 +84,6 @@ export const ZONES = {
       "Closet organized (not cluttered/hazardous)?"
     ],
     supplyItems: [0, 1, 2, 3]
-  },
-  restroom_additional: {
-    name: "Restroom (Additional)",
-    type: "optional",
-    amberEligible: false,
-    description: "Any defect = RED",
-    cleanliness: [
-      "Toilets/urinals sanitary?",
-      "Sinks and counters dry and clean?",
-      "Mirrors smudge-free?",
-      "Floor free of debris, water, and stains?",
-      "Soap dispensers functional and stocked?",
-      "Paper towels/hand dryers functional and stocked?",
-      "Toilet paper stocked?",
-      "Trash cans empty with liners intact?",
-      "No detectable odor from doorway?",
-      "All clear — no safety hazards?"
-    ]
   },
   classroom: {
     name: "Classroom",
@@ -154,5 +143,11 @@ export const ZONES = {
   }
 };
 
-export const MANDATORY_ZONE_IDS = ['entry', 'hallway', 'restroom_primary', 'commons', 'supply_closet'];
-export const OPTIONAL_ZONE_IDS = ['restroom_additional', 'classroom', 'office', 'gym', 'cafeteria'];
+// Tour route zones (non-restroom mandatory zones)
+export const TOUR_ROUTE_ZONE_IDS = ['entry', 'hallway', 'commons', 'supply_closet'];
+
+// Optional zones (can be added to walkthrough)
+export const OPTIONAL_ZONE_IDS = ['classroom', 'office', 'gym', 'cafeteria'];
+
+// Legacy export for backward compatibility
+export const MANDATORY_ZONE_IDS = TOUR_ROUTE_ZONE_IDS;

@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { CampusSelector } from '../components/CampusSelector';
 import { Header } from '../components/Header';
 import { CAMPUSES } from '../data/campuses';
-import { ZONES, MANDATORY_ZONE_IDS, OPTIONAL_ZONE_IDS } from '../data/zones';
+import { ZONES, TOUR_ROUTE_ZONE_IDS, OPTIONAL_ZONE_IDS } from '../data/zones';
 
 export const AuditSetup = ({ audit }) => {
   const navigate = useNavigate();
   const [campusName, setCampusName] = useState('');
   const [auditorName, setAuditorName] = useState('');
   const [auditorEmail, setAuditorEmail] = useState('');
+  const [restroomCount, setRestroomCount] = useState(1);
   const [selectedOptional, setSelectedOptional] = useState([]);
 
   const handleOptionalToggle = (zoneId) => {
@@ -31,7 +32,7 @@ export const AuditSetup = ({ audit }) => {
       return;
     }
     const campus = CAMPUSES.find(c => c.name === campusName);
-    audit.beginAudit(campus, auditorName, auditorEmail, selectedOptional);
+    audit.beginAudit(campus, auditorName, auditorEmail, selectedOptional, restroomCount);
     audit.setCurrentZoneIndex(0);
     window.scrollTo(0, 0);
     navigate('/audit/zone');
@@ -102,10 +103,42 @@ export const AuditSetup = ({ audit }) => {
           </p>
         </div>
 
-        {/* Mandatory Zones */}
+        {/* Number of Restrooms */}
         <div>
           <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
-            Mandatory Zones (5)
+            Number of Restrooms *
+          </label>
+          <select
+            value={restroomCount}
+            onChange={(e) => setRestroomCount(parseInt(e.target.value))}
+            style={{
+              width: '100%',
+              border: '1px solid #ccc',
+              borderRadius: '10px',
+              padding: '14px 16px',
+              fontSize: '17px',
+              boxSizing: 'border-box',
+              backgroundColor: '#fff',
+              appearance: 'none',
+              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'right 12px center',
+              backgroundSize: '20px'
+            }}
+          >
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(num => (
+              <option key={num} value={num}>{num} restroom{num > 1 ? 's' : ''}</option>
+            ))}
+          </select>
+          <p style={{ fontSize: '14px', color: '#666', marginTop: '6px' }}>
+            All restrooms will be checked as part of the walkthrough
+          </p>
+        </div>
+
+        {/* Tour Route Zones */}
+        <div>
+          <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
+            Tour Route Zones ({TOUR_ROUTE_ZONE_IDS.length})
           </label>
           <div style={{
             backgroundColor: 'rgba(194, 236, 253, 0.4)',
@@ -113,14 +146,14 @@ export const AuditSetup = ({ audit }) => {
             borderRadius: '12px',
             padding: '16px'
           }}>
-            {MANDATORY_ZONE_IDS.map((id, index) => (
+            {TOUR_ROUTE_ZONE_IDS.map((id, index) => (
               <div
                 key={id}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   padding: '12px 0',
-                  borderBottom: index !== MANDATORY_ZONE_IDS.length - 1 ? '1px solid rgba(71, 196, 230, 0.3)' : 'none'
+                  borderBottom: index !== TOUR_ROUTE_ZONE_IDS.length - 1 ? '1px solid rgba(71, 196, 230, 0.3)' : 'none'
                 }}
               >
                 <span style={{ color: '#2B57D0', marginRight: '12px', fontSize: '20px' }}>✓</span>
@@ -140,6 +173,47 @@ export const AuditSetup = ({ audit }) => {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Restrooms Preview */}
+        <div>
+          <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
+            Restrooms ({restroomCount})
+          </label>
+          <div style={{
+            backgroundColor: 'rgba(254, 226, 226, 0.4)',
+            border: '1px solid #f87171',
+            borderRadius: '12px',
+            padding: '16px'
+          }}>
+            {Array.from({ length: restroomCount }, (_, i) => (
+              <div
+                key={i}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '12px 0',
+                  borderBottom: i !== restroomCount - 1 ? '1px solid rgba(248, 113, 113, 0.3)' : 'none'
+                }}
+              >
+                <span style={{ color: '#b91c1c', marginRight: '12px', fontSize: '20px' }}>✓</span>
+                <span style={{ fontSize: '17px', flex: 1 }}>Restroom {i + 1}</span>
+                <span style={{
+                  fontSize: '13px',
+                  backgroundColor: '#fee2e2',
+                  color: '#b91c1c',
+                  padding: '4px 10px',
+                  borderRadius: '6px',
+                  fontWeight: '500'
+                }}>
+                  ⚠️ RED
+                </span>
+              </div>
+            ))}
+          </div>
+          <p style={{ fontSize: '14px', color: '#b91c1c', marginTop: '6px' }}>
+            Any restroom defect results in RED status
+          </p>
         </div>
 
         {/* Optional Zones */}

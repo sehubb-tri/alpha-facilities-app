@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { ZONES, MANDATORY_ZONE_IDS } from '../data/zones';
+import { ZONES, TOUR_ROUTE_ZONE_IDS, createRestroomZone } from '../data/zones';
 
 export const useAudit = () => {
   const [campus, setCampus] = useState(null);
@@ -7,15 +7,22 @@ export const useAudit = () => {
   const [auditorEmail, setAuditorEmail] = useState('');
   const [startTime, setStartTime] = useState(null);
   const [selectedOptionalZones, setSelectedOptionalZones] = useState([]);
+  const [restroomCount, setRestroomCount] = useState(1);
   const [currentZoneIndex, setCurrentZoneIndex] = useState(0);
   const [zoneResults, setZoneResults] = useState({});
   const [conditionAlerts, setConditionAlerts] = useState([]);
   const [tourReady, setTourReady] = useState(null);
   const [zonePhotos, setZonePhotos] = useState({}); // { zoneId: [photo1, photo2, ...] }
 
+  // Generate restroom zone IDs based on count
+  const restroomZoneIds = useMemo(() => {
+    return Array.from({ length: restroomCount }, (_, i) => `restroom_${i + 1}`);
+  }, [restroomCount]);
+
+  // All zones: tour route + optional + restrooms
   const allZones = useMemo(() =>
-    [...MANDATORY_ZONE_IDS, ...selectedOptionalZones],
-    [selectedOptionalZones]
+    [...TOUR_ROUTE_ZONE_IDS, ...selectedOptionalZones, ...restroomZoneIds],
+    [selectedOptionalZones, restroomZoneIds]
   );
 
   const currentZoneId = useMemo(() =>
@@ -23,9 +30,20 @@ export const useAudit = () => {
     [allZones, currentZoneIndex]
   );
 
+  // Get zone config - handles both static zones and dynamic restrooms
+  const getZoneConfig = useCallback((zoneId) => {
+    if (!zoneId) return null;
+    // Check if it's a dynamic restroom zone
+    if (zoneId.startsWith('restroom_')) {
+      const num = parseInt(zoneId.split('_')[1]);
+      return createRestroomZone(num);
+    }
+    return ZONES[zoneId];
+  }, []);
+
   const currentZone = useMemo(() =>
-    ZONES[currentZoneId],
-    [currentZoneId]
+    getZoneConfig(currentZoneId),
+    [currentZoneId, getZoneConfig]
   );
 
   const countDefects = useCallback((zoneId) => {
@@ -42,10 +60,10 @@ export const useAudit = () => {
     let hasAmberIneligibleDefect = false;
 
     for (const zoneId of allZones) {
-      const zone = ZONES[zoneId];
+      const zone = getZoneConfig(zoneId);
       const defects = countDefects(zoneId);
       totalDefects += defects;
-      if (!zone.amberEligible && defects > 0) {
+      if (zone && !zone.amberEligible && defects > 0) {
         hasAmberIneligibleDefect = true;
       }
     }
@@ -55,13 +73,14 @@ export const useAudit = () => {
     if (totalDefects === 0) return 'GREEN';
     if (totalDefects === 1) return 'AMBER';
     return 'RED';
-  }, [allZones, countDefects, tourReady]);
+  }, [allZones, countDefects, tourReady, getZoneConfig]);
 
   const isZoneComplete = useCallback((zoneId) => {
-    const zone = ZONES[zoneId];
+    const zone = getZoneConfig(zoneId);
+    if (!zone) return false;
     const results = zoneResults[zoneId] || {};
     return Object.keys(results).length === zone.cleanliness.length;
-  }, [zoneResults]);
+  }, [zoneResults, getZoneConfig]);
 
   const setResponse = useCallback((zoneId, questionIndex, value) => {
     setZoneResults(prev => ({
@@ -154,6 +173,7 @@ export const useAudit = () => {
     setAuditorEmail('');
     setStartTime(null);
     setSelectedOptionalZones([]);
+    setRestroomCount(1);
     setCurrentZoneIndex(0);
     setZoneResults({});
     setConditionAlerts([]);
@@ -161,11 +181,12 @@ export const useAudit = () => {
     setZonePhotos({});
   }, []);
 
-  const beginAudit = useCallback((campusData, name, email, optionalZones) => {
+  const beginAudit = useCallback((campusData, name, email, optionalZones, numRestrooms = 1) => {
     setCampus(campusData);
     setAuditorName(name);
     setAuditorEmail(email);
     setSelectedOptionalZones(optionalZones);
+    setRestroomCount(numRestrooms);
     setStartTime(Date.now());
   }, []);
 
@@ -212,6 +233,7 @@ export const useAudit = () => {
     auditorEmail,
     startTime,
     selectedOptionalZones,
+    restroomCount,
     currentZoneIndex,
     zoneResults,
     conditionAlerts,
@@ -226,6 +248,7 @@ export const useAudit = () => {
     setAuditorName,
     setAuditorEmail,
     setSelectedOptionalZones,
+    setRestroomCount,
     setCurrentZoneIndex,
     setTourReady,
     setResponse,
@@ -246,6 +269,7 @@ export const useAudit = () => {
     isZoneComplete,
     canCompleteCondition,
     getConditionAlert,
+    getZoneConfig,
     getDuration,
     getCompletedZonesCount,
     getNextIncompleteZoneIndex,
