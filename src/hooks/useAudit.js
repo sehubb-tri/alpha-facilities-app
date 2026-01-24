@@ -110,13 +110,21 @@ export const useAudit = () => {
   }, []);
 
   const updateConditionAlertPhoto = useCallback((zoneId, photo) => {
+    console.log('[useAudit] updateConditionAlertPhoto called:', {
+      zoneId,
+      photoLength: photo?.length,
+      photoStart: photo?.substring(0, 50)
+    });
     setConditionAlerts(prev => {
       const idx = prev.findIndex(a => a.zoneId === zoneId);
+      console.log('[useAudit] Found alert at index:', idx, 'for zone:', zoneId);
       if (idx >= 0) {
         const newAlerts = [...prev];
         newAlerts[idx] = { ...newAlerts[idx], photo };
+        console.log('[useAudit] Updated alert:', newAlerts[idx].zoneId, 'hasPhoto:', !!newAlerts[idx].photo);
         return newAlerts;
       }
+      console.warn('[useAudit] WARNING: No existing alert found for zone:', zoneId);
       return prev;
     });
   }, []);
@@ -207,6 +215,19 @@ export const useAudit = () => {
   }, [allZones, zoneResults]);
 
   const buildAuditData = useCallback(() => {
+    const filteredAlerts = conditionAlerts.filter(a => a.hasIssue);
+    console.log('[useAudit] buildAuditData - conditionAlerts:', conditionAlerts);
+    console.log('[useAudit] buildAuditData - filtered alerts with hasIssue:', filteredAlerts);
+    filteredAlerts.forEach((alert, idx) => {
+      console.log(`[useAudit] Alert ${idx}:`, {
+        zoneId: alert.zoneId,
+        hasIssue: alert.hasIssue,
+        hasPhoto: !!alert.photo,
+        photoLength: alert.photo?.length,
+        note: alert.note
+      });
+    });
+
     return {
       date: new Date().toLocaleDateString(),
       time: new Date().toLocaleTimeString(),
@@ -218,9 +239,9 @@ export const useAudit = () => {
       zones: allZones.length,
       duration: getDuration(),
       tourReady: tourReady === 'yes',
-      conditionAlerts: conditionAlerts.filter(a => a.hasIssue).length,
+      conditionAlerts: filteredAlerts.length,
       zoneResults,
-      conditionAlertDetails: conditionAlerts.filter(a => a.hasIssue),
+      conditionAlertDetails: filteredAlerts,
       campusData: campus,
       zonePhotos
     };
