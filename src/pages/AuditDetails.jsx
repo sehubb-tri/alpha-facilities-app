@@ -8,11 +8,13 @@ export const AuditDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [audit, setAudit] = useState(null);
+  const [zonePhotos, setZonePhotos] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadAudit = async () => {
       try {
+        // Load audit data
         const { data, error } = await supabase
           .from('audits')
           .select('*')
@@ -40,6 +42,17 @@ export const AuditDetails = () => {
           campusData: data.campus_data,
           createdAt: data.created_at
         });
+
+        // Load zone photos for this audit
+        const { data: photos, error: photosError } = await supabase
+          .from('zone_photos')
+          .select('*')
+          .eq('audit_id', id)
+          .order('created_at', { ascending: true });
+
+        if (!photosError && photos) {
+          setZonePhotos(photos);
+        }
       } catch (error) {
         console.error('Error loading audit:', error);
       } finally {
@@ -250,6 +263,68 @@ export const AuditDetails = () => {
                         }}
                       />
                     )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Zone Photos */}
+        {zonePhotos.length > 0 && (
+          <div style={{
+            backgroundColor: '#fff',
+            borderRadius: '12px',
+            padding: '20px',
+            marginBottom: '16px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+          }}>
+            <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#092849', marginBottom: '16px' }}>
+              Zone Photos ({zonePhotos.length})
+            </h3>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {/* Group photos by zone */}
+              {Object.entries(
+                zonePhotos.reduce((acc, photo) => {
+                  const key = photo.zone_id || 'unknown';
+                  if (!acc[key]) acc[key] = [];
+                  acc[key].push(photo);
+                  return acc;
+                }, {})
+              ).map(([zoneId, photos]) => {
+                const zone = ZONES[zoneId];
+                return (
+                  <div
+                    key={zoneId}
+                    style={{
+                      padding: '14px',
+                      backgroundColor: '#f0f9ff',
+                      borderRadius: '10px'
+                    }}
+                  >
+                    <div style={{ fontWeight: '600', color: '#0369a1', marginBottom: '12px' }}>
+                      {zone?.name || photos[0]?.zone_name || zoneId}
+                    </div>
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(2, 1fr)',
+                      gap: '8px'
+                    }}>
+                      {photos.map((photo, idx) => (
+                        <img
+                          key={photo.id || idx}
+                          src={photo.photo_url}
+                          alt={`Zone photo ${idx + 1}`}
+                          style={{
+                            width: '100%',
+                            height: '120px',
+                            objectFit: 'cover',
+                            borderRadius: '8px'
+                          }}
+                        />
+                      ))}
+                    </div>
                   </div>
                 );
               })}
