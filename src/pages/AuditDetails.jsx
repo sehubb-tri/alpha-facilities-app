@@ -289,10 +289,6 @@ export const AuditDetails = () => {
                         {alert.note}
                       </div>
                     )}
-                    {/* Debug: show photo status */}
-                    <div style={{ fontSize: '12px', color: '#999', marginBottom: '4px' }}>
-                      Photo: {alert.photo ? (alert.photo.substring(0, 50) + '...') : 'null'}
-                    </div>
                     {alert.photo ? (
                       <img
                         src={alert.photo}

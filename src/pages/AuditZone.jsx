@@ -24,7 +24,8 @@ export const AuditZone = ({ audit, camera }) => {
     campus,
     auditorName,
     addZonePhotos,
-    getZonePhotos
+    getZonePhotos,
+    updateConditionAlertPhoto
   } = audit;
 
   // Get photos already taken for this zone
@@ -42,7 +43,8 @@ export const AuditZone = ({ audit, camera }) => {
   // B&G condition alert state
   const alert = getConditionAlert(currentZoneId);
   const hasBGSelection = alert?.hasIssue !== undefined;
-  const bgComplete = alert?.hasIssue === false || (alert?.hasIssue === true && alert?.note?.length > 0);
+  // B&G is complete if: no issue, OR has issue with BOTH photo AND note
+  const bgComplete = alert?.hasIssue === false || (alert?.hasIssue === true && alert?.photo && alert?.note?.length > 0);
 
   const handleComplete = () => {
     if (complete && bgComplete) {
@@ -61,6 +63,19 @@ export const AuditZone = ({ audit, camera }) => {
   const handleNoteChange = (e) => {
     const note = e.target.value.slice(0, 100);
     audit.updateConditionAlertNote(currentZoneId, note);
+  };
+
+  // Handle taking photo for B&G condition alert
+  const handleTakeConditionPhoto = () => {
+    const zoneIdAtCapture = currentZoneId;
+    console.log('[AuditZone] Taking condition photo for zone:', zoneIdAtCapture);
+
+    camera.openCamera((imageData) => {
+      console.log('[AuditZone] Condition photo received, length:', imageData?.length);
+      if (imageData) {
+        updateConditionAlertPhoto(zoneIdAtCapture, imageData);
+      }
+    });
   };
 
   const handleReportIssue = () => {
@@ -255,9 +270,70 @@ export const AuditZone = ({ audit, camera }) => {
             </button>
           </div>
 
-          {/* Text input when Yes is selected */}
+          {/* Photo and text input when Yes is selected */}
           {alert?.hasIssue === true && (
             <div style={{ marginTop: '12px' }}>
+              {/* Condition Alert Photo */}
+              <div style={{ marginBottom: '12px' }}>
+                {alert.photo ? (
+                  <div style={{ position: 'relative' }}>
+                    <img
+                      src={alert.photo}
+                      alt="B&G Issue"
+                      style={{
+                        width: '100%',
+                        borderRadius: '8px',
+                        maxHeight: '200px',
+                        objectFit: 'cover'
+                      }}
+                    />
+                    <button
+                      onClick={handleTakeConditionPhoto}
+                      style={{
+                        position: 'absolute',
+                        bottom: '8px',
+                        right: '8px',
+                        backgroundColor: '#fff',
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        fontSize: '13px',
+                        fontWeight: '600',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.15)',
+                        border: 'none',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      🔄 Retake
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleTakeConditionPhoto}
+                    style={{
+                      width: '100%',
+                      padding: '20px',
+                      border: '2px dashed #d1d5db',
+                      borderRadius: '8px',
+                      backgroundColor: '#f9fafb',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    <span style={{ fontSize: '28px' }}>📷</span>
+                    <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>
+                      Take Photo of Issue
+                    </span>
+                    <span style={{ fontSize: '12px', color: '#6b7280' }}>
+                      Required for B&G alerts
+                    </span>
+                  </button>
+                )}
+              </div>
+
+              {/* Description textarea */}
               <textarea
                 value={alert?.note || ''}
                 onChange={handleNoteChange}
@@ -341,6 +417,8 @@ export const AuditZone = ({ audit, camera }) => {
             ? `Answer all (${answeredCount}/${totalQuestions})`
             : !hasBGSelection
             ? 'Select B&G status'
+            : alert?.hasIssue && !alert?.photo
+            ? 'Add B&G photo'
             : alert?.hasIssue && !alert?.note?.length
             ? 'Describe B&G issue'
             : 'Complete Zone →'}
