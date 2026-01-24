@@ -39,6 +39,12 @@ export const AuditDetails = () => {
 
         if (error) throw error;
 
+        // Debug: log raw data to check structure
+        console.log('Raw audit data:', {
+          zone_results: data.zone_results,
+          condition_alert_details: data.condition_alert_details
+        });
+
         // Map snake_case to camelCase
         setAudit({
           id: data.id,
@@ -215,15 +221,18 @@ export const AuditDetails = () => {
                       </span>
                     </div>
 
-                    {defectCount > 0 && zone?.cleanliness && (
+                    {defectCount > 0 && (
                       <div style={{ marginTop: '10px', fontSize: '14px', color: '#666' }}>
                         {Object.entries(results)
                           .filter(([, value]) => value === 'no')
-                          .map(([qIndex]) => (
-                            <div key={qIndex} style={{ marginTop: '4px', color: '#b91c1c' }}>
-                              • {zone.cleanliness[parseInt(qIndex)]}
-                            </div>
-                          ))
+                          .map(([qIndex]) => {
+                            const questionText = zone?.cleanliness?.[parseInt(qIndex)] || `Question ${parseInt(qIndex) + 1}`;
+                            return (
+                              <div key={qIndex} style={{ marginTop: '4px', color: '#b91c1c' }}>
+                                • {questionText}
+                              </div>
+                            );
+                          })
                         }
                       </div>
                     )}
@@ -273,9 +282,14 @@ export const AuditDetails = () => {
                         alt="Condition alert"
                         style={{
                           width: '100%',
-                          maxHeight: '200px',
-                          objectFit: 'cover',
-                          borderRadius: '8px'
+                          maxHeight: '300px',
+                          objectFit: 'contain',
+                          borderRadius: '8px',
+                          backgroundColor: '#f3f4f6'
+                        }}
+                        onError={(e) => {
+                          console.error('Failed to load condition alert photo:', alert.photo);
+                          e.target.style.display = 'none';
                         }}
                       />
                     )}
