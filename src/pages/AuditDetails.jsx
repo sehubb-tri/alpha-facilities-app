@@ -2,7 +2,23 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { supabase } from '../supabase/config';
-import { ZONES } from '../data/zones';
+import { ZONES, RESTROOM_TEMPLATE } from '../data/zones';
+
+// Helper to get zone config, handling dynamic restroom zones
+const getZoneConfig = (zoneId) => {
+  if (ZONES[zoneId]) {
+    return ZONES[zoneId];
+  }
+  // Handle dynamic restroom zones (restroom_1, restroom_2, etc.)
+  if (zoneId.startsWith('restroom_')) {
+    const num = zoneId.replace('restroom_', '');
+    return {
+      ...RESTROOM_TEMPLATE,
+      name: `Restroom ${num}`
+    };
+  }
+  return null;
+};
 
 export const AuditDetails = () => {
   const navigate = useNavigate();
@@ -173,7 +189,7 @@ export const AuditDetails = () => {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {Object.entries(audit.zoneResults).map(([zoneId, results]) => {
-                const zone = ZONES[zoneId];
+                const zone = getZoneConfig(zoneId);
                 const defectCount = Object.values(results).filter(v => v === 'no').length;
                 const totalQuestions = Object.keys(results).length;
 
@@ -233,7 +249,7 @@ export const AuditDetails = () => {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {audit.conditionAlertDetails.map((alert, idx) => {
-                const zone = ZONES[alert.zoneId];
+                const zone = getZoneConfig(alert.zoneId);
                 return (
                   <div
                     key={idx}
@@ -293,7 +309,7 @@ export const AuditDetails = () => {
                   return acc;
                 }, {})
               ).map(([zoneId, photos]) => {
-                const zone = ZONES[zoneId];
+                const zone = getZoneConfig(zoneId);
                 return (
                   <div
                     key={zoneId}
