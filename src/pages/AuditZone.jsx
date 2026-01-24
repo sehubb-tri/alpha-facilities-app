@@ -1,14 +1,9 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PhotoCaptureModal } from '../components/PhotoCaptureModal';
-import { saveZonePhotos } from '../supabase/services';
 import { useI18n } from '../i18n';
 
 export const AuditZone = ({ audit, camera }) => {
   const navigate = useNavigate();
   const { t, getChecklist, getZoneName } = useI18n();
-  const [showPhotoModal, setShowPhotoModal] = useState(false);
-  const [savingPhotos, setSavingPhotos] = useState(false);
 
   const {
     currentZoneIndex,
@@ -21,15 +16,9 @@ export const AuditZone = ({ audit, camera }) => {
     setConditionAlert,
     getConditionAlert,
     setCurrentZoneIndex,
-    campus,
-    auditorName,
-    addZonePhotos,
-    getZonePhotos,
-    updateConditionAlertPhoto
+    addConditionAlertPhoto,
+    removeConditionAlertPhoto
   } = audit;
-
-  // Get photos already taken for this zone
-  const currentZonePhotos = getZonePhotos(currentZoneId);
 
   const results = zoneResults[currentZoneId] || {};
   const answeredCount = Object.keys(results).length;
@@ -43,8 +32,9 @@ export const AuditZone = ({ audit, camera }) => {
   // B&G condition alert state
   const alert = getConditionAlert(currentZoneId);
   const hasBGSelection = alert?.hasIssue !== undefined;
-  // B&G is complete if: no issue, OR has issue with BOTH photo AND note
-  const bgComplete = alert?.hasIssue === false || (alert?.hasIssue === true && alert?.photo && alert?.note?.length > 0);
+  const alertPhotos = alert?.photos || [];
+  // B&G is complete if: no issue, OR has issue with at least one photo AND note
+  const bgComplete = alert?.hasIssue === false || (alert?.hasIssue === true && alertPhotos.length > 0 && alert?.note?.length > 0);
 
   const handleComplete = () => {
     if (complete && bgComplete) {
@@ -65,7 +55,7 @@ export const AuditZone = ({ audit, camera }) => {
     audit.updateConditionAlertNote(currentZoneId, note);
   };
 
-  // Handle taking photo for B&G condition alert
+  // Handle taking photo for B&G condition alert (supports multiple)
   const handleTakeConditionPhoto = () => {
     const zoneIdAtCapture = currentZoneId;
     console.log('[AuditZone] Taking condition photo for zone:', zoneIdAtCapture);
@@ -73,37 +63,14 @@ export const AuditZone = ({ audit, camera }) => {
     camera.openCamera((imageData) => {
       console.log('[AuditZone] Condition photo received, length:', imageData?.length);
       if (imageData) {
-        updateConditionAlertPhoto(zoneIdAtCapture, imageData);
+        addConditionAlertPhoto(zoneIdAtCapture, imageData);
       }
     });
   };
 
-  const handleReportIssue = () => {
-    // Open the photo capture modal instead of navigating away
-    setShowPhotoModal(true);
-  };
-
-  const handleSavePhotos = async (photos) => {
-    setSavingPhotos(true);
-    try {
-      // Save photos to database with zone and campus tagging
-      await saveZonePhotos({
-        photos,
-        campus: campus?.name || '',
-        zoneId: currentZoneId,
-        zoneName: currentZone?.name || '',
-        auditor: auditorName,
-        campusData: campus
-      });
-
-      // Also store in local state for the audit
-      addZonePhotos(currentZoneId, photos);
-    } catch (error) {
-      console.error('Error saving photos:', error);
-      throw error;
-    } finally {
-      setSavingPhotos(false);
-    }
+  // Handle removing a condition alert photo
+  const handleRemoveConditionPhoto = (photoIndex) => {
+    removeConditionAlertPhoto(currentZoneId, photoIndex);
   };
 
   return (
@@ -273,64 +240,94 @@ export const AuditZone = ({ audit, camera }) => {
           {/* Photo and text input when Yes is selected */}
           {alert?.hasIssue === true && (
             <div style={{ marginTop: '12px' }}>
-              {/* Condition Alert Photo */}
+              {/* Condition Alert Photos - Multiple */}
               <div style={{ marginBottom: '12px' }}>
-                {alert.photo ? (
-                  <div style={{ position: 'relative' }}>
-                    <img
-                      src={alert.photo}
-                      alt="B&G Issue"
-                      style={{
-                        width: '100%',
-                        borderRadius: '8px',
-                        maxHeight: '200px',
-                        objectFit: 'cover'
-                      }}
-                    />
-                    <button
-                      onClick={handleTakeConditionPhoto}
-                      style={{
-                        position: 'absolute',
-                        bottom: '8px',
-                        right: '8px',
-                        backgroundColor: '#fff',
-                        padding: '6px 12px',
-                        borderRadius: '6px',
-                        fontSize: '13px',
-                        fontWeight: '600',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.15)',
-                        border: 'none',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      🔄 Retake
-                    </button>
+                {/* Photo Grid */}
+                {alertPhotos.length > 0 && (
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(2, 1fr)',
+                    gap: '8px',
+                    marginBottom: '12px'
+                  }}>
+                    {alertPhotos.map((photo, idx) => (
+                      <div key={idx} style={{ position: 'relative' }}>
+                        <img
+                          src={photo}
+                          alt={`B&G Issue ${idx + 1}`}
+                          style={{
+                            width: '100%',
+                            height: '120px',
+                            borderRadius: '8px',
+                            objectFit: 'cover'
+                          }}
+                        />
+                        <button
+                          onClick={() => handleRemoveConditionPhoto(idx)}
+                          style={{
+                            position: 'absolute',
+                            top: '4px',
+                            right: '4px',
+                            backgroundColor: '#ef4444',
+                            color: '#fff',
+                            width: '24px',
+                            height: '24px',
+                            borderRadius: '50%',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            fontWeight: '700',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          ×
+                        </button>
+                        <div style={{
+                          position: 'absolute',
+                          bottom: '4px',
+                          left: '4px',
+                          backgroundColor: 'rgba(0,0,0,0.6)',
+                          color: '#fff',
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          fontSize: '11px'
+                        }}>
+                          #{idx + 1}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ) : (
-                  <button
-                    onClick={handleTakeConditionPhoto}
-                    style={{
-                      width: '100%',
-                      padding: '20px',
-                      border: '2px dashed #d1d5db',
-                      borderRadius: '8px',
-                      backgroundColor: '#f9fafb',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '6px'
-                    }}
-                  >
-                    <span style={{ fontSize: '28px' }}>📷</span>
-                    <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>
-                      Take Photo of Issue
-                    </span>
+                )}
+
+                {/* Add Photo Button */}
+                <button
+                  onClick={handleTakeConditionPhoto}
+                  style={{
+                    width: '100%',
+                    padding: alertPhotos.length > 0 ? '12px' : '20px',
+                    border: '2px dashed #d1d5db',
+                    borderRadius: '8px',
+                    backgroundColor: '#f9fafb',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: alertPhotos.length > 0 ? 'row' : 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <span style={{ fontSize: alertPhotos.length > 0 ? '20px' : '28px' }}>📷</span>
+                  <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>
+                    {alertPhotos.length > 0 ? 'Add Another Photo' : 'Take Photo of Issue'}
+                  </span>
+                  {alertPhotos.length === 0 && (
                     <span style={{ fontSize: '12px', color: '#6b7280' }}>
                       Required for B&G alerts
                     </span>
-                  </button>
-                )}
+                  )}
+                </button>
               </div>
 
               {/* Description textarea */}
@@ -361,30 +358,6 @@ export const AuditZone = ({ audit, camera }) => {
               </div>
             </div>
           )}
-
-          {/* Report with Photo Button */}
-          <button
-            onClick={handleReportIssue}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              marginTop: '16px',
-              padding: '14px 20px',
-              backgroundColor: currentZonePhotos.length > 0 ? '#1a5f2a' : '#2B57D0',
-              border: 'none',
-              borderRadius: '10px',
-              color: '#fff',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              width: '100%',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.15)'
-            }}
-          >
-            📸 {currentZonePhotos.length > 0 ? `${currentZonePhotos.length} ${currentZonePhotos.length !== 1 ? t('audit.walkthrough.photosAdded') : t('audit.walkthrough.photoAdded')}` : t('audit.walkthrough.takePhoto')}
-          </button>
         </div>
       </div>
 
@@ -417,23 +390,13 @@ export const AuditZone = ({ audit, camera }) => {
             ? `Answer all (${answeredCount}/${totalQuestions})`
             : !hasBGSelection
             ? 'Select B&G status'
-            : alert?.hasIssue && !alert?.photo
+            : alert?.hasIssue && alertPhotos.length === 0
             ? 'Add B&G photo'
             : alert?.hasIssue && !alert?.note?.length
             ? 'Describe B&G issue'
             : 'Complete Zone →'}
         </button>
       </div>
-
-      {/* Photo Capture Modal */}
-      <PhotoCaptureModal
-        isOpen={showPhotoModal}
-        onClose={() => setShowPhotoModal(false)}
-        onSave={handleSavePhotos}
-        zoneName={currentZone?.name || ''}
-        campusName={campus?.name || ''}
-        maxPhotos={5}
-      />
     </div>
   );
 };

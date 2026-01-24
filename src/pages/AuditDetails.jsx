@@ -289,22 +289,32 @@ export const AuditDetails = () => {
                         {alert.note}
                       </div>
                     )}
-                    {alert.photo ? (
-                      <img
-                        src={alert.photo}
-                        alt="Condition alert"
-                        style={{
-                          width: '100%',
-                          maxHeight: '300px',
-                          objectFit: 'cover',
-                          borderRadius: '8px',
-                          backgroundColor: '#f3f4f6'
-                        }}
-                        onError={(e) => {
-                          console.error('Failed to load condition alert photo:', alert.photo);
-                          e.target.style.display = 'none';
-                        }}
-                      />
+                    {/* Support both old single photo and new multiple photos format */}
+                    {(alert.photos?.length > 0 || alert.photo) ? (
+                      <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: (alert.photos?.length || 1) > 1 ? 'repeat(2, 1fr)' : '1fr',
+                        gap: '8px'
+                      }}>
+                        {(alert.photos || [alert.photo]).filter(Boolean).map((photo, photoIdx) => (
+                          <img
+                            key={photoIdx}
+                            src={photo}
+                            alt={`Condition alert ${photoIdx + 1}`}
+                            style={{
+                              width: '100%',
+                              maxHeight: (alert.photos?.length || 1) > 1 ? '150px' : '300px',
+                              objectFit: 'cover',
+                              borderRadius: '8px',
+                              backgroundColor: '#f3f4f6'
+                            }}
+                            onError={(e) => {
+                              console.error('Failed to load condition alert photo:', photo);
+                              e.target.style.display = 'none';
+                            }}
+                          />
+                        ))}
+                      </div>
                     ) : (
                       <div style={{
                         padding: '12px',

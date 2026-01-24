@@ -100,31 +100,49 @@ export const useAudit = () => {
         newAlerts[idx] = {
           ...newAlerts[idx],
           hasIssue,
-          ...(hasIssue ? updates : { photo: null, note: '' })
+          ...(hasIssue ? updates : { photos: [], note: '' })
         };
         return newAlerts;
       } else {
-        return [...prev, { zoneId, hasIssue, note: '', photo: null, ...updates }];
+        return [...prev, { zoneId, hasIssue, note: '', photos: [], ...updates }];
       }
     });
   }, []);
 
-  const updateConditionAlertPhoto = useCallback((zoneId, photo) => {
-    console.log('[useAudit] updateConditionAlertPhoto called:', {
+  // Add a photo to condition alert (supports multiple photos)
+  const addConditionAlertPhoto = useCallback((zoneId, photo) => {
+    console.log('[useAudit] addConditionAlertPhoto called:', {
       zoneId,
-      photoLength: photo?.length,
-      photoStart: photo?.substring(0, 50)
+      photoLength: photo?.length
     });
     setConditionAlerts(prev => {
       const idx = prev.findIndex(a => a.zoneId === zoneId);
       console.log('[useAudit] Found alert at index:', idx, 'for zone:', zoneId);
       if (idx >= 0) {
         const newAlerts = [...prev];
-        newAlerts[idx] = { ...newAlerts[idx], photo };
-        console.log('[useAudit] Updated alert:', newAlerts[idx].zoneId, 'hasPhoto:', !!newAlerts[idx].photo);
+        const existingPhotos = newAlerts[idx].photos || [];
+        newAlerts[idx] = { ...newAlerts[idx], photos: [...existingPhotos, photo] };
+        console.log('[useAudit] Updated alert:', newAlerts[idx].zoneId, 'photoCount:', newAlerts[idx].photos.length);
         return newAlerts;
       }
       console.warn('[useAudit] WARNING: No existing alert found for zone:', zoneId);
+      return prev;
+    });
+  }, []);
+
+  // Remove a photo from condition alert
+  const removeConditionAlertPhoto = useCallback((zoneId, photoIndex) => {
+    setConditionAlerts(prev => {
+      const idx = prev.findIndex(a => a.zoneId === zoneId);
+      if (idx >= 0) {
+        const newAlerts = [...prev];
+        const existingPhotos = newAlerts[idx].photos || [];
+        newAlerts[idx] = {
+          ...newAlerts[idx],
+          photos: existingPhotos.filter((_, i) => i !== photoIndex)
+        };
+        return newAlerts;
+      }
       return prev;
     });
   }, []);
@@ -274,7 +292,8 @@ export const useAudit = () => {
     setTourReady,
     setResponse,
     setConditionAlert,
-    updateConditionAlertPhoto,
+    addConditionAlertPhoto,
+    removeConditionAlertPhoto,
     updateConditionAlertNote,
 
     // Zone photos
