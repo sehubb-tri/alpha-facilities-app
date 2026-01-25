@@ -507,8 +507,7 @@ export const BG_ZONES = {
       {
         name: 'Documentation',
         checks: [
-          { id: 'gov_photos_complete', text: 'Photo evidence captured for all Amber/Red items this walkthrough?', tier: 2 },
-          { id: 'gov_exit_photos', text: 'Exit photo captured for all Green zones?', tier: 3 }
+          { id: 'gov_photos_complete', text: 'Photo evidence captured for all Amber/Red items this walkthrough?', tier: 2 }
         ]
       }
     ]

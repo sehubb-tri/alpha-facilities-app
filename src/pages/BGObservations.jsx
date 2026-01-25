@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BG_ZONES, BG_ZONE_ORDER } from '../data/bgZones';
 import { ROUTING_RULES, BG_ISSUE_CATEGORIES } from '../data/bgCategories';
@@ -11,15 +11,42 @@ export const BGObservations = ({ bgWalkthrough, camera }) => {
     description: '',
     photos: []
   });
+  const [elapsedTime, setElapsedTime] = useState('0:00');
 
   const {
     currentZoneIndex,
     observations,
+    startTime,
     addObservation,
     removeObservation,
     nextZone,
     goToZone
   } = bgWalkthrough;
+
+  // Live timer effect
+  useEffect(() => {
+    if (!startTime) return;
+
+    const updateTimer = () => {
+      const start = new Date(startTime);
+      const now = new Date();
+      const diffMs = now - start;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffSecs = Math.floor((diffMs % 60000) / 1000);
+      const hours = Math.floor(diffMins / 60);
+      const mins = diffMins % 60;
+
+      if (hours > 0) {
+        setElapsedTime(`${hours}:${mins.toString().padStart(2, '0')}:${diffSecs.toString().padStart(2, '0')}`);
+      } else {
+        setElapsedTime(`${mins}:${diffSecs.toString().padStart(2, '0')}`);
+      }
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [startTime]);
 
   const currentZoneId = BG_ZONE_ORDER[currentZoneIndex];
   const currentZone = BG_ZONES[currentZoneId];
@@ -141,7 +168,19 @@ export const BGObservations = ({ bgWalkthrough, camera }) => {
               Zone {currentZoneIndex + 1} of {totalZones}
             </p>
           </div>
-          <div style={{ width: '40px' }} />
+          <div style={{
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            borderRadius: '8px',
+            padding: '6px 10px',
+            fontSize: '14px',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            <span>⏱️</span>
+            <span>{elapsedTime}</span>
+          </div>
         </div>
       </div>
 

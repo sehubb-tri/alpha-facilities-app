@@ -7,6 +7,7 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
   const [localResults, setLocalResults] = useState({});
   const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
   const [expandedSections, setExpandedSections] = useState({});
+  const [elapsedTime, setElapsedTime] = useState('0:00');
 
   const {
     currentZoneIndex,
@@ -14,15 +15,39 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
     roomResults,
     selectedRooms,
     issues,
-    exitPhotos,
+    startTime,
     recordZoneResults,
     addIssue,
     updateIssue,
-    addExitPhoto,
     nextZone,
     goToZone,
     calculateAndSetZoneRating
   } = bgWalkthrough;
+
+  // Live timer effect
+  useEffect(() => {
+    if (!startTime) return;
+
+    const updateTimer = () => {
+      const start = new Date(startTime);
+      const now = new Date();
+      const diffMs = now - start;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffSecs = Math.floor((diffMs % 60000) / 1000);
+      const hours = Math.floor(diffMins / 60);
+      const mins = diffMins % 60;
+
+      if (hours > 0) {
+        setElapsedTime(`${hours}:${mins.toString().padStart(2, '0')}:${diffSecs.toString().padStart(2, '0')}`);
+      } else {
+        setElapsedTime(`${mins}:${diffSecs.toString().padStart(2, '0')}`);
+      }
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [startTime]);
 
   const currentZoneId = BG_ZONE_ORDER[currentZoneIndex];
   const currentZone = BG_ZONES[currentZoneId];
@@ -140,14 +165,11 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
     return issue && issue.photos && issue.photos.length > 0;
   });
 
-  // Check if green zone needs exit photo
+  // Check if zone is green (all passed)
   const isGreen = failedChecks.length === 0 && isComplete;
-  const hasExitPhoto = exitPhotos[isRoomBased ? resultsKey : currentZoneId];
-  const needsExitPhoto = isGreen && !hasExitPhoto;
 
   const canProceed = isComplete && (
-    (isGreen && hasExitPhoto) ||
-    (!isGreen && allIssuesHavePhotos)
+    isGreen || allIssuesHavePhotos
   );
 
   const handleTakeIssuePhoto = (check) => {
@@ -184,15 +206,6 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
             photos: [...(existingIssue.photos || []), imageData]
           });
         }
-      }
-    });
-  };
-
-  const handleTakeExitPhoto = () => {
-    const key = isRoomBased ? resultsKey : currentZoneId;
-    camera.openCamera((imageData) => {
-      if (imageData) {
-        addExitPhoto(key, imageData);
       }
     });
   };
@@ -324,7 +337,19 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
               {isRoomBased && ` • Room ${currentRoomIndex + 1} of ${totalRooms}`}
             </p>
           </div>
-          <div style={{ width: '40px' }} />
+          <div style={{
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            borderRadius: '8px',
+            padding: '6px 10px',
+            fontSize: '14px',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            <span>⏱️</span>
+            <span>{elapsedTime}</span>
+          </div>
         </div>
       </div>
 
@@ -572,7 +597,7 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
           </div>
         ))}
 
-        {/* Exit Photo for Green Zone */}
+        {/* Green Zone Success Message */}
         {isComplete && isGreen && (
           <div style={{
             backgroundColor: '#fff',
@@ -581,60 +606,9 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
             marginTop: '16px',
             border: '2px solid #10b981'
           }}>
-            <div style={{ fontSize: '16px', fontWeight: '600', color: '#059669', marginBottom: '12px' }}>
-              ✅ All checks passed - Exit Photo Required
+            <div style={{ fontSize: '16px', fontWeight: '600', color: '#059669' }}>
+              ✅ All checks passed - Zone is Green!
             </div>
-
-            {hasExitPhoto ? (
-              <div style={{ position: 'relative', display: 'inline-block' }}>
-                <img
-                  src={exitPhotos[isRoomBased ? resultsKey : currentZoneId]}
-                  alt="Exit photo"
-                  style={{
-                    width: '100%',
-                    maxWidth: '200px',
-                    borderRadius: '8px'
-                  }}
-                />
-                <div style={{
-                  position: 'absolute',
-                  bottom: '8px',
-                  left: '8px',
-                  backgroundColor: '#10b981',
-                  color: '#fff',
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                  fontWeight: '600'
-                }}>
-                  Exit Photo ✓
-                </div>
-              </div>
-            ) : (
-              <button
-                onClick={handleTakeExitPhoto}
-                style={{
-                  width: '100%',
-                  padding: '20px',
-                  border: '2px dashed #10b981',
-                  borderRadius: '8px',
-                  backgroundColor: '#f0fdf4',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-              >
-                <span style={{ fontSize: '32px' }}>📸</span>
-                <span style={{ fontSize: '15px', fontWeight: '600', color: '#059669' }}>
-                  Take Exit Photo
-                </span>
-                <span style={{ fontSize: '13px', color: '#6b7280' }}>
-                  Proof of presence for Green zone
-                </span>
-              </button>
-            )}
           </div>
         )}
       </div>
@@ -666,9 +640,7 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
         >
           {!isComplete
             ? `Answer All Questions (${getAnsweredCount()}/${getTotalChecks()})`
-            : needsExitPhoto
-            ? 'Take Exit Photo to Continue'
-            : !allIssuesHavePhotos
+            : !allIssuesHavePhotos && !isGreen
             ? 'Add Photos for All Issues'
             : isRoomBased && currentRoomIndex < totalRooms - 1
             ? `Next Room →`

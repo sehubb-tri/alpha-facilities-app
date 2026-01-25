@@ -8,11 +8,24 @@ export const BGSummary = ({ bgWalkthrough }) => {
   const {
     campus,
     auditor,
+    startTime,
     zoneRatings,
     issues,
     observations,
     completeWalkthrough
   } = bgWalkthrough;
+
+  // Calculate walkthrough duration
+  const walkthroughDuration = useMemo(() => {
+    if (!startTime) return null;
+    const start = new Date(startTime);
+    const now = new Date();
+    const diffMs = now - start;
+    const diffMins = Math.round(diffMs / 60000);
+    const hours = Math.floor(diffMins / 60);
+    const mins = diffMins % 60;
+    return { total: diffMins, hours, mins };
+  }, [startTime]);
 
   // Calculate final results - memoized to run once
   const campusResult = useMemo(() => {
@@ -79,6 +92,22 @@ export const BGSummary = ({ bgWalkthrough }) => {
         <p style={{ fontSize: '14px', opacity: 0.8, margin: '4px 0 0 0' }}>
           Completed by {auditor}
         </p>
+        {walkthroughDuration && (
+          <div style={{
+            marginTop: '12px',
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            borderRadius: '8px',
+            padding: '8px 16px',
+            display: 'inline-block'
+          }}>
+            <span style={{ fontSize: '14px', opacity: 0.9 }}>⏱️ Walkthrough Time: </span>
+            <span style={{ fontSize: '16px', fontWeight: '700' }}>
+              {walkthroughDuration.hours > 0
+                ? `${walkthroughDuration.hours}h ${walkthroughDuration.mins}m`
+                : `${walkthroughDuration.mins} minutes`}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Stats Overview */}

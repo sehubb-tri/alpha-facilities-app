@@ -3,22 +3,47 @@ import { useNavigate } from 'react-router-dom';
 import { BG_ZONES, BG_ZONE_ORDER } from '../data/bgZones';
 import { getBGWalkthroughs } from '../supabase/services';
 
-export const BGGovernance = ({ bgWalkthrough, camera }) => {
+export const BGGovernance = ({ bgWalkthrough }) => {
   const navigate = useNavigate();
   const [priorWeekData, setPriorWeekData] = useState(null);
   const [loadingPrior, setLoadingPrior] = useState(true);
   const [localResults, setLocalResults] = useState({});
+  const [elapsedTime, setElapsedTime] = useState('0:00');
 
   const {
     currentZoneIndex,
     campus,
     zoneResults,
-    exitPhotos,
+    startTime,
     recordZoneResults,
-    addExitPhoto,
     goToZone,
     calculateAndSetZoneRating
   } = bgWalkthrough;
+
+  // Live timer effect
+  useEffect(() => {
+    if (!startTime) return;
+
+    const updateTimer = () => {
+      const start = new Date(startTime);
+      const now = new Date();
+      const diffMs = now - start;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffSecs = Math.floor((diffMs % 60000) / 1000);
+      const hours = Math.floor(diffMins / 60);
+      const mins = diffMins % 60;
+
+      if (hours > 0) {
+        setElapsedTime(`${hours}:${mins.toString().padStart(2, '0')}:${diffSecs.toString().padStart(2, '0')}`);
+      } else {
+        setElapsedTime(`${mins}:${diffSecs.toString().padStart(2, '0')}`);
+      }
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [startTime]);
 
   const currentZoneId = BG_ZONE_ORDER[currentZoneIndex];
   const currentZone = BG_ZONES[currentZoneId];
@@ -74,17 +99,8 @@ export const BGGovernance = ({ bgWalkthrough, camera }) => {
   // Check for failed items
   const failedChecks = governanceChecks.filter(check => localResults[check.id] === false);
   const isGreen = failedChecks.length === 0 && isComplete;
-  const hasExitPhoto = exitPhotos[currentZoneId];
 
-  const canProceed = isComplete && (isGreen ? hasExitPhoto : true);
-
-  const handleTakeExitPhoto = () => {
-    camera.openCamera((imageData) => {
-      if (imageData) {
-        addExitPhoto(currentZoneId, imageData);
-      }
-    });
-  };
+  const canProceed = isComplete;
 
   const handleComplete = () => {
     // Save results
@@ -147,7 +163,19 @@ export const BGGovernance = ({ bgWalkthrough, camera }) => {
               Zone {currentZoneIndex + 1} of {totalZones}
             </p>
           </div>
-          <div style={{ width: '40px' }} />
+          <div style={{
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            borderRadius: '8px',
+            padding: '6px 10px',
+            fontSize: '14px',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px'
+          }}>
+            <span>⏱️</span>
+            <span>{elapsedTime}</span>
+          </div>
         </div>
       </div>
 
@@ -361,7 +389,7 @@ export const BGGovernance = ({ bgWalkthrough, camera }) => {
           ))}
         </div>
 
-        {/* Exit Photo for Green Zone */}
+        {/* Green Zone Success Message */}
         {isComplete && isGreen && (
           <div style={{
             backgroundColor: '#fff',
@@ -370,57 +398,9 @@ export const BGGovernance = ({ bgWalkthrough, camera }) => {
             marginTop: '16px',
             border: '2px solid #10b981'
           }}>
-            <div style={{ fontSize: '16px', fontWeight: '600', color: '#059669', marginBottom: '12px' }}>
-              ✅ All governance checks passed - Exit Photo Required
+            <div style={{ fontSize: '16px', fontWeight: '600', color: '#059669' }}>
+              ✅ All governance checks passed!
             </div>
-
-            {hasExitPhoto ? (
-              <div style={{ position: 'relative', display: 'inline-block' }}>
-                <img
-                  src={exitPhotos[currentZoneId]}
-                  alt="Exit photo"
-                  style={{
-                    width: '100%',
-                    maxWidth: '200px',
-                    borderRadius: '8px'
-                  }}
-                />
-                <div style={{
-                  position: 'absolute',
-                  bottom: '8px',
-                  left: '8px',
-                  backgroundColor: '#10b981',
-                  color: '#fff',
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                  fontWeight: '600'
-                }}>
-                  Exit Photo ✓
-                </div>
-              </div>
-            ) : (
-              <button
-                onClick={handleTakeExitPhoto}
-                style={{
-                  width: '100%',
-                  padding: '20px',
-                  border: '2px dashed #10b981',
-                  borderRadius: '8px',
-                  backgroundColor: '#f0fdf4',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
-              >
-                <span style={{ fontSize: '32px' }}>📸</span>
-                <span style={{ fontSize: '15px', fontWeight: '600', color: '#059669' }}>
-                  Take Exit Photo
-                </span>
-              </button>
-            )}
           </div>
         )}
       </div>
@@ -452,8 +432,6 @@ export const BGGovernance = ({ bgWalkthrough, camera }) => {
         >
           {!isComplete
             ? `Answer All Questions (${getAnsweredCount()}/${getTotalChecks()})`
-            : isGreen && !hasExitPhoto
-            ? 'Take Exit Photo to Continue'
             : 'View Summary →'}
         </button>
       </div>
