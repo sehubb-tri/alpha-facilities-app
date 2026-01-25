@@ -2,84 +2,6 @@ import { useState, useCallback, useEffect } from 'react';
 import { BG_ZONES, BG_ZONE_ORDER, calculateZoneRating, calculateCampusRating, getCheckTier } from '../data/bgZones';
 
 const STORAGE_KEY = 'bg_walkthrough_state';
-const PHOTOS_STORAGE_KEY = 'bg_walkthrough_photos';
-
-// Store photos separately in IndexedDB to avoid localStorage limits
-const PhotoStorage = {
-  db: null,
-
-  async init() {
-    if (this.db) return this.db;
-
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open('BGWalkthroughPhotos', 1);
-
-      request.onerror = () => {
-        console.error('[PhotoStorage] Failed to open IndexedDB');
-        reject(request.error);
-      };
-
-      request.onsuccess = () => {
-        this.db = request.result;
-        resolve(this.db);
-      };
-
-      request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        if (!db.objectStoreNames.contains('photos')) {
-          db.createObjectStore('photos', { keyPath: 'id' });
-        }
-      };
-    });
-  },
-
-  async savePhoto(id, dataUrl) {
-    try {
-      const db = await this.init();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction('photos', 'readwrite');
-        const store = tx.objectStore('photos');
-        const request = store.put({ id, dataUrl, timestamp: Date.now() });
-        request.onsuccess = () => resolve(id);
-        request.onerror = () => reject(request.error);
-      });
-    } catch (e) {
-      console.error('[PhotoStorage] Error saving photo:', e);
-      return id;
-    }
-  },
-
-  async getPhoto(id) {
-    try {
-      const db = await this.init();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction('photos', 'readonly');
-        const store = tx.objectStore('photos');
-        const request = store.get(id);
-        request.onsuccess = () => resolve(request.result?.dataUrl || null);
-        request.onerror = () => reject(request.error);
-      });
-    } catch (e) {
-      console.error('[PhotoStorage] Error getting photo:', e);
-      return null;
-    }
-  },
-
-  async clear() {
-    try {
-      const db = await this.init();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction('photos', 'readwrite');
-        const store = tx.objectStore('photos');
-        const request = store.clear();
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(request.error);
-      });
-    } catch (e) {
-      console.error('[PhotoStorage] Error clearing photos:', e);
-    }
-  }
-};
 
 const getInitialState = () => ({
   // Setup info
@@ -109,14 +31,17 @@ const getInitialState = () => ({
 
   // Issues/defects found
   // Structure: [{ zoneId, checkId, checkText, tier, photos: [], notes, rating, roomId? }, ...]
+  // photos array now contains Supabase URLs (not base64)
   issues: [],
 
   // Observations routed to other pillars
   // Structure: [{ category, description, pillar, tier, photos: [], notes }, ...]
+  // photos array now contains Supabase URLs (not base64)
   observations: [],
 
   // Exit photos for Green zones
   // Structure: { zoneId: photoUrl, ... }
+  // Values are now Supabase URLs (not base64)
   exitPhotos: {},
 
   // Zone ratings
@@ -154,47 +79,14 @@ export const useBGWalkthrough = () => {
     return getInitialState();
   });
 
-  // Save to localStorage on state change (excluding large photo data)
+  // Save to localStorage on state change
+  // Since photos are now URLs (small strings), not base64, this won't overflow
   useEffect(() => {
     if (state.startTime && !state.isComplete) {
       try {
-        // Create a copy without base64 photo data to avoid localStorage limits
-        const stateToSave = {
-          ...state,
-          // Keep photo IDs/URLs but strip base64 data from issues
-          issues: state.issues.map(issue => ({
-            ...issue,
-            photos: issue.photos.map(photo =>
-              // Keep URLs and photo IDs, but skip huge base64 data
-              photo && photo.startsWith('data:') && photo.length > 10000
-                ? `photo_ref_${issue.id}_${Date.now()}` // Replace with reference
-                : photo
-            )
-          })),
-          // Same for observations
-          observations: state.observations.map(obs => ({
-            ...obs,
-            photos: obs.photos.map(photo =>
-              photo && photo.startsWith('data:') && photo.length > 10000
-                ? `photo_ref_${obs.id}_${Date.now()}`
-                : photo
-            )
-          })),
-          // Same for exit photos
-          exitPhotos: Object.fromEntries(
-            Object.entries(state.exitPhotos).map(([zoneId, photo]) => [
-              zoneId,
-              photo && photo.startsWith('data:') && photo.length > 10000
-                ? `photo_ref_exit_${zoneId}`
-                : photo
-            ])
-          )
-        };
-
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       } catch (e) {
         console.error('[useBGWalkthrough] Error saving to localStorage:', e);
-        // If localStorage fails, at least the in-memory state is preserved
       }
     }
   }, [state]);
@@ -202,8 +94,6 @@ export const useBGWalkthrough = () => {
   // Clear saved state
   const clearSavedState = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY);
-    // Also clear IndexedDB photos
-    PhotoStorage.clear().catch(e => console.error('[useBGWalkthrough] Error clearing photo storage:', e));
   }, []);
 
   // Initialize walkthrough
