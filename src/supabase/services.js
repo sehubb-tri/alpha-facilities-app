@@ -3,41 +3,128 @@ import { supabase } from './config';
 // ============================================
 // PHOTO UPLOAD
 // ============================================
-export const uploadPhoto = async (base64Data, folder = 'reports') => {
-  try {
-    // Convert base64 to blob
-    const base64 = base64Data.replace(/^data:image\/\w+;base64,/, '');
-    const bytes = atob(base64);
-    const byteArray = new Uint8Array(bytes.length);
-    for (let i = 0; i < bytes.length; i++) {
-      byteArray[i] = bytes.charCodeAt(i);
+
+// Helper to convert base64 to blob properly
+const base64ToBlob = (base64Data) => {
+  // Handle data URL format
+  let base64 = base64Data;
+  let mimeType = 'image/jpeg';
+
+  if (base64Data.includes(',')) {
+    const parts = base64Data.split(',');
+    const mimeMatch = parts[0].match(/:(.*?);/);
+    if (mimeMatch) {
+      mimeType = mimeMatch[1];
     }
-    const blob = new Blob([byteArray], { type: 'image/jpeg' });
+    base64 = parts[1];
+  }
 
-    // Generate unique filename
-    const filename = `${folder}/${Date.now()}_${Math.random().toString(36).substr(2, 9)}.jpg`;
+  // Decode base64 using fetch API (more reliable than atob for binary data)
+  return fetch(`data:${mimeType};base64,${base64}`)
+    .then(res => res.blob());
+};
 
-    // Upload to Supabase Storage
-    const { data, error } = await supabase.storage
-      .from('photos')
-      .upload(filename, blob, {
-        contentType: 'image/jpeg',
-        upsert: false
-      });
+// Helper to compress image if it's too large
+const compressIfNeeded = async (base64Data, maxSizeKB = 500) => {
+  const sizeKB = (base64Data.length * 3) / 4 / 1024; // Approximate size
 
-    if (error) throw error;
-
-    // Get public URL
-    const { data: urlData } = supabase.storage
-      .from('photos')
-      .getPublicUrl(filename);
-
-    return urlData.publicUrl;
-  } catch (error) {
-    console.error('Error uploading photo:', error);
-    // Fallback: return base64 if upload fails
+  if (sizeKB <= maxSizeKB) {
     return base64Data;
   }
+
+  console.log(`[uploadPhoto] Image too large (${Math.round(sizeKB)}KB), compressing...`);
+
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let width = img.width;
+      let height = img.height;
+
+      // Scale down proportionally
+      const scaleFactor = Math.sqrt(maxSizeKB / sizeKB);
+      width = Math.floor(width * scaleFactor);
+      height = Math.floor(height * scaleFactor);
+
+      // Minimum dimensions
+      width = Math.max(width, 400);
+      height = Math.max(height, 300);
+
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      const compressed = canvas.toDataURL('image/jpeg', 0.7);
+      console.log(`[uploadPhoto] Compressed to ${Math.round((compressed.length * 3) / 4 / 1024)}KB`);
+      resolve(compressed);
+    };
+    img.onerror = () => resolve(base64Data);
+    img.src = base64Data;
+  });
+};
+
+export const uploadPhoto = async (base64Data, folder = 'reports', retries = 3) => {
+  if (!base64Data) {
+    console.error('[uploadPhoto] No image data provided');
+    return null;
+  }
+
+  // Compress if too large before uploading
+  const compressedData = await compressIfNeeded(base64Data);
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      console.log(`[uploadPhoto] Attempt ${attempt}/${retries} for folder: ${folder}`);
+
+      // Convert base64 to blob using fetch API (more reliable)
+      const blob = await base64ToBlob(compressedData);
+      console.log(`[uploadPhoto] Created blob, size: ${blob.size} bytes`);
+
+      // Generate unique filename
+      const filename = `${folder}/${Date.now()}_${Math.random().toString(36).substr(2, 9)}.jpg`;
+
+      // Upload to Supabase Storage
+      const { error } = await supabase.storage
+        .from('photos')
+        .upload(filename, blob, {
+          contentType: 'image/jpeg',
+          upsert: false
+        });
+
+      if (error) {
+        console.error(`[uploadPhoto] Supabase error on attempt ${attempt}:`, error);
+        if (attempt === retries) throw error;
+        // Wait before retry
+        await new Promise(r => setTimeout(r, 1000 * attempt));
+        continue;
+      }
+
+      // Get public URL
+      const { data: urlData } = supabase.storage
+        .from('photos')
+        .getPublicUrl(filename);
+
+      console.log('[uploadPhoto] Success! URL:', urlData.publicUrl);
+      return urlData.publicUrl;
+
+    } catch (error) {
+      console.error(`[uploadPhoto] Error on attempt ${attempt}:`, error);
+
+      if (attempt === retries) {
+        // IMPORTANT: Don't return base64 data - it's too large and will break localStorage
+        // Instead, return a placeholder URL or null
+        console.error('[uploadPhoto] All retries failed, returning null instead of base64');
+        return null;
+      }
+
+      // Wait before retry
+      await new Promise(r => setTimeout(r, 1000 * attempt));
+    }
+  }
+
+  return null;
 };
 
 // ============================================
