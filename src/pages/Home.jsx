@@ -11,6 +11,24 @@ export const Home = () => {
   const [audits, setAudits] = useState([]);
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isLandscape, setIsLandscape] = useState(false);
+
+  // Detect landscape orientation
+  useEffect(() => {
+    const checkOrientation = () => {
+      const isLandscapeMode = window.innerWidth > window.innerHeight && window.innerHeight < 500;
+      setIsLandscape(isLandscapeMode);
+    };
+
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+
+    return () => {
+      window.removeEventListener('resize', checkOrientation);
+      window.removeEventListener('orientationchange', checkOrientation);
+    };
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -161,12 +179,12 @@ export const Home = () => {
       </div>
 
       {/* Logo Section */}
-      <div style={{ padding: '30px 24px 30px', textAlign: 'center' }}>
+      <div style={{ padding: isLandscape ? '10px 24px' : '30px 24px 30px', textAlign: 'center' }}>
         <img
           src="/Alpha School Logo - Blue.png"
           alt="Alpha School"
           style={{
-            maxWidth: '200px',
+            maxWidth: isLandscape ? '120px' : '200px',
             width: 'auto',
             filter: 'brightness(0) invert(1)'
           }}
@@ -177,39 +195,17 @@ export const Home = () => {
       </div>
 
       {/* Main Action Buttons */}
-      <div style={{ padding: '0 24px 24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-          <button
-            onClick={() => navigate('/report')}
-            style={{
-              aspectRatio: '1',
-              backgroundColor: '#fff',
-              color: '#092849',
-              borderRadius: '20px',
-              fontSize: '17px',
-              fontWeight: '700',
-              border: 'none',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '16px',
-              cursor: 'pointer'
-            }}
-          >
-            <span style={{ fontSize: '48px', marginBottom: '12px' }}>📸</span>
-            <span style={{ textAlign: 'center', lineHeight: '1.3' }}>{t('nav.report')}</span>
-          </button>
-
+      <div style={{ padding: isLandscape ? '0 24px 12px' : '0 24px 24px' }}>
+        {/* Top row: Daily Cleanliness Check and Weekly Building and Grounds Check side by side */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: isLandscape ? '12px' : '20px' }}>
           <button
             onClick={() => navigate('/audit/setup')}
             style={{
-              aspectRatio: '1',
+              aspectRatio: isLandscape ? 'auto' : '1',
               backgroundColor: '#fff',
               color: '#092849',
-              borderRadius: '20px',
-              fontSize: '17px',
+              borderRadius: isLandscape ? '14px' : '20px',
+              fontSize: isLandscape ? '14px' : '17px',
               fontWeight: '700',
               border: 'none',
               boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
@@ -217,46 +213,65 @@ export const Home = () => {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: '16px',
-              cursor: 'pointer'
+              padding: isLandscape ? '10px' : '16px',
+              cursor: 'pointer',
+              minHeight: isLandscape ? '70px' : '120px',
+              maxHeight: isLandscape ? '100px' : '180px'
             }}
           >
-            <span style={{ fontSize: '48px', marginBottom: '12px' }}>✅</span>
+            <span style={{ fontSize: isLandscape ? '28px' : '48px', marginBottom: isLandscape ? '4px' : '12px' }}>✅</span>
             <span style={{ textAlign: 'center', lineHeight: '1.3' }}>{t('nav.audit')}</span>
+          </button>
+
+          <button
+            onClick={() => navigate('/bg/setup')}
+            style={{
+              aspectRatio: isLandscape ? 'auto' : '1',
+              backgroundColor: '#fff',
+              color: '#092849',
+              borderRadius: isLandscape ? '14px' : '20px',
+              fontSize: isLandscape ? '14px' : '17px',
+              fontWeight: '700',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: isLandscape ? '10px' : '16px',
+              cursor: 'pointer',
+              minHeight: isLandscape ? '70px' : '120px',
+              maxHeight: isLandscape ? '100px' : '180px'
+            }}
+          >
+            <span style={{ fontSize: isLandscape ? '28px' : '48px', marginBottom: isLandscape ? '4px' : '12px' }}>🏢</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.3' }}>{t('nav.bgWalkthrough')}</span>
           </button>
         </div>
 
-        {/* Weekly B&G Button */}
+        {/* See It, Report It - Full width button below */}
         <button
-          onClick={() => navigate('/bg/setup')}
+          onClick={() => navigate('/report')}
           style={{
             width: '100%',
-            marginTop: '16px',
+            marginTop: isLandscape ? '10px' : '16px',
             backgroundColor: 'rgba(255,255,255,0.15)',
             color: '#fff',
-            borderRadius: '16px',
-            fontSize: '16px',
+            borderRadius: isLandscape ? '12px' : '16px',
+            fontSize: isLandscape ? '14px' : '16px',
             fontWeight: '700',
             border: '2px solid rgba(255,255,255,0.3)',
             boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '16px 20px',
+            padding: isLandscape ? '10px 16px' : '16px 20px',
             cursor: 'pointer',
             gap: '12px'
           }}
         >
-          <span style={{ fontSize: '28px' }}>🏢</span>
-          <span>Weekly B&G Walkthrough</span>
-          <span style={{
-            fontSize: '12px',
-            backgroundColor: 'rgba(255,255,255,0.2)',
-            padding: '4px 8px',
-            borderRadius: '6px'
-          }}>
-            NEW
-          </span>
+          <span style={{ fontSize: isLandscape ? '20px' : '28px' }}>📸</span>
+          <span>{t('nav.report')}</span>
         </button>
       </div>
 

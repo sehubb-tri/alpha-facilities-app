@@ -117,3 +117,41 @@ body {
 .hidden {
   display: none;
 }
+
+/* Landscape mode responsive styles */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  /* Reduce padding and spacing in landscape on mobile */
+  .landscape-compact {
+    padding: 8px 16px !important;
+  }
+
+  /* Smaller buttons in landscape */
+  .landscape-button {
+    aspect-ratio: unset !important;
+    min-height: 80px !important;
+    max-height: 120px !important;
+    padding: 12px !important;
+  }
+
+  .landscape-button span:first-child {
+    font-size: 32px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .landscape-button span:last-child {
+    font-size: 14px !important;
+  }
+}
+
+/* Prevent layout issues on orientation change */
+@media screen and (orientation: landscape) {
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Ensure main container doesn't overflow */
+  #root {
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+}

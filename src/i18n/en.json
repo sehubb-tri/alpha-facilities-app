@@ -19,8 +19,9 @@
   },
   "nav": {
     "home": "Home",
-    "audit": "Daily QC Walkthrough",
+    "audit": "Daily Cleanliness Check",
     "report": "See It, Report It",
+    "bgWalkthrough": "Weekly Building and Grounds Check",
     "history": "History",
     "settings": "Settings"
   },

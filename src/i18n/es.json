@@ -19,8 +19,9 @@
   },
   "nav": {
     "home": "Inicio",
-    "audit": "Inspección Diaria QC",
+    "audit": "Inspección Diaria de Limpieza",
     "report": "Ver y Reportar",
+    "bgWalkthrough": "Inspección Semanal de Edificio y Terrenos",
     "history": "Historial",
     "settings": "Configuración"
   },
