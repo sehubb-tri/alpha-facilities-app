@@ -61,7 +61,25 @@
       "submitAudit": "Enviar Inspección",
       "tourReady": "¿Está esta instalación lista para visitas?",
       "tourReadyYes": "Sí, lista para visitas",
-      "tourReadyNo": "No, necesita atención"
+      "tourReadyNo": "No, necesita atención",
+      "zones": "Zonas",
+      "defects": "Defectos",
+      "duration": "Duración",
+      "submitting": "Enviando...",
+      "bgIssuesFlagged": "Problema(s) de Mantenimiento Reportado(s)",
+      "sentToBGTeam": "Se enviará al equipo de Mantenimiento"
+    },
+    "tourReady": {
+      "title": "Pregunta Final",
+      "question": "¿Podría ocurrir un recorrido de padres ahora mismo?",
+      "yesTourReady": "Sí - Listo para Recorrido",
+      "noNotTourReady": "No - No Listo para Recorrido",
+      "automaticRed": "ROJO Automático",
+      "reviewSummary": "Ver Resumen"
+    },
+    "complete": {
+      "submitted": "¡Enviado!",
+      "done": "Listo"
     },
     "status": {
       "green": "VERDE - Todo en Orden",
@@ -73,10 +91,26 @@
       "enterName": "Por favor ingrese su nombre",
       "enterEmail": "Por favor ingrese su correo electrónico",
       "completeAllQuestions": "Por favor responda todas las preguntas antes de continuar"
+    },
+    "bg": {
+      "title": "¿Hay problemas del edificio para reportar a Mantenimiento?",
+      "addAnotherPhoto": "Agregar Otra Foto",
+      "takePhotoOfIssue": "Tomar Foto del Problema",
+      "requiredForAlerts": "Requerido para alertas de Mantenimiento",
+      "describeIssue": "Describa el problema (requerido)...",
+      "answerAll": "Responda todas",
+      "selectBGStatus": "Seleccione estado de Mantenimiento",
+      "addBGPhoto": "Agregar foto de Mantenimiento",
+      "describeBGIssue": "Describa el problema de Mantenimiento",
+      "completeZone": "Completar Zona",
+      "anyDefectRed": "Cualquier defecto = estado ROJO"
     }
   },
   "report": {
     "title": "Ver y Reportar",
+    "subtitle": "Reportar un problema de instalación",
+    "snapPhoto": "Tomar una Foto",
+    "snapPhotoDesc": "Tome una foto del problema y lo enviaremos al equipo correcto.",
     "setup": {
       "campus": "Campus",
       "campusPlaceholder": "Seleccione un campus",
@@ -161,7 +195,7 @@
     ],
     "hallway": [
       "¿El piso está limpio (sin escombros, derrames o manchas)?",
-      "¿Los bordes, esquinas y zócalos están libres de polvo (sin acumulación)?",
+      "¿Los bordes, esquinas y rodapié están libres de polvo (sin acumulación)?",
       "¿Las paredes están libres de marcas de rozaduras (sin marcas negras o rasguños)?",
       "¿Los vidrios y puertas están limpios (sin manchas o huellas)?",
       "¿Las superficies de alto contacto están limpias (manijas de puertas, pasamanos, interruptores de luz)?",
@@ -187,7 +221,7 @@
     ],
     "classroom": [
       "¿El piso está limpio (sin escombros, derrames o manchas)?",
-      "¿Los bordes, esquinas y zócalos están libres de polvo (sin acumulación)?",
+      "¿Los bordes, esquinas y rodapié están libres de polvo (sin acumulación)?",
       "¿Los escritorios y mesas de estudiantes están limpios (sin escritura, calcomanías o residuos)?",
       "¿El escritorio y superficies del maestro están limpios (sin polvo o desorden)?",
       "¿El área del pizarrón está limpia (bandeja limpia, repisa sin polvo)?",

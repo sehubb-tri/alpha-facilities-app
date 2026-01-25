@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { saveAudit } from '../supabase/services';
+import { useI18n } from '../i18n';
 
 export const AuditSummary = ({ audit }) => {
   const navigate = useNavigate();
+  const { t, getZoneName } = useI18n();
   const [submitting, setSubmitting] = useState(false);
 
   const {
@@ -74,7 +76,7 @@ export const AuditSummary = ({ audit }) => {
             textAlign: 'center'
           }}>
             <div style={{ fontSize: '24px', fontWeight: '700', color: '#092849' }}>{allZones.length}</div>
-            <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>Zones</div>
+            <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>{t('audit.summary.zones')}</div>
           </div>
           <div style={{
             backgroundColor: '#fff',
@@ -90,7 +92,7 @@ export const AuditSummary = ({ audit }) => {
             }}>
               {totalDefects}
             </div>
-            <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>Defects</div>
+            <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>{t('audit.summary.defects')}</div>
           </div>
           <div style={{
             backgroundColor: '#fff',
@@ -100,7 +102,7 @@ export const AuditSummary = ({ audit }) => {
             textAlign: 'center'
           }}>
             <div style={{ fontSize: '24px', fontWeight: '700', color: '#092849' }}>{duration}m</div>
-            <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>Duration</div>
+            <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>{t('audit.summary.duration')}</div>
           </div>
         </div>
 
@@ -139,7 +141,7 @@ export const AuditSummary = ({ audit }) => {
                 }}>
                   {defects === 0 ? '✓' : defects}
                 </span>
-                <span style={{ flex: 1, fontSize: '17px', color: '#374151' }}>{zone?.name || zoneId}</span>
+                <span style={{ flex: 1, fontSize: '17px', color: '#374151' }}>{zone?.type === 'restroom' ? zone?.name : getZoneName(zoneId)}</span>
               </div>
             );
           })}
@@ -154,10 +156,10 @@ export const AuditSummary = ({ audit }) => {
             padding: '16px'
           }}>
             <div style={{ fontWeight: '700', color: '#092849', marginBottom: '4px', fontSize: '17px' }}>
-              🔧 {flaggedAlerts} B&G Issue(s) Flagged
+              🔧 {flaggedAlerts} {t('audit.summary.bgIssuesFlagged')}
             </div>
             <div style={{ fontSize: '15px', color: '#141685' }}>
-              Will be sent to B&G team
+              {t('audit.summary.sentToBGTeam')}
             </div>
           </div>
         )}
@@ -188,7 +190,7 @@ export const AuditSummary = ({ audit }) => {
             cursor: submitting ? 'not-allowed' : 'pointer'
           }}
         >
-          {submitting ? 'Submitting...' : '✓ Submit Audit'}
+          {submitting ? t('audit.summary.submitting') : `✓ ${t('audit.summary.submitAudit')}`}
         </button>
       </div>
     </div>

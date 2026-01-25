@@ -134,7 +134,7 @@ export const AuditZone = ({ audit, camera }) => {
           borderRadius: '8px'
         }}>
           <div style={{ fontWeight: '600', color: '#141685', fontSize: '15px' }}>
-            ⚠️ Any defect = RED status
+            ⚠️ {t('audit.bg.anyDefectRed')}
           </div>
         </div>
       )}
@@ -200,7 +200,7 @@ export const AuditZone = ({ audit, camera }) => {
           borderLeft: '4px solid #2B57D0'
         }}>
           <div style={{ fontSize: '15px', fontWeight: '600', color: '#092849', marginBottom: '12px' }}>
-            Any building issues to flag for B&G?
+            {t('audit.bg.title')}
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button
@@ -320,11 +320,11 @@ export const AuditZone = ({ audit, camera }) => {
                 >
                   <span style={{ fontSize: alertPhotos.length > 0 ? '20px' : '28px' }}>📷</span>
                   <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>
-                    {alertPhotos.length > 0 ? 'Add Another Photo' : 'Take Photo of Issue'}
+                    {alertPhotos.length > 0 ? t('audit.bg.addAnotherPhoto') : t('audit.bg.takePhotoOfIssue')}
                   </span>
                   {alertPhotos.length === 0 && (
                     <span style={{ fontSize: '12px', color: '#6b7280' }}>
-                      Required for B&G alerts
+                      {t('audit.bg.requiredForAlerts')}
                     </span>
                   )}
                 </button>
@@ -334,7 +334,7 @@ export const AuditZone = ({ audit, camera }) => {
               <textarea
                 value={alert?.note || ''}
                 onChange={handleNoteChange}
-                placeholder="Describe the issue (required)..."
+                placeholder={t('audit.bg.describeIssue')}
                 maxLength={100}
                 style={{
                   width: '100%',
@@ -387,14 +387,14 @@ export const AuditZone = ({ audit, camera }) => {
           }}
         >
           {!complete
-            ? `Answer all (${answeredCount}/${totalQuestions})`
+            ? `${t('audit.bg.answerAll')} (${answeredCount}/${totalQuestions})`
             : !hasBGSelection
-            ? 'Select B&G status'
+            ? t('audit.bg.selectBGStatus')
             : alert?.hasIssue && alertPhotos.length === 0
-            ? 'Add B&G photo'
+            ? t('audit.bg.addBGPhoto')
             : alert?.hasIssue && !alert?.note?.length
-            ? 'Describe B&G issue'
-            : 'Complete Zone →'}
+            ? t('audit.bg.describeBGIssue')
+            : `${t('audit.bg.completeZone')} →`}
         </button>
       </div>
     </div>

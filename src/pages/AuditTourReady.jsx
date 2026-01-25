@@ -1,21 +1,23 @@
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
+import { useI18n } from '../i18n';
 
 export const AuditTourReady = ({ audit }) => {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const { tourReady, setTourReady } = audit;
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6', paddingBottom: '100px' }}>
       <Header
-        title="Final Question"
+        title={t('audit.tourReady.title')}
         onBack={() => navigate('/audit/overview')}
       />
 
       <div style={{ padding: '20px' }}>
         <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
           <div style={{ fontSize: '20px', fontWeight: '600', marginBottom: '20px', color: '#092849' }}>
-            Could a parent tour happen right now?
+            {t('audit.tourReady.question')}
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -33,7 +35,7 @@ export const AuditTourReady = ({ audit }) => {
               }}
             >
               <span style={{ fontSize: '28px', marginRight: '16px' }}>✓</span>
-              <div style={{ fontWeight: '600', fontSize: '18px' }}>Yes — Tour Ready</div>
+              <div style={{ fontWeight: '600', fontSize: '18px' }}>{t('audit.tourReady.yesTourReady')}</div>
             </button>
 
             <button
@@ -52,8 +54,8 @@ export const AuditTourReady = ({ audit }) => {
             >
               <span style={{ fontSize: '28px', marginRight: '16px' }}>✗</span>
               <div>
-                <div style={{ fontWeight: '600', fontSize: '18px' }}>No — Not Tour Ready</div>
-                <div style={{ fontSize: '15px', color: '#141685', marginTop: '4px' }}>⚠️ Automatic RED</div>
+                <div style={{ fontWeight: '600', fontSize: '18px' }}>{t('audit.tourReady.noNotTourReady')}</div>
+                <div style={{ fontSize: '15px', color: '#141685', marginTop: '4px' }}>⚠️ {t('audit.tourReady.automaticRed')}</div>
               </div>
             </button>
           </div>
@@ -85,7 +87,7 @@ export const AuditTourReady = ({ audit }) => {
             color: tourReady !== null ? '#fff' : '#9ca3af'
           }}
         >
-          Review Summary →
+          {t('audit.tourReady.reviewSummary')} →
         </button>
       </div>
     </div>

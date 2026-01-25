@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { CampusSelector } from '../components/CampusSelector';
 import { CAMPUSES } from '../data/campuses';
+import { useI18n } from '../i18n';
 
 export const ReportStart = ({ report, camera }) => {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const [campusName, setCampusName] = useState('');
 
   const handleOpenCamera = () => {
@@ -25,8 +27,8 @@ export const ReportStart = ({ report, camera }) => {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6' }}>
       <Header
-        title="See It, Report It"
-        subtitle="Report a facility issue"
+        title={t('nav.report')}
+        subtitle={t('report.setup.subtitle', 'Report a facility issue')}
         variant="red"
         onBack={() => navigate('/')}
       />
@@ -41,10 +43,10 @@ export const ReportStart = ({ report, camera }) => {
         }}>
           <div style={{ fontSize: '64px', marginBottom: '16px' }}>📸</div>
           <h2 style={{ fontSize: '22px', fontWeight: '700', marginBottom: '10px', color: '#092849' }}>
-            Snap a Photo
+            {t('report.snapPhoto')}
           </h2>
           <p style={{ color: '#666', marginBottom: '28px', fontSize: '17px', lineHeight: '1.5' }}>
-            Take a photo of the issue and we'll route it to the right team.
+            {t('report.snapPhotoDesc')}
           </p>
 
           <div style={{ marginBottom: '24px', textAlign: 'left' }}>
@@ -55,7 +57,7 @@ export const ReportStart = ({ report, camera }) => {
               color: '#333',
               marginBottom: '10px'
             }}>
-              Campus *
+              {t('report.setup.campus')} *
             </label>
             <CampusSelector
               id="reportCampus"
@@ -78,7 +80,7 @@ export const ReportStart = ({ report, camera }) => {
               cursor: 'pointer'
             }}
           >
-            📷 Take Photo
+            📷 {t('audit.walkthrough.takePhoto')}
           </button>
         </div>
       </div>

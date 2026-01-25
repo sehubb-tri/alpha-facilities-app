@@ -61,7 +61,25 @@
       "submitAudit": "Submit Audit",
       "tourReady": "Is this facility tour-ready?",
       "tourReadyYes": "Yes, tour-ready",
-      "tourReadyNo": "No, needs attention"
+      "tourReadyNo": "No, needs attention",
+      "zones": "Zones",
+      "defects": "Defects",
+      "duration": "Duration",
+      "submitting": "Submitting...",
+      "bgIssuesFlagged": "B&G Issue(s) Flagged",
+      "sentToBGTeam": "Will be sent to B&G team"
+    },
+    "tourReady": {
+      "title": "Final Question",
+      "question": "Could a parent tour happen right now?",
+      "yesTourReady": "Yes - Tour Ready",
+      "noNotTourReady": "No - Not Tour Ready",
+      "automaticRed": "Automatic RED",
+      "reviewSummary": "Review Summary"
+    },
+    "complete": {
+      "submitted": "Submitted!",
+      "done": "Done"
     },
     "status": {
       "green": "GREEN - All Clear",
@@ -73,10 +91,26 @@
       "enterName": "Please enter your name",
       "enterEmail": "Please enter your email",
       "completeAllQuestions": "Please answer all questions before proceeding"
+    },
+    "bg": {
+      "title": "Any building issues to flag for B&G?",
+      "addAnotherPhoto": "Add Another Photo",
+      "takePhotoOfIssue": "Take Photo of Issue",
+      "requiredForAlerts": "Required for B&G alerts",
+      "describeIssue": "Describe the issue (required)...",
+      "answerAll": "Answer all",
+      "selectBGStatus": "Select B&G status",
+      "addBGPhoto": "Add B&G photo",
+      "describeBGIssue": "Describe B&G issue",
+      "completeZone": "Complete Zone",
+      "anyDefectRed": "Any defect = RED status"
     }
   },
   "report": {
     "title": "See It, Report It",
+    "subtitle": "Report a facility issue",
+    "snapPhoto": "Snap a Photo",
+    "snapPhotoDesc": "Take a photo of the issue and we'll route it to the right team.",
     "setup": {
       "campus": "Campus",
       "campusPlaceholder": "Select a campus",

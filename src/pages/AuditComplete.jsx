@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom';
+import { useI18n } from '../i18n';
 
 export const AuditComplete = ({ audit }) => {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const { campus, calculateStatus, resetAudit } = audit;
 
   const status = calculateStatus();
@@ -30,7 +32,7 @@ export const AuditComplete = ({ audit }) => {
       textAlign: 'center'
     }}>
       <div style={{ fontSize: '96px', marginBottom: '24px' }}>✅</div>
-      <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>Submitted!</h1>
+      <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>{t('audit.complete.submitted')}</h1>
       <div style={{ fontSize: '56px', fontWeight: '700', margin: '16px 0' }}>{status}</div>
       <p style={{ opacity: 0.9, marginBottom: '32px', fontSize: '18px' }}>{campus?.name || ''}</p>
       <button
@@ -46,7 +48,7 @@ export const AuditComplete = ({ audit }) => {
           cursor: 'pointer'
         }}
       >
-        Done
+        {t('audit.complete.done')}
       </button>
     </div>
   );
