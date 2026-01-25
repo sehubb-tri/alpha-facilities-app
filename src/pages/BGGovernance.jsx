@@ -16,7 +16,6 @@ export const BGGovernance = ({ bgWalkthrough, camera }) => {
     exitPhotos,
     recordZoneResults,
     addExitPhoto,
-    nextZone,
     goToZone,
     calculateAndSetZoneRating
   } = bgWalkthrough;
@@ -50,12 +49,11 @@ export const BGGovernance = ({ bgWalkthrough, camera }) => {
     loadPriorWeek();
   }, [campus]);
 
-  // Get existing results
-  const existingResults = zoneResults[currentZoneId] || {};
-
+  // Initialize local results when zone changes
   useEffect(() => {
+    const existingResults = zoneResults[currentZoneId] || {};
     setLocalResults(existingResults);
-  }, [currentZoneId]);
+  }, [currentZoneId, zoneResults]);
 
   const handleResponse = (checkId, value) => {
     setLocalResults(prev => ({

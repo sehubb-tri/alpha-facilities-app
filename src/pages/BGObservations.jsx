@@ -16,7 +16,6 @@ export const BGObservations = ({ bgWalkthrough, camera }) => {
     currentZoneIndex,
     observations,
     addObservation,
-    updateObservation,
     removeObservation,
     nextZone,
     goToZone

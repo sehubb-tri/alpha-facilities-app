@@ -540,7 +540,7 @@ export const getZoneChecks = (zoneId) => {
 };
 
 // Helper to calculate zone rating
-export const calculateZoneRating = (zoneId, results, amberCount = 0) => {
+export const calculateZoneRating = (zoneId, results) => {
   const checks = getZoneChecks(zoneId);
 
   // Check for any NO answers

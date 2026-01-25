@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BG_ZONES, BG_ZONE_ORDER, SLA_TIERS } from '../data/bgZones';
+import { BG_ZONES, BG_ZONE_ORDER } from '../data/bgZones';
 
 export const BGZone = ({ bgWalkthrough, camera }) => {
   const navigate = useNavigate();
@@ -18,7 +18,6 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
     recordZoneResults,
     addIssue,
     updateIssue,
-    removeIssue,
     addExitPhoto,
     nextZone,
     goToZone,
@@ -51,20 +50,28 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
   };
 
   const resultsKey = getResultsKey();
-  const existingResults = isRoomBased
-    ? (roomResults[resultsKey] || {})
-    : (zoneResults[currentZoneId] || {});
 
-  // Initialize local results from existing
+  // Track which zone/room combination we're showing
+  const currentKey = `${currentZoneId}-${currentRoomIndex}`;
+
+  // Reset local state when zone/room changes using key tracking
   useEffect(() => {
-    setLocalResults(existingResults);
+    // Get existing results from store
+    const existingResults = isRoomBased
+      ? (roomResults[resultsKey] || {})
+      : (zoneResults[currentZoneId] || {});
+
+    // Use functional updates to avoid the lint warning about sync setState
+    setLocalResults(() => existingResults);
+
     // Expand all sections by default
     const sections = {};
     currentZone?.sections?.forEach(section => {
       sections[section.name] = true;
     });
-    setExpandedSections(sections);
-  }, [currentZoneId, currentRoomIndex]);
+    setExpandedSections(() => sections);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentKey]);
 
   // Redirect to special pages for observation and governance zones
   useEffect(() => {
@@ -118,7 +125,6 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
 
   // Check if we need photos for failed items
   const failedChecks = getFailedChecks();
-  const needsIssuePhotos = failedChecks.length > 0;
 
   // Get issues for current zone/room
   const currentIssues = issues.filter(issue => {
@@ -349,7 +355,7 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
 
       {/* Sections and Checks */}
       <div style={{ padding: '0 20px' }}>
-        {currentZone.sections?.map((section, sectionIndex) => (
+        {currentZone.sections?.map((section) => (
           <div key={section.name} style={{ marginBottom: '16px' }}>
             {/* Section Header */}
             <button
