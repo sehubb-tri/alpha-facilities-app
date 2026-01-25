@@ -88,71 +88,71 @@ export const BG_ZONES = {
     description: 'Turf, beds, trees, mulch, irrigation, drainage',
     sections: [
       {
-        name: 'Turf',
+        name: 'Turf (Grass Areas)',
         checks: [
-          { id: 'turf_height', text: 'Height uniform across the area?', tier: 3 },
-          { id: 'turf_color', text: 'Color consistent (no yellow/brown)?', tier: 3 },
-          { id: 'turf_weeds', text: 'Weeds scattered, not dominant (grass is clearly the main coverage)?', tier: 3, amberEligible: true },
-          { id: 'turf_bare', text: 'No bare spots?', tier: 2, amberIneligibleIf: 'visible from arrival path' },
-          { id: 'turf_scalping', text: 'No scalping or overgrowth?', tier: 3 }
+          { id: 'turf_height', text: 'Grass is the same height everywhere (no tall patches or short patches)?', tier: 3 },
+          { id: 'turf_color', text: 'Grass is green and healthy looking (no yellow or brown spots)?', tier: 3 },
+          { id: 'turf_weeds', text: 'Grass is mostly grass, not weeds (some weeds OK, but grass should be the main plant)?', tier: 3, amberEligible: true },
+          { id: 'turf_bare', text: 'Grass covers all areas (no bare dirt patches showing)?', tier: 2, amberIneligibleIf: 'visible from arrival path' },
+          { id: 'turf_scalping', text: 'Grass is cut properly (not cut too short showing brown, not overgrown and shaggy)?', tier: 3 }
         ]
       },
       {
-        name: 'Edging',
+        name: 'Edging (Where Grass Meets Sidewalk)',
         checks: [
-          { id: 'edging_lines', text: 'Clean lines visible from the parking lot?', tier: 3 },
-          { id: 'edging_overhang', text: 'No grass overhang onto hardscape?', tier: 3 },
-          { id: 'edging_weeds', text: 'No weeds in expansion joints?', tier: 3 }
+          { id: 'edging_lines', text: 'Edges look neat and straight (clean line between grass and sidewalk)?', tier: 3 },
+          { id: 'edging_overhang', text: 'Grass stays in the grass area (not growing over onto sidewalk or curb)?', tier: 3 },
+          { id: 'edging_weeds', text: 'Sidewalk cracks are clear (no weeds growing up through the cracks)?', tier: 3 }
         ]
       },
       {
-        name: 'Beds',
+        name: 'Plant Beds (Flower and Shrub Areas)',
         checks: [
-          { id: 'beds_healthy', text: 'Plants appear healthy (no wilting)?', tier: 3 },
-          { id: 'beds_pests', text: 'No visible pest damage?', tier: 3 },
-          { id: 'beds_dead', text: 'No dead plants?', tier: 3 },
-          { id: 'beds_toxic', text: 'No toxic plants (oleander, poison ivy, etc.) present?', tier: 1 },
-          { id: 'beds_weeds', text: 'Weeds scattered, not dominant (plants are clearly the main coverage)?', tier: 3, amberEligible: true },
-          { id: 'beds_seasonal', text: 'Seasonal color present and blooming (not dead, wilted, or bare)?', tier: 4, amberEligible: true }
+          { id: 'beds_healthy', text: 'Plants look healthy (standing up straight, not drooping or wilting)?', tier: 3 },
+          { id: 'beds_pests', text: 'Plants are pest-free (no holes in leaves, no bugs visible, no webs)?', tier: 3 },
+          { id: 'beds_dead', text: 'All plants are alive (no brown, dead, or dying plants)?', tier: 3 },
+          { id: 'beds_toxic', text: 'No dangerous plants present (no oleander, poison ivy, poison oak, or other toxic plants)?', tier: 1 },
+          { id: 'beds_weeds', text: 'Beds are mostly plants, not weeds (some weeds OK, but planted flowers/shrubs should be the main plants)?', tier: 3, amberEligible: true },
+          { id: 'beds_seasonal', text: 'Seasonal flowers are blooming and colorful (if the season calls for flowers, they should be alive and blooming)?', tier: 4, amberEligible: true }
         ]
       },
       {
-        name: 'Mulch',
+        name: 'Mulch (Wood Chips in Plant Beds)',
         checks: [
-          { id: 'mulch_coverage', text: 'Mulch visibly full with even coverage (no bare soil showing through)?', tier: 3, amberEligible: true },
-          { id: 'mulch_weeds', text: 'No weed breakthrough?', tier: 3 }
+          { id: 'mulch_coverage', text: 'Mulch covers all the soil (no bare dirt showing through the wood chips)?', tier: 3, amberEligible: true },
+          { id: 'mulch_weeds', text: 'Mulch is weed-free (no weeds poking up through the wood chips)?', tier: 3 }
         ]
       },
       {
         name: 'Trees',
         checks: [
-          { id: 'trees_clearance', text: 'Can an adult walk under without ducking?', tier: 3 },
-          { id: 'trees_limbs', text: 'No dead or hanging limbs?', tier: 1 },
-          { id: 'trees_disease', text: 'No visible disease signs?', tier: 3 },
-          { id: 'trees_lean', text: 'No hazardous lean?', tier: 1 }
+          { id: 'trees_clearance', text: 'Tree branches are high enough (an adult can walk under without ducking)?', tier: 3 },
+          { id: 'trees_limbs', text: 'All branches are healthy and attached (no dead branches, no broken limbs hanging)?', tier: 1 },
+          { id: 'trees_disease', text: 'Trees look healthy (no strange spots on leaves, no fungus on trunk, no oozing sap)?', tier: 3 },
+          { id: 'trees_lean', text: 'Trees stand straight (no trees leaning dangerously that could fall)?', tier: 1 }
         ]
       },
       {
-        name: 'Irrigation (Visible)',
+        name: 'Irrigation (Sprinkler System)',
         checks: [
-          { id: 'irrigation_leaks', text: 'No visible leaks?', tier: 2 },
-          { id: 'irrigation_dry', text: 'No dry/brown spots indicating failure?', tier: 2 },
-          { id: 'irrigation_overspray', text: 'No overspray on hardscape/buildings?', tier: 3 },
-          { id: 'irrigation_heads', text: 'No broken heads visible?', tier: 3 }
+          { id: 'irrigation_leaks', text: 'No water leaks visible (no puddles, no water spraying from broken pipes)?', tier: 2 },
+          { id: 'irrigation_dry', text: 'All areas are getting water (no dry brown patches from sprinklers not reaching)?', tier: 2 },
+          { id: 'irrigation_overspray', text: 'Water stays on plants (sprinklers not spraying onto sidewalks, walls, or parking lot)?', tier: 3 },
+          { id: 'irrigation_heads', text: 'Sprinkler heads are intact (no broken, cracked, or missing sprinkler heads)?', tier: 3 }
         ]
       },
       {
-        name: 'Debris',
+        name: 'Debris (Trash and Litter)',
         checks: [
-          { id: 'debris_trash', text: 'Grounds free of trash?', tier: 3, amberEligible: true },
-          { id: 'debris_leaves', text: 'No accumulated leaves/branches?', tier: 3, amberEligible: true }
+          { id: 'debris_trash', text: 'Grounds are litter-free (no trash, wrappers, bottles, or garbage on the ground)?', tier: 3, amberEligible: true },
+          { id: 'debris_leaves', text: 'Grounds are clear of yard waste (no piles of leaves, sticks, or branches)?', tier: 3, amberEligible: true }
         ]
       },
       {
-        name: 'Drainage',
+        name: 'Drainage (Water Flow)',
         checks: [
-          { id: 'drainage_standing', text: 'No standing water (or water present on prior audit still present)?', tier: 2 },
-          { id: 'drainage_erosion', text: 'No erosion visible?', tier: 2 }
+          { id: 'drainage_standing', text: 'No standing water (no puddles sitting in grass or low spots)?', tier: 2 },
+          { id: 'drainage_erosion', text: 'No erosion damage (no washed-out areas, no gullies, no exposed roots from water runoff)?', tier: 2 }
         ]
       }
     ]
@@ -165,45 +165,45 @@ export const BG_ZONES = {
     description: 'Parking surface, striping, walkways, curbing, site furnishings',
     sections: [
       {
-        name: 'Parking Surface',
+        name: 'Parking Lot Surface',
         checks: [
-          { id: 'parking_potholes', text: 'No potholes you\'d walk around to avoid?', tier: 1 },
-          { id: 'parking_cracks_width', text: 'No cracks wide enough to fit a pencil?', tier: 2 },
-          { id: 'parking_cracks_length', text: 'No cracks longer than a shoe length?', tier: 2 },
-          { id: 'parking_oil', text: 'No oil stains larger than your hand?', tier: 3, amberEligible: true },
-          { id: 'parking_stain_pattern', text: 'No visible stain pattern when pulling into the lot?', tier: 2 }
+          { id: 'parking_potholes', text: 'Parking lot is smooth (no potholes or dips you would walk around)?', tier: 1 },
+          { id: 'parking_cracks_width', text: 'No wide cracks (no cracks big enough to fit a pencil inside)?', tier: 2 },
+          { id: 'parking_cracks_length', text: 'No long cracks (no cracks longer than the length of your shoe)?', tier: 2 },
+          { id: 'parking_oil', text: 'No large oil stains (no stains bigger than your hand)?', tier: 3, amberEligible: true },
+          { id: 'parking_stain_pattern', text: 'Parking lot looks clean overall (no obvious pattern of stains when you drive in)?', tier: 2 }
         ]
       },
       {
-        name: 'Striping',
+        name: 'Parking Lot Striping (Painted Lines)',
         checks: [
-          { id: 'striping_visible', text: 'All lines clearly visible?', tier: 3 },
-          { id: 'striping_ada', text: 'ADA markings legible?', tier: 2 }
+          { id: 'striping_visible', text: 'Parking lines are easy to see (all painted lines are visible and not faded)?', tier: 3 },
+          { id: 'striping_ada', text: 'Handicap markings are clear (blue paint and wheelchair symbol are easy to read)?', tier: 2 }
         ]
       },
       {
-        name: 'Walkways',
+        name: 'Walkways and Sidewalks',
         checks: [
-          { id: 'walkways_cracks', text: 'No cracks wide enough to fit a pencil?', tier: 2 },
-          { id: 'walkways_trip', text: 'No trip hazards (would you warn someone in heels)?', tier: 1 },
-          { id: 'walkways_stains', text: 'No stains/gum?', tier: 3 },
-          { id: 'walkways_moss', text: 'No moss or slip hazards?', tier: 1 }
+          { id: 'walkways_cracks', text: 'No wide cracks (no cracks big enough to fit a pencil inside)?', tier: 2 },
+          { id: 'walkways_trip', text: 'No trip hazards (no raised edges, uneven sections, or gaps that could trip someone)?', tier: 1 },
+          { id: 'walkways_stains', text: 'Walkways are clean (no stains, no chewing gum stuck to concrete)?', tier: 3 },
+          { id: 'walkways_moss', text: 'Walkways are safe to walk on (no moss, algae, or slippery spots)?', tier: 1 }
         ]
       },
       {
-        name: 'Curbing',
+        name: 'Curbing (Curbs and Borders)',
         checks: [
-          { id: 'curbing_intact', text: 'Intact (no crumbling)?', tier: 3 },
-          { id: 'curbing_paint', text: 'Paint visible where applicable?', tier: 4, amberEligible: true }
+          { id: 'curbing_intact', text: 'Curbs are solid (no crumbling, chipping, or broken pieces)?', tier: 3 },
+          { id: 'curbing_paint', text: 'Curb paint is visible (yellow, red, or white paint still shows where needed)?', tier: 4, amberEligible: true }
         ]
       },
       {
-        name: 'Site Furnishings',
+        name: 'Outdoor Furniture (Benches, Trash Cans)',
         checks: [
-          { id: 'furnishings_benches', text: 'Benches undamaged?', tier: 3 },
-          { id: 'furnishings_graffiti', text: 'No graffiti?', tier: 2 },
-          { id: 'furnishings_rust', text: 'No rust damage?', tier: 3 },
-          { id: 'furnishings_trash', text: 'Trash receptacles functional?', tier: 3 }
+          { id: 'furnishings_benches', text: 'Benches are in good shape (no broken boards, no loose parts, safe to sit on)?', tier: 3 },
+          { id: 'furnishings_graffiti', text: 'No graffiti anywhere (no spray paint, markers, or scratched messages)?', tier: 2 },
+          { id: 'furnishings_rust', text: 'Metal items are rust-free (no rust holes, no flaking rust)?', tier: 3 },
+          { id: 'furnishings_trash', text: 'Trash cans work properly (lids open and close, cans are not broken or overflowing)?', tier: 3 }
         ]
       }
     ]
@@ -216,51 +216,51 @@ export const BG_ZONES = {
     description: 'Roof, gutters, walls, windows, doors, lighting',
     sections: [
       {
-        name: 'Roof (Visible)',
+        name: 'Roof (What You Can See From Ground)',
         checks: [
-          { id: 'roof_debris', text: 'No debris accumulation?', tier: 3 },
-          { id: 'roof_damage', text: 'No visible damage?', tier: 2 }
+          { id: 'roof_debris', text: 'Roof is clear (no leaves, branches, balls, or trash sitting on the roof)?', tier: 3 },
+          { id: 'roof_damage', text: 'Roof looks intact (no missing shingles, no sagging areas, no visible damage)?', tier: 2 }
         ]
       },
       {
-        name: 'Gutters',
+        name: 'Gutters and Downspouts',
         checks: [
-          { id: 'gutters_clear', text: 'Clear of debris?', tier: 3, amberEligible: true },
-          { id: 'gutters_overflow', text: 'No overflow stains on walls?', tier: 2 },
-          { id: 'gutters_attached', text: 'Securely attached?', tier: 2 }
+          { id: 'gutters_clear', text: 'Gutters are clear (no leaves or debris sticking out of gutters)?', tier: 3, amberEligible: true },
+          { id: 'gutters_overflow', text: 'Gutters drain properly (no water stains or streaks running down the walls)?', tier: 2 },
+          { id: 'gutters_attached', text: 'Gutters are secure (no sagging sections, no gutters pulling away from building)?', tier: 2 }
         ]
       },
       {
-        name: 'Walls',
+        name: 'Exterior Walls',
         checks: [
-          { id: 'walls_paint', text: 'Paint intact (no peeling larger than a quarter)?', tier: 3 },
-          { id: 'walls_cracks', text: 'No cracks with visible shadow/depth?', tier: 2 },
-          { id: 'walls_staining', text: 'No staining or mold visible from the parking lot approach?', tier: 2 },
-          { id: 'walls_dirt', text: 'No dirt, cobwebs, or debris visible from the arrival path?', tier: 3, amberEligible: true }
+          { id: 'walls_paint', text: 'Paint is in good condition (no peeling or flaking spots bigger than a quarter)?', tier: 3 },
+          { id: 'walls_cracks', text: 'No deep cracks (no cracks with visible depth or shadow inside them)?', tier: 2 },
+          { id: 'walls_staining', text: 'Walls are clean (no dark stains, no mold, no mildew visible from the parking lot)?', tier: 2 },
+          { id: 'walls_dirt', text: 'Walls look presentable (no dirt buildup, no cobwebs, no debris on walls you can see walking in)?', tier: 3, amberEligible: true }
         ]
       },
       {
-        name: 'Windows (Exterior View)',
+        name: 'Exterior Windows',
         checks: [
-          { id: 'windows_intact', text: 'All panes intact?', tier: 2 },
-          { id: 'windows_clean', text: 'Clean?', tier: 3 },
-          { id: 'windows_seal', text: 'No visible seal failure?', tier: 3 }
+          { id: 'windows_intact', text: 'All windows are whole (no cracked, chipped, or broken glass)?', tier: 2 },
+          { id: 'windows_clean', text: 'Windows are clean (no heavy dirt, dust, or grime buildup)?', tier: 3 },
+          { id: 'windows_seal', text: 'Window seals are good (no foggy glass from broken seals, no gaps around frames)?', tier: 3 }
         ]
       },
       {
         name: 'Exterior Doors',
         checks: [
-          { id: 'doors_clean', text: 'Clean?', tier: 3 },
-          { id: 'doors_damage', text: 'No damage?', tier: 2 },
-          { id: 'doors_weatherstrip', text: 'Weatherstripping visible/intact?', tier: 3 }
+          { id: 'doors_clean', text: 'Doors are clean (no dirt, dust, or grime on door surfaces)?', tier: 3 },
+          { id: 'doors_damage', text: 'Doors are undamaged (no dents, scratches, peeling paint, or broken parts)?', tier: 2 },
+          { id: 'doors_weatherstrip', text: 'Weatherstripping is present (rubber seal around door edges is visible and intact)?', tier: 3 }
         ]
       },
       {
         name: 'Exterior Lighting',
         checks: [
-          { id: 'lighting_operational', text: 'All fixtures operational?', tier: 2 },
-          { id: 'lighting_lenses', text: 'Lenses clean?', tier: 4, amberEligible: true },
-          { id: 'lighting_dark', text: 'No dark zones in arrival path?', tier: 1 }
+          { id: 'lighting_operational', text: 'All lights work (no burnt out bulbs, no flickering lights)?', tier: 2 },
+          { id: 'lighting_lenses', text: 'Light covers are clean (no heavy dirt, bugs, or debris inside light fixtures)?', tier: 4, amberEligible: true },
+          { id: 'lighting_dark', text: 'Walkways are well-lit (no dark areas along the path from parking to entrance)?', tier: 1 }
         ]
       }
     ]
@@ -273,39 +273,39 @@ export const BG_ZONES = {
     description: 'Signage, entry glass, mats, threshold, Ritz-Carlton test',
     sections: [
       {
-        name: 'Signage',
+        name: 'Building Signage',
         checks: [
-          { id: 'signage_clean', text: 'Clean?', tier: 3 },
-          { id: 'signage_aligned', text: 'Straight/aligned?', tier: 3 },
-          { id: 'signage_illuminated', text: 'Illuminated (if applicable)?', tier: 2 },
-          { id: 'signage_visible', text: 'Visible from approach?', tier: 2 }
+          { id: 'signage_clean', text: 'Signs are clean (no dirt, dust, bird droppings, or grime)?', tier: 3 },
+          { id: 'signage_aligned', text: 'Signs are straight (not crooked, tilted, or hanging unevenly)?', tier: 3 },
+          { id: 'signage_illuminated', text: 'Lit signs are working (if the sign has lights, they are all on and bright)?', tier: 2 },
+          { id: 'signage_visible', text: 'Signs can be seen clearly (nothing blocking the view from the parking lot)?', tier: 2 }
         ]
       },
       {
-        name: 'Entry Glass',
+        name: 'Entry Door Glass',
         checks: [
-          { id: 'entry_glass', text: '100% clean (no smudges/streaks)?', tier: 2, amberIneligible: true }
+          { id: 'entry_glass', text: 'Entry glass is spotless (no fingerprints, smudges, streaks, or nose prints)?', tier: 2, amberIneligible: true }
         ]
       },
       {
-        name: 'Mats',
+        name: 'Entry Mats',
         checks: [
-          { id: 'mats_centered', text: 'Centered?', tier: 3, amberEligible: true },
-          { id: 'mats_clean', text: 'Clean?', tier: 3 },
-          { id: 'mats_trip', text: 'No trip edges?', tier: 1 }
+          { id: 'mats_centered', text: 'Mats are centered in doorway (not pushed to one side or crooked)?', tier: 3, amberEligible: true },
+          { id: 'mats_clean', text: 'Mats are clean (no heavy dirt, stains, or debris on mat surface)?', tier: 3 },
+          { id: 'mats_trip', text: 'Mats are flat and safe (no curled edges, bumps, or corners sticking up)?', tier: 1 }
         ]
       },
       {
-        name: 'Threshold',
+        name: 'Door Threshold (Floor at Doorway)',
         checks: [
-          { id: 'threshold_clear', text: 'Clear of debris?', tier: 3, amberEligible: true },
-          { id: 'threshold_damage', text: 'No damage?', tier: 2 }
+          { id: 'threshold_clear', text: 'Threshold is clean (no leaves, dirt, sand, or debris at the door)?', tier: 3, amberEligible: true },
+          { id: 'threshold_damage', text: 'Threshold is in good condition (no chips, cracks, or damage to floor at doorway)?', tier: 2 }
         ]
       },
       {
-        name: 'Ritz-Carlton Test',
+        name: 'First Impression Test',
         checks: [
-          { id: 'ritz_test', text: 'Would a luxury hotel guest accept this entrance?', tier: 2 }
+          { id: 'ritz_test', text: 'Entrance looks professional (would a guest at a nice hotel find this entrance acceptable)?', tier: 2 }
         ]
       }
     ]
@@ -323,78 +323,78 @@ export const BG_ZONES = {
     },
     sections: [
       {
-        name: 'Walls',
+        name: 'Interior Walls',
         checks: [
-          { id: 'int_walls_paint', text: 'Paint intact (no peeling larger than a quarter)?', tier: 3 },
-          { id: 'int_walls_bubbling', text: 'No bubbling or blistering?', tier: 3 },
-          { id: 'int_walls_touchup', text: 'No visible touch-up patches (color mismatch) on tour route?', tier: 3 },
-          { id: 'int_walls_water', text: 'No water stains larger than your hand?', tier: 1, amberIneligible: true },
-          { id: 'int_walls_holes', text: 'No holes or gouges larger than a quarter?', tier: 3 },
-          { id: 'int_walls_cracks', text: 'No cracks with visible shadow/depth?', tier: 2 },
-          { id: 'int_walls_seams', text: 'No drywall seams, joints, or tape lines visible from arm\'s length?', tier: 3 },
-          { id: 'int_walls_scuffs', text: 'No more than 3 scuff marks per wall section?', tier: 3, amberEligible: true }
+          { id: 'int_walls_paint', text: 'Paint is in good condition (no peeling, flaking, or chipping spots bigger than a quarter)?', tier: 3 },
+          { id: 'int_walls_bubbling', text: 'Walls are flat (no bubbles, blisters, or bumps in the paint)?', tier: 3 },
+          { id: 'int_walls_touchup', text: 'Touch-up paint matches (no obvious patches of different colored paint)?', tier: 3 },
+          { id: 'int_walls_water', text: 'No water damage (no water stains, brown spots, or damp areas bigger than your hand)?', tier: 1, amberIneligible: true },
+          { id: 'int_walls_holes', text: 'Walls are intact (no holes or gouges bigger than a quarter)?', tier: 3 },
+          { id: 'int_walls_cracks', text: 'No deep cracks (no cracks with visible depth or shadow inside them)?', tier: 2 },
+          { id: 'int_walls_seams', text: 'Drywall looks smooth (no visible tape lines, seams, or joints when standing arm\'s length away)?', tier: 3 },
+          { id: 'int_walls_scuffs', text: 'Walls are mostly scuff-free (no more than 3 scuff marks on any wall)?', tier: 3, amberEligible: true }
         ]
       },
       {
         name: 'Floors',
         checks: [
-          { id: 'int_floors_cracks', text: 'Hard surfaces: No cracks larger than a quarter?', tier: 2 },
-          { id: 'int_floors_chips', text: 'No chips creating a lip you\'d warn someone about?', tier: 1 },
-          { id: 'int_floors_tiles', text: 'No tiles loose or cracked?', tier: 2 },
-          { id: 'int_floors_grout', text: 'Grout intact (no gaps larger than pencil width)?', tier: 3 },
-          { id: 'int_floors_carpet_wear', text: 'Carpet: No visible wear paths from 10 feet?', tier: 3 },
-          { id: 'int_floors_carpet_fray', text: 'No fraying at edges or seams?', tier: 3, amberEligible: true },
-          { id: 'int_floors_carpet_ripples', text: 'No ripples or bumps?', tier: 2 },
-          { id: 'int_floors_transitions', text: 'All transition strips secure (don\'t move when stepped on)?', tier: 2 }
+          { id: 'int_floors_cracks', text: 'Hard floors are intact (no cracks bigger than a quarter)?', tier: 2 },
+          { id: 'int_floors_chips', text: 'No chipped edges (no chips or lips that could catch your foot or trip someone)?', tier: 1 },
+          { id: 'int_floors_tiles', text: 'Tiles are secure (no loose, wobbly, or cracked tiles)?', tier: 2 },
+          { id: 'int_floors_grout', text: 'Grout is solid (no missing grout, no gaps wider than a pencil between tiles)?', tier: 3 },
+          { id: 'int_floors_carpet_wear', text: 'Carpet looks good (no worn paths or bald spots you can see from 10 feet away)?', tier: 3 },
+          { id: 'int_floors_carpet_fray', text: 'Carpet edges are intact (no fraying, unraveling, or loose threads at edges or seams)?', tier: 3, amberEligible: true },
+          { id: 'int_floors_carpet_ripples', text: 'Carpet is flat (no bumps, ripples, or waves in the carpet)?', tier: 2 },
+          { id: 'int_floors_transitions', text: 'Floor transitions are secure (metal strips between floor types are tight and don\'t move when stepped on)?', tier: 2 }
         ]
       },
       {
         name: 'Ceilings',
         checks: [
-          { id: 'int_ceilings_flush', text: 'All tiles flush with grid (no gaps visible)?', tier: 3 },
-          { id: 'int_ceilings_sag', text: 'No tiles sagging below grid line?', tier: 2 },
-          { id: 'int_ceilings_stains', text: 'No stains larger than your hand?', tier: 1, amberIneligible: true },
-          { id: 'int_ceilings_cracks', text: 'No cracks with visible shadow/depth?', tier: 2 },
-          { id: 'int_ceilings_fixtures', text: 'All fixtures and vents properly seated?', tier: 3 }
+          { id: 'int_ceilings_flush', text: 'Ceiling tiles are in place (all tiles sitting flat in the grid, no gaps)?', tier: 3 },
+          { id: 'int_ceilings_sag', text: 'Ceiling tiles are level (no tiles sagging or hanging below the others)?', tier: 2 },
+          { id: 'int_ceilings_stains', text: 'No ceiling stains (no brown spots or water marks bigger than your hand)?', tier: 1, amberIneligible: true },
+          { id: 'int_ceilings_cracks', text: 'No deep cracks (no cracks with visible depth or shadow inside them)?', tier: 2 },
+          { id: 'int_ceilings_fixtures', text: 'Ceiling fixtures are secure (lights, vents, and speakers are sitting properly in ceiling)?', tier: 3 }
         ]
       },
       {
-        name: 'Interior Doors & Windows',
+        name: 'Interior Doors and Windows',
         checks: [
-          { id: 'int_doors_latch', text: 'Latches properly on first attempt?', tier: 2, amberEligible: true },
-          { id: 'int_doors_wobble', text: 'No wobble in handle or knob?', tier: 3 },
-          { id: 'int_doors_components', text: 'All components present?', tier: 3 },
-          { id: 'int_doors_hinges', text: 'Hinges aligned (door closes flush to frame)?', tier: 3 },
-          { id: 'int_doors_glass', text: 'Glass intact (no cracks or chips of any size)?', tier: 2, amberEligible: true },
-          { id: 'int_doors_frames', text: 'Frames intact with no visible damage?', tier: 3 }
+          { id: 'int_doors_latch', text: 'Doors close properly (door latches shut on the first try without extra pushing)?', tier: 2, amberEligible: true },
+          { id: 'int_doors_wobble', text: 'Door handles are tight (no wobble or looseness when you turn the handle)?', tier: 3 },
+          { id: 'int_doors_components', text: 'Door hardware is complete (all parts present - handle, latch plate, hinges)?', tier: 3 },
+          { id: 'int_doors_hinges', text: 'Doors hang straight (door closes flush against the frame, no gaps or rubbing)?', tier: 3 },
+          { id: 'int_doors_glass', text: 'Window glass is intact (no cracks, chips, or broken panes of any size)?', tier: 2, amberEligible: true },
+          { id: 'int_doors_frames', text: 'Door and window frames are undamaged (no dents, chips, or missing pieces)?', tier: 3 }
         ]
       },
       {
-        name: 'Baseboards & Trim',
+        name: 'Baseboards and Trim',
         checks: [
-          { id: 'int_baseboards_gaps', text: 'No gaps visible from standing height?', tier: 3, amberEligible: true },
-          { id: 'int_baseboards_damage', text: 'No damage longer than a hand length?', tier: 3 },
-          { id: 'int_baseboards_missing', text: 'No missing sections?', tier: 2 },
-          { id: 'int_baseboards_paint', text: 'Paint intact (no peeling larger than a quarter)?', tier: 3 }
+          { id: 'int_baseboards_gaps', text: 'Baseboards are tight to wall (no gaps you can see when standing up)?', tier: 3, amberEligible: true },
+          { id: 'int_baseboards_damage', text: 'Baseboards are in good shape (no damaged sections longer than your hand)?', tier: 3 },
+          { id: 'int_baseboards_missing', text: 'All baseboards are present (no missing sections of baseboard)?', tier: 2 },
+          { id: 'int_baseboards_paint', text: 'Baseboard paint is good (no peeling, flaking, or chipping bigger than a quarter)?', tier: 3 }
         ]
       },
       {
-        name: 'Fixtures (Condition)',
+        name: 'Fixtures (Sinks, Lights, Outlets)',
         checks: [
-          { id: 'int_fixtures_secure', text: 'All secure and flush to surface?', tier: 2 },
-          { id: 'int_fixtures_broken', text: 'No broken handles, knobs, or components?', tier: 2 },
-          { id: 'int_fixtures_scratches', text: 'No chips or scratches visible from arm\'s length?', tier: 3, amberEligible: true },
-          { id: 'int_fixtures_covers', text: 'All covers and plates present?', tier: 3 }
+          { id: 'int_fixtures_secure', text: 'Fixtures are attached firmly (nothing loose or pulling away from wall or ceiling)?', tier: 2 },
+          { id: 'int_fixtures_broken', text: 'All parts work (no broken handles, knobs, switches, or levers)?', tier: 2 },
+          { id: 'int_fixtures_scratches', text: 'Fixtures look good (no big chips or scratches you can see from arm\'s length)?', tier: 3, amberEligible: true },
+          { id: 'int_fixtures_covers', text: 'All covers are in place (no missing outlet covers, switch plates, or vent covers)?', tier: 3 }
         ]
       },
       {
-        name: 'Furniture (Structural)',
+        name: 'Furniture (Tables, Chairs, Desks)',
         checks: [
-          { id: 'int_furniture_wobble', text: 'No wobble when sat on or leaned against?', tier: 2 },
-          { id: 'int_furniture_legs', text: 'All legs/supports intact?', tier: 2 },
-          { id: 'int_furniture_broken', text: 'No broken parts?', tier: 2 },
-          { id: 'int_furniture_edges', text: 'No sharp edges exposed?', tier: 1 },
-          { id: 'int_furniture_upholstery', text: 'No upholstery tears or exposed seams?', tier: 3 }
+          { id: 'int_furniture_wobble', text: 'Furniture is stable (no wobbling when you sit down or lean on it)?', tier: 2 },
+          { id: 'int_furniture_legs', text: 'All legs and supports are intact (no broken, bent, or missing legs)?', tier: 2 },
+          { id: 'int_furniture_broken', text: 'Furniture is complete (no broken drawers, missing parts, or damaged pieces)?', tier: 2 },
+          { id: 'int_furniture_edges', text: 'No sharp edges exposed (no broken corners, exposed metal, or splintered wood)?', tier: 1 },
+          { id: 'int_furniture_upholstery', text: 'Fabric is intact (no tears, rips, or seams coming apart on upholstered items)?', tier: 3 }
         ]
       }
     ]
@@ -492,22 +492,22 @@ export const BG_ZONES = {
     isGovernanceZone: true,
     sections: [
       {
-        name: 'Prior Week Resolution',
+        name: 'Prior Week Follow-Up',
         checks: [
-          { id: 'gov_amber_resolved', text: 'All Amber items from prior week resolved?', tier: 2 },
-          { id: 'gov_tickets_closed', text: 'All tickets from prior week closed or on track?', tier: 3 }
+          { id: 'gov_amber_resolved', text: 'Last week\'s Amber issues are fixed (all yellow-rated items from last week have been repaired)?', tier: 2 },
+          { id: 'gov_tickets_closed', text: 'Last week\'s work orders are complete or on track (all tickets from last week are closed or have a plan)?', tier: 3 }
         ]
       },
       {
-        name: 'Reporting Queue',
+        name: 'Staff Reporting Queue',
         checks: [
-          { id: 'gov_see_it_empty', text: 'See It, Snap It feed - staff reporting queue empty?', tier: 3 }
+          { id: 'gov_see_it_empty', text: 'Staff reports have been addressed (See It, Snap It queue is empty or caught up)?', tier: 3 }
         ]
       },
       {
-        name: 'Documentation',
+        name: 'Photo Documentation',
         checks: [
-          { id: 'gov_photos_complete', text: 'Photo evidence captured for all Amber/Red items this walkthrough?', tier: 2 }
+          { id: 'gov_photos_complete', text: 'Photos taken for all problems (every Amber or Red item found today has a photo)?', tier: 2 }
         ]
       }
     ]
