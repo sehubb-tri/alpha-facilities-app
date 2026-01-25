@@ -33,7 +33,7 @@ export const AuditComplete = ({ audit }) => {
     }}>
       <div style={{ fontSize: '96px', marginBottom: '24px' }}>✅</div>
       <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px' }}>{t('audit.complete.submitted')}</h1>
-      <div style={{ fontSize: '56px', fontWeight: '700', margin: '16px 0' }}>{status}</div>
+      <div style={{ fontSize: '56px', fontWeight: '700', margin: '16px 0' }}>{t(`audit.status.${status}`)}</div>
       <p style={{ opacity: 0.9, marginBottom: '32px', fontSize: '18px' }}>{campus?.name || ''}</p>
       <button
         onClick={handleDone}

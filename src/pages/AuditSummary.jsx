@@ -61,7 +61,7 @@ export const AuditSummary = ({ audit }) => {
         textAlign: 'center'
       }}>
         <div style={{ fontSize: '56px', marginBottom: '8px' }}>{statusIcons[status]}</div>
-        <div style={{ fontSize: '32px', fontWeight: '700' }}>{status}</div>
+        <div style={{ fontSize: '32px', fontWeight: '700' }}>{t(`audit.status.${status}`)}</div>
         <div style={{ opacity: 0.9, fontSize: '17px', marginTop: '4px' }}>{campus?.name || ''}</div>
       </div>
 

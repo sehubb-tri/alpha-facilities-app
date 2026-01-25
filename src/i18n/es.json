@@ -84,7 +84,10 @@
     "status": {
       "green": "VERDE - Todo en Orden",
       "amber": "AMARILLO - Problemas Menores",
-      "red": "ROJO - Necesita Atención"
+      "red": "ROJO - Necesita Atención",
+      "GREEN": "VERDE",
+      "AMBER": "AMARILLO",
+      "RED": "ROJO"
     },
     "validation": {
       "selectCampus": "Por favor seleccione un campus",
