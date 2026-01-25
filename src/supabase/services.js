@@ -356,3 +356,182 @@ export const getRecentZonePhotos = async (limitCount = 50) => {
     return [];
   }
 };
+
+// ============================================
+// B&G WALKTHROUGHS (Weekly Building & Grounds)
+// ============================================
+export const saveBGWalkthrough = async (walkthroughData) => {
+  try {
+    console.log('[saveBGWalkthrough] Starting save...');
+
+    // Upload issue photos
+    const processedIssues = [];
+    for (const issue of (walkthroughData.issues || [])) {
+      const uploadedPhotos = [];
+      for (const photo of (issue.photos || [])) {
+        if (photo && photo.startsWith('data:')) {
+          const photoUrl = await uploadPhoto(photo, 'bg-issues');
+          uploadedPhotos.push(photoUrl);
+        } else if (photo) {
+          uploadedPhotos.push(photo);
+        }
+      }
+      processedIssues.push({ ...issue, photos: uploadedPhotos });
+    }
+
+    // Upload observation photos
+    const processedObservations = [];
+    for (const obs of (walkthroughData.observations || [])) {
+      const uploadedPhotos = [];
+      for (const photo of (obs.photos || [])) {
+        if (photo && photo.startsWith('data:')) {
+          const photoUrl = await uploadPhoto(photo, 'bg-observations');
+          uploadedPhotos.push(photoUrl);
+        } else if (photo) {
+          uploadedPhotos.push(photo);
+        }
+      }
+      processedObservations.push({ ...obs, photos: uploadedPhotos });
+    }
+
+    // Upload exit photos
+    const processedExitPhotos = {};
+    for (const [zoneId, photo] of Object.entries(walkthroughData.exitPhotos || {})) {
+      if (photo && photo.startsWith('data:')) {
+        processedExitPhotos[zoneId] = await uploadPhoto(photo, 'bg-exit');
+      } else if (photo) {
+        processedExitPhotos[zoneId] = photo;
+      }
+    }
+
+    const { data, error } = await supabase
+      .from('bg_walkthroughs')
+      .insert([{
+        date: walkthroughData.date,
+        time: walkthroughData.time,
+        campus: walkthroughData.campus,
+        auditor: walkthroughData.auditor,
+        auditor_email: walkthroughData.auditorEmail,
+        duration: walkthroughData.duration,
+        campus_rating: walkthroughData.campusRating,
+        zone_ratings: walkthroughData.zoneRatings,
+        zone_results: walkthroughData.zoneResults,
+        room_results: walkthroughData.roomResults,
+        selected_rooms: walkthroughData.selectedRooms,
+        issues: processedIssues,
+        observations: processedObservations,
+        exit_photos: processedExitPhotos,
+        total_issues: walkthroughData.totalIssues,
+        total_observations: walkthroughData.totalObservations,
+        green_zones: walkthroughData.greenZones,
+        amber_zones: walkthroughData.amberZones,
+        red_zones: walkthroughData.redZones,
+        campus_data: walkthroughData.campusData,
+        start_time: walkthroughData.startTime,
+        end_time: walkthroughData.endTime,
+        is_complete: true
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+    console.log('[saveBGWalkthrough] Saved successfully:', data.id);
+    return data;
+  } catch (error) {
+    console.error('Error saving B&G walkthrough:', error);
+    throw error;
+  }
+};
+
+export const getBGWalkthroughs = async (campusName = null, limitCount = 50) => {
+  try {
+    let query = supabase
+      .from('bg_walkthroughs')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(limitCount);
+
+    if (campusName) {
+      query = query.eq('campus', campusName);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    // Map snake_case to camelCase for compatibility
+    return (data || []).map(w => ({
+      id: w.id,
+      date: w.date,
+      time: w.time,
+      campus: w.campus,
+      auditor: w.auditor,
+      auditorEmail: w.auditor_email,
+      duration: w.duration,
+      campusRating: w.campus_rating,
+      zoneRatings: w.zone_ratings,
+      zoneResults: w.zone_results,
+      roomResults: w.room_results,
+      selectedRooms: w.selected_rooms,
+      issues: w.issues,
+      observations: w.observations,
+      exitPhotos: w.exit_photos,
+      totalIssues: w.total_issues,
+      totalObservations: w.total_observations,
+      greenZones: w.green_zones,
+      amberZones: w.amber_zones,
+      redZones: w.red_zones,
+      campusData: w.campus_data,
+      startTime: w.start_time,
+      endTime: w.end_time,
+      isComplete: w.is_complete,
+      createdAt: w.created_at
+    }));
+  } catch (error) {
+    console.error('Error getting B&G walkthroughs:', error);
+    return [];
+  }
+};
+
+export const getBGWalkthroughById = async (id) => {
+  try {
+    const { data, error } = await supabase
+      .from('bg_walkthroughs')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) throw error;
+
+    return {
+      id: data.id,
+      date: data.date,
+      time: data.time,
+      campus: data.campus,
+      auditor: data.auditor,
+      auditorEmail: data.auditor_email,
+      duration: data.duration,
+      campusRating: data.campus_rating,
+      zoneRatings: data.zone_ratings,
+      zoneResults: data.zone_results,
+      roomResults: data.room_results,
+      selectedRooms: data.selected_rooms,
+      issues: data.issues,
+      observations: data.observations,
+      exitPhotos: data.exit_photos,
+      totalIssues: data.total_issues,
+      totalObservations: data.total_observations,
+      greenZones: data.green_zones,
+      amberZones: data.amber_zones,
+      redZones: data.red_zones,
+      campusData: data.campus_data,
+      startTime: data.start_time,
+      endTime: data.end_time,
+      isComplete: data.is_complete,
+      createdAt: data.created_at
+    };
+  } catch (error) {
+    console.error('Error getting B&G walkthrough by ID:', error);
+    return null;
+  }
+};

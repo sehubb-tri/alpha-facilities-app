@@ -225,6 +225,39 @@ export const Home = () => {
             <span style={{ textAlign: 'center', lineHeight: '1.3' }}>{t('nav.audit')}</span>
           </button>
         </div>
+
+        {/* Weekly B&G Button */}
+        <button
+          onClick={() => navigate('/bg/setup')}
+          style={{
+            width: '100%',
+            marginTop: '16px',
+            backgroundColor: 'rgba(255,255,255,0.15)',
+            color: '#fff',
+            borderRadius: '16px',
+            fontSize: '16px',
+            fontWeight: '700',
+            border: '2px solid rgba(255,255,255,0.3)',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px 20px',
+            cursor: 'pointer',
+            gap: '12px'
+          }}
+        >
+          <span style={{ fontSize: '28px' }}>🏢</span>
+          <span>Weekly B&G Walkthrough</span>
+          <span style={{
+            fontSize: '12px',
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            padding: '4px 8px',
+            borderRadius: '6px'
+          }}>
+            NEW
+          </span>
+        </button>
       </div>
 
       {/* Stats Row */}

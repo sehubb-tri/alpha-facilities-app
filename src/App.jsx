@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useCamera } from './hooks/useCamera';
 import { useAudit } from './hooks/useAudit';
 import { useReport } from './hooks/useReport';
+import { useBGWalkthrough } from './hooks/useBGWalkthrough';
 import { CameraModal } from './components/CameraModal';
 
 // Pages
@@ -22,10 +23,19 @@ import { ReportComplete } from './pages/ReportComplete';
 import { ReportsList } from './pages/ReportsList';
 import { Settings } from './pages/Settings';
 
+// B&G Weekly Walkthrough Pages
+import { BGSetup } from './pages/BGSetup';
+import { BGZone } from './pages/BGZone';
+import { BGObservations } from './pages/BGObservations';
+import { BGGovernance } from './pages/BGGovernance';
+import { BGSummary } from './pages/BGSummary';
+import { BGComplete } from './pages/BGComplete';
+
 function App() {
   const camera = useCamera();
   const audit = useAudit();
   const report = useReport();
+  const bgWalkthrough = useBGWalkthrough();
 
   return (
     <BrowserRouter>
@@ -54,7 +64,7 @@ function App() {
         {/* Home */}
         <Route path="/" element={<Home />} />
 
-        {/* Audit Flow */}
+        {/* Audit Flow (Daily Cleanliness) */}
         <Route path="/audit/setup" element={<AuditSetup audit={audit} />} />
         <Route path="/audit/overview" element={<AuditOverview audit={audit} />} />
         <Route path="/audit/zone" element={<AuditZone audit={audit} camera={camera} />} />
@@ -62,6 +72,14 @@ function App() {
         <Route path="/audit/tour-ready" element={<AuditTourReady audit={audit} />} />
         <Route path="/audit/summary" element={<AuditSummary audit={audit} />} />
         <Route path="/audit/complete" element={<AuditComplete audit={audit} />} />
+
+        {/* B&G Weekly Walkthrough Flow */}
+        <Route path="/bg/setup" element={<BGSetup bgWalkthrough={bgWalkthrough} />} />
+        <Route path="/bg/zone" element={<BGZone bgWalkthrough={bgWalkthrough} camera={camera} />} />
+        <Route path="/bg/observations" element={<BGObservations bgWalkthrough={bgWalkthrough} camera={camera} />} />
+        <Route path="/bg/governance" element={<BGGovernance bgWalkthrough={bgWalkthrough} camera={camera} />} />
+        <Route path="/bg/summary" element={<BGSummary bgWalkthrough={bgWalkthrough} />} />
+        <Route path="/bg/complete" element={<BGComplete bgWalkthrough={bgWalkthrough} />} />
 
         {/* History */}
         <Route path="/history" element={<History />} />
