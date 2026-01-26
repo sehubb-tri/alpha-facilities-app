@@ -45,8 +45,8 @@ export const ReportsList = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {reports.map((r, idx) => {
               const cat = ISSUE_CATEGORIES.find(c => c.id === r.category) || {
-                icon: '❓',
-                name: 'Other'
+                icon: '📸',
+                name: 'See It, Report It'
               };
               return (
                 <div

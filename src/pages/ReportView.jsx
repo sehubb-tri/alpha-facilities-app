@@ -62,7 +62,10 @@ export const ReportView = () => {
     }
   };
 
-  const category = report ? ISSUE_CATEGORIES.find(c => c.id === report.category) : null;
+  const category = report ? (ISSUE_CATEGORIES.find(c => c.id === report.category) || {
+    icon: '📸',
+    name: 'See It, Report It'
+  }) : null;
 
   if (loading) {
     return (
@@ -96,14 +99,14 @@ export const ReportView = () => {
           marginBottom: '20px'
         }}>
           <div style={{ fontSize: '56px', marginBottom: '12px' }}>
-            {report.urgent ? '🚨' : category?.icon || '❓'}
+            {report.urgent ? '🚨' : category?.icon}
           </div>
           <div style={{
             fontSize: '24px',
             fontWeight: '700',
             color: report.urgent ? '#b91c1c' : '#092849'
           }}>
-            {category?.name || 'Issue'}
+            {category?.name}
           </div>
           {report.urgent && (
             <div style={{
@@ -179,7 +182,7 @@ export const ReportView = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ color: '#666' }}>Category</span>
               <span style={{ fontWeight: '600', color: '#092849' }}>
-                {category?.icon} {category?.name || report.category}
+                {category?.icon} {category?.name}
               </span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>

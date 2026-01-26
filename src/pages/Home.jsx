@@ -148,8 +148,8 @@ export const Home = () => {
             );
           } else {
             const cat = ISSUE_CATEGORIES.find(c => c.id === item.category) || {
-              icon: '❓',
-              name: 'Other'
+              icon: '📸',
+              name: 'See It, Report It'
             };
             return (
               <div
