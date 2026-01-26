@@ -203,12 +203,13 @@ export const useBGWalkthrough = () => {
     });
   }, []);
 
-  // Add issue
+  // Add issue - returns the generated ID so caller can use it immediately
   const addIssue = useCallback((issue) => {
+    const generatedId = `issue_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     setState(prev => ({
       ...prev,
       issues: [...prev.issues, {
-        id: `issue_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: generatedId,
         timestamp: new Date().toISOString(),
         tier: getCheckTier(issue.checkId),
         photos: [],
@@ -216,6 +217,7 @@ export const useBGWalkthrough = () => {
         ...issue
       }]
     }));
+    return generatedId;
   }, []);
 
   // Update issue (add photos, notes)
@@ -224,6 +226,18 @@ export const useBGWalkthrough = () => {
       ...prev,
       issues: prev.issues.map(issue =>
         issue.id === issueId ? { ...issue, ...updates } : issue
+      )
+    }));
+  }, []);
+
+  // Add a photo to an issue - uses functional update to avoid stale state
+  const addPhotoToIssue = useCallback((issueId, photoData) => {
+    setState(prev => ({
+      ...prev,
+      issues: prev.issues.map(issue =>
+        issue.id === issueId
+          ? { ...issue, photos: [...(issue.photos || []), photoData] }
+          : issue
       )
     }));
   }, []);
@@ -508,6 +522,7 @@ export const useBGWalkthrough = () => {
     recordZoneResults,
     addIssue,
     updateIssue,
+    addPhotoToIssue,
     removeIssue,
     addObservation,
     updateObservation,

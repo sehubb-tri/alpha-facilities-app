@@ -19,6 +19,7 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
     recordZoneResults,
     addIssue,
     updateIssue,
+    addPhotoToIssue,
     nextZone,
     goToZone,
     calculateAndSetZoneRating
@@ -188,10 +189,11 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
 
   const handleTakeIssuePhoto = (check) => {
     // Find or create issue for this check
-    let issue = currentIssues.find(i => i.checkId === check.id);
+    let existingIssue = currentIssues.find(i => i.checkId === check.id);
+    let issueId = existingIssue?.id;
 
-    if (!issue) {
-      // Create issue first
+    if (!existingIssue) {
+      // Create issue first and get the ID back immediately
       const newIssue = {
         zoneId: currentZoneId,
         zoneName: currentZone.name,
@@ -206,20 +208,13 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
         photos: [],
         notes: ''
       };
-      addIssue(newIssue);
-      issue = newIssue;
+      issueId = addIssue(newIssue);
     }
-
-    const issueId = currentIssues.find(i => i.checkId === check.id)?.id || issue.id;
 
     camera.openCamera((imageData) => {
       if (imageData && issueId) {
-        const existingIssue = issues.find(i => i.id === issueId);
-        if (existingIssue) {
-          updateIssue(issueId, {
-            photos: [...(existingIssue.photos || []), imageData]
-          });
-        }
+        // Use addPhotoToIssue which handles state correctly via functional update
+        addPhotoToIssue(issueId, imageData);
       }
     });
   };
