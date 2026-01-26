@@ -669,12 +669,6 @@ export const BG_ZONES = {
         checks: [
           { id: 'gov_see_it_empty', text: 'Staff reports have been addressed (See It, Snap It queue is empty or caught up)?', tier: 3 }
         ]
-      },
-      {
-        name: 'Photo Documentation',
-        checks: [
-          { id: 'gov_photos_complete', text: 'Photos taken for all problems (every Amber or Red item found today has a photo)?', tier: 2 }
-        ]
       }
     ]
   }
@@ -687,7 +681,6 @@ export const BG_ZONE_ORDER = [
   'buildingExterior',
   'entrance',
   'interior',
-  'observations',
   'governance'
 ];
 

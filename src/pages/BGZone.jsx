@@ -7,7 +7,6 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
   const [localResults, setLocalResults] = useState({});
   const [currentRoomIndex, setCurrentRoomIndex] = useState(0);
   const [expandedSections, setExpandedSections] = useState({});
-  const [elapsedTime, setElapsedTime] = useState('0:00');
 
   const {
     currentZoneIndex,
@@ -15,7 +14,6 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
     roomResults,
     selectedRooms,
     issues,
-    startTime,
     recordZoneResults,
     addIssue,
     updateIssue,
@@ -24,31 +22,6 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
     goToZone,
     calculateAndSetZoneRating
   } = bgWalkthrough;
-
-  // Live timer effect
-  useEffect(() => {
-    if (!startTime) return;
-
-    const updateTimer = () => {
-      const start = new Date(startTime);
-      const now = new Date();
-      const diffMs = now - start;
-      const diffMins = Math.floor(diffMs / 60000);
-      const diffSecs = Math.floor((diffMs % 60000) / 1000);
-      const hours = Math.floor(diffMins / 60);
-      const mins = diffMins % 60;
-
-      if (hours > 0) {
-        setElapsedTime(`${hours}:${mins.toString().padStart(2, '0')}:${diffSecs.toString().padStart(2, '0')}`);
-      } else {
-        setElapsedTime(`${mins}:${diffSecs.toString().padStart(2, '0')}`);
-      }
-    };
-
-    updateTimer();
-    const interval = setInterval(updateTimer, 1000);
-    return () => clearInterval(interval);
-  }, [startTime]);
 
   const currentZoneId = BG_ZONE_ORDER[currentZoneIndex];
   const currentZone = BG_ZONES[currentZoneId];
@@ -348,19 +321,7 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
               {isRoomBased && ` • Room ${currentRoomIndex + 1} of ${totalRooms}`}
             </p>
           </div>
-          <div style={{
-            backgroundColor: 'rgba(255,255,255,0.2)',
-            borderRadius: '8px',
-            padding: '6px 10px',
-            fontSize: '14px',
-            fontWeight: '600',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '4px'
-          }}>
-            <span>⏱️</span>
-            <span>{elapsedTime}</span>
-          </div>
+          <div style={{ width: '40px' }}></div>
         </div>
       </div>
 
@@ -441,31 +402,6 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
                       {/* Check Text */}
                       <div style={{ fontSize: '15px', marginBottom: '12px', color: '#333', lineHeight: '1.4' }}>
                         {check.text}
-                        {check.tier === 1 && (
-                          <span style={{
-                            marginLeft: '8px',
-                            fontSize: '11px',
-                            backgroundColor: '#fee2e2',
-                            color: '#b91c1c',
-                            padding: '2px 6px',
-                            borderRadius: '4px',
-                            fontWeight: '600'
-                          }}>
-                            TIER 1
-                          </span>
-                        )}
-                        {check.amberEligible && (
-                          <span style={{
-                            marginLeft: '8px',
-                            fontSize: '11px',
-                            backgroundColor: '#fef3c7',
-                            color: '#92400e',
-                            padding: '2px 6px',
-                            borderRadius: '4px'
-                          }}>
-                            Amber OK
-                          </span>
-                        )}
                       </div>
 
                       {/* Yes/No Buttons */}
@@ -514,7 +450,7 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
                           border: '1px solid #fecaca'
                         }}>
                           <div style={{ fontSize: '13px', fontWeight: '600', color: '#b91c1c', marginBottom: '8px' }}>
-                            📸 Photo Required - Tier {check.tier} Issue
+                            📸 Photo Required
                           </div>
 
                           {/* Photo Grid */}

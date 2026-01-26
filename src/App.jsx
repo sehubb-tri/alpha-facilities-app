@@ -28,7 +28,6 @@ import { Settings } from './pages/Settings';
 // B&G Weekly Walkthrough Pages
 import { BGSetup } from './pages/BGSetup';
 import { BGZone } from './pages/BGZone';
-import { BGObservations } from './pages/BGObservations';
 import { BGGovernance } from './pages/BGGovernance';
 import { BGSummary } from './pages/BGSummary';
 import { BGComplete } from './pages/BGComplete';
@@ -89,7 +88,6 @@ function App() {
         {/* B&G Weekly Walkthrough Flow */}
         <Route path="/bg/setup" element={<BGSetup bgWalkthrough={bgWalkthrough} />} />
         <Route path="/bg/zone" element={<BGZone bgWalkthrough={bgWalkthrough} camera={camera} />} />
-        <Route path="/bg/observations" element={<BGObservations bgWalkthrough={bgWalkthrough} camera={camera} />} />
         <Route path="/bg/governance" element={<BGGovernance bgWalkthrough={bgWalkthrough} camera={camera} />} />
         <Route path="/bg/summary" element={<BGSummary bgWalkthrough={bgWalkthrough} />} />
         <Route path="/bg/complete" element={<BGComplete bgWalkthrough={bgWalkthrough} />} />
