@@ -149,17 +149,19 @@ export const Home = () => {
           } else {
             const cat = ISSUE_CATEGORIES.find(c => c.id === item.category) || {
               icon: '❓',
-              name: 'Issue'
+              name: 'Other'
             };
             return (
               <div
                 key={`report-${item.id || idx}`}
+                onClick={() => item.id && navigate(`/report/${item.id}`)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   padding: '14px',
                   backgroundColor: '#f5f5f5',
-                  borderRadius: '12px'
+                  borderRadius: '12px',
+                  cursor: item.id ? 'pointer' : 'default'
                 }}
               >
                 <span style={{ fontSize: '24px', marginRight: '14px' }}>{cat.icon}</span>
@@ -177,6 +179,7 @@ export const Home = () => {
                 }}>
                   {item.status}
                 </span>
+                <span style={{ color: '#9ca3af', fontSize: '20px', marginLeft: '8px' }}>›</span>
               </div>
             );
           }

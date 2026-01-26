@@ -22,6 +22,7 @@ import { ReportDescription } from './pages/ReportDescription';
 import { ReportEmergency } from './pages/ReportEmergency';
 import { ReportComplete } from './pages/ReportComplete';
 import { ReportsList } from './pages/ReportsList';
+import { ReportView } from './pages/ReportView';
 import { Settings } from './pages/Settings';
 
 // B&G Weekly Walkthrough Pages
@@ -107,6 +108,7 @@ function App() {
 
         {/* Reports List */}
         <Route path="/reports" element={<ReportsList />} />
+        <Route path="/report/:id" element={<ReportView />} />
 
         {/* Settings */}
         <Route path="/settings" element={<Settings />} />

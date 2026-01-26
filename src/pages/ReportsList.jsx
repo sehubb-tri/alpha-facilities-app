@@ -46,16 +46,18 @@ export const ReportsList = () => {
             {reports.map((r, idx) => {
               const cat = ISSUE_CATEGORIES.find(c => c.id === r.category) || {
                 icon: '❓',
-                name: 'Issue'
+                name: 'Other'
               };
               return (
                 <div
                   key={r.id || idx}
+                  onClick={() => r.id && navigate(`/report/${r.id}`)}
                   style={{
                     backgroundColor: '#fff',
                     borderRadius: '12px',
                     padding: '16px',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                    cursor: r.id ? 'pointer' : 'default'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'flex-start' }}>
@@ -82,16 +84,19 @@ export const ReportsList = () => {
                         <span style={{ fontWeight: '700', fontSize: '17px', color: '#092849' }}>
                           {cat.icon} {cat.name}
                         </span>
-                        <span style={{
-                          fontSize: '14px',
-                          padding: '5px 10px',
-                          borderRadius: '6px',
-                          backgroundColor: r.status === 'open' ? '#C2ECFD' : 'rgba(194, 236, 253, 0.5)',
-                          color: r.status === 'open' ? '#141685' : '#092849',
-                          fontWeight: '500'
-                        }}>
-                          {r.status}
-                        </span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{
+                            fontSize: '14px',
+                            padding: '5px 10px',
+                            borderRadius: '6px',
+                            backgroundColor: r.status === 'open' ? '#C2ECFD' : 'rgba(194, 236, 253, 0.5)',
+                            color: r.status === 'open' ? '#141685' : '#092849',
+                            fontWeight: '500'
+                          }}>
+                            {r.status}
+                          </span>
+                          <span style={{ color: '#9ca3af', fontSize: '20px' }}>›</span>
+                        </div>
                       </div>
                       <div style={{ fontSize: '15px', color: '#666' }}>{r.campus}</div>
                       <div style={{ fontSize: '15px', color: '#888', marginTop: '2px' }}>{r.location}</div>
