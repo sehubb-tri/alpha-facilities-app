@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SECURITY_ZONES, SECURITY_ZONE_ORDER, isInstantRed, isPhotoRequired } from '../data/securityZones';
+import { SECURITY_ZONES, isInstantRed, isPhotoRequired } from '../data/securityZones';
 
 export const SecurityChecklist = ({ securityChecklist, camera }) => {
   const navigate = useNavigate();
@@ -8,42 +8,40 @@ export const SecurityChecklist = ({ securityChecklist, camera }) => {
   const [expandedSections, setExpandedSections] = useState({});
 
   const {
-    currentZoneId,
-    zoneResults,
+    checklistType,
+    checkResults,
     issues,
     recordZoneResults,
     addIssue,
     updateIssue,
-    addPhotoToIssue,
-    setCurrentZone,
-    calculateAndSetZoneRating
+    addPhotoToIssue
   } = securityChecklist;
 
-  const currentZone = SECURITY_ZONES[currentZoneId];
-  const currentZoneIndex = SECURITY_ZONE_ORDER.indexOf(currentZoneId);
-  const totalZones = SECURITY_ZONE_ORDER.length;
+  const currentZone = SECURITY_ZONES[checklistType];
 
-  // Reset local state when zone changes
+  // Initialize local state from saved results
   useEffect(() => {
-    const existingResults = zoneResults[currentZoneId] || {};
-    // Use functional updates to avoid lint warning about sync setState
-    setLocalResults(() => existingResults);
+    if (checkResults) {
+      setLocalResults(() => checkResults);
+    }
 
     // Expand all sections by default
-    const sections = {};
-    currentZone?.sections?.forEach(section => {
-      sections[section.name] = true;
-    });
-    setExpandedSections(() => sections);
+    if (currentZone?.sections) {
+      const sections = {};
+      currentZone.sections.forEach(section => {
+        sections[section.name] = true;
+      });
+      setExpandedSections(() => sections);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentZoneId]);
+  }, [checklistType]);
 
   // Redirect if not initialized
   useEffect(() => {
-    if (!securityChecklist.startTime) {
+    if (!securityChecklist.startTime || !checklistType) {
       navigate('/security');
     }
-  }, [securityChecklist.startTime, navigate]);
+  }, [securityChecklist.startTime, checklistType, navigate]);
 
   const handleResponse = (checkId, value) => {
     setLocalResults(prev => ({
@@ -88,39 +86,31 @@ export const SecurityChecklist = ({ securityChecklist, camera }) => {
 
   const failedChecks = getFailedChecks();
 
-  // Get issues for current zone
-  const currentIssues = issues.filter(issue => issue.zoneId === currentZoneId);
-
   // Check if all issues have required explanations and photos
   const allIssuesComplete = failedChecks.every(check => {
-    const issue = currentIssues.find(i => i.checkId === check.id);
+    const issue = issues.find(i => i.checkId === check.id);
     if (!issue) return false;
-    // Must have explanation
     if (!issue.explanation || issue.explanation.trim() === '') return false;
-    // If photo required, must have photo
     if (isPhotoRequired(check.id) && (!issue.photos || issue.photos.length === 0)) return false;
     return true;
   });
 
-  // Check if zone is green
   const isGreen = failedChecks.length === 0 && isComplete;
-
   const canProceed = isComplete && (isGreen || allIssuesComplete);
 
   const handleTakeIssuePhoto = (check) => {
-    let existingIssue = currentIssues.find(i => i.checkId === check.id);
+    let existingIssue = issues.find(i => i.checkId === check.id);
     let issueId = existingIssue?.id;
 
     if (!existingIssue) {
       const newIssue = {
-        zoneId: currentZoneId,
-        zoneName: currentZone.name,
+        checklistType,
+        checklistName: currentZone.name,
         checkId: check.id,
         checkText: check.text,
         section: check.section,
-        tier: check.tier,
-        instantRed: check.instantRed || false,
-        photoRequired: check.photoRequired || false,
+        instantRed: isInstantRed(check.id),
+        photoRequired: isPhotoRequired(check.id),
         photos: [],
         explanation: ''
       };
@@ -143,23 +133,21 @@ export const SecurityChecklist = ({ securityChecklist, camera }) => {
   };
 
   const handleExplanationChange = (checkId, explanation) => {
-    let existingIssue = currentIssues.find(i => i.checkId === checkId);
+    let existingIssue = issues.find(i => i.checkId === checkId);
 
     if (existingIssue) {
       updateIssue(existingIssue.id, { explanation: explanation.slice(0, 500) });
     } else {
-      // Create issue if it doesn't exist
       const check = failedChecks.find(c => c.id === checkId);
       if (check) {
         addIssue({
-          zoneId: currentZoneId,
-          zoneName: currentZone.name,
+          checklistType,
+          checklistName: currentZone.name,
           checkId: check.id,
           checkText: check.text,
           section: check.section,
-          tier: check.tier,
-          instantRed: check.instantRed || false,
-          photoRequired: check.photoRequired || false,
+          instantRed: isInstantRed(check.id),
+          photoRequired: isPhotoRequired(check.id),
           photos: [],
           explanation: explanation.slice(0, 500)
         });
@@ -169,53 +157,32 @@ export const SecurityChecklist = ({ securityChecklist, camera }) => {
 
   const handleComplete = () => {
     // Save results
-    recordZoneResults(currentZoneId, localResults);
+    recordZoneResults(checklistType, localResults);
 
     // Create issues for any failed checks that don't have issues yet
     failedChecks.forEach(check => {
-      const existingIssue = currentIssues.find(i => i.checkId === check.id);
+      const existingIssue = issues.find(i => i.checkId === check.id);
       if (!existingIssue) {
         addIssue({
-          zoneId: currentZoneId,
-          zoneName: currentZone.name,
+          checklistType,
+          checklistName: currentZone.name,
           checkId: check.id,
           checkText: check.text,
           section: check.section,
-          tier: check.tier,
-          instantRed: check.instantRed || false,
-          photoRequired: check.photoRequired || false,
+          instantRed: isInstantRed(check.id),
+          photoRequired: isPhotoRequired(check.id),
           photos: [],
           explanation: ''
         });
       }
     });
 
-    // Calculate zone rating
-    calculateAndSetZoneRating(currentZoneId);
-
-    // Move to next zone or summary
-    if (currentZoneIndex < totalZones - 1) {
-      setCurrentZone(SECURITY_ZONE_ORDER[currentZoneIndex + 1]);
-      window.scrollTo(0, 0);
-    } else {
-      navigate('/security/summary');
-    }
+    // Go to summary (single checklist, no more zones to navigate)
+    navigate('/security/summary');
   };
 
   const handleBack = () => {
-    if (currentZoneIndex > 0) {
-      setCurrentZone(SECURITY_ZONE_ORDER[currentZoneIndex - 1]);
-      window.scrollTo(0, 0);
-    } else {
-      navigate('/security');
-    }
-  };
-
-  const handleZoneSelect = (zoneId) => {
-    // Save current results first
-    recordZoneResults(currentZoneId, localResults);
-    setCurrentZone(zoneId);
-    window.scrollTo(0, 0);
+    navigate('/security');
   };
 
   if (!currentZone) {
@@ -254,49 +221,39 @@ export const SecurityChecklist = ({ securityChecklist, camera }) => {
               {currentZone.name}
             </h1>
             <p style={{ fontSize: '14px', opacity: 0.8, margin: '4px 0 0 0' }}>
-              {currentZone.frequency.charAt(0).toUpperCase() + currentZone.frequency.slice(1)} Checks
+              {securityChecklist.campus}
             </p>
           </div>
           <div style={{ width: '40px' }}></div>
         </div>
       </div>
 
-      {/* Zone Navigation Pills */}
+      {/* Progress Bar */}
       <div style={{
-        display: 'flex',
-        gap: '8px',
-        padding: '12px 20px',
         backgroundColor: '#fff',
-        borderBottom: '1px solid #e5e7eb',
-        overflowX: 'auto'
+        padding: '12px 20px',
+        borderBottom: '1px solid #e5e7eb'
       }}>
-        {SECURITY_ZONE_ORDER.map((zoneId) => {
-          const zone = SECURITY_ZONES[zoneId];
-          const isActive = zoneId === currentZoneId;
-          const status = securityChecklist.getZoneCompletionStatus(zoneId);
-          const rating = securityChecklist.zoneRatings[zoneId];
-
-          return (
-            <button
-              key={zoneId}
-              onClick={() => handleZoneSelect(zoneId)}
-              style={{
-                padding: '8px 16px',
-                borderRadius: '20px',
-                border: 'none',
-                fontSize: '14px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                backgroundColor: isActive ? '#092849' : rating === 'GREEN' ? '#d1fae5' : rating === 'RED' ? '#fee2e2' : rating === 'AMBER' ? '#fef3c7' : '#f3f4f6',
-                color: isActive ? '#fff' : rating === 'GREEN' ? '#059669' : rating === 'RED' ? '#dc2626' : rating === 'AMBER' ? '#d97706' : '#666'
-              }}
-            >
-              {zone.name.replace(' Checks', '')}
-              {status.complete && !rating && ' ✓'}
-            </button>
-          );
-        })}
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+          <span style={{ fontSize: '14px', color: '#666' }}>Progress</span>
+          <span style={{ fontSize: '14px', fontWeight: '600', color: '#092849' }}>
+            {getAnsweredCount()} / {getTotalChecks()}
+          </span>
+        </div>
+        <div style={{
+          height: '8px',
+          backgroundColor: '#e5e7eb',
+          borderRadius: '4px',
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            height: '100%',
+            width: `${(getAnsweredCount() / getTotalChecks()) * 100}%`,
+            backgroundColor: isComplete ? '#10b981' : '#2563eb',
+            borderRadius: '4px',
+            transition: 'width 0.3s'
+          }} />
+        </div>
       </div>
 
       {/* Zone Description */}
@@ -367,7 +324,7 @@ export const SecurityChecklist = ({ securityChecklist, camera }) => {
               }}>
                 {section.checks.map((check, checkIndex) => {
                   const result = localResults[check.id];
-                  const issue = currentIssues.find(i => i.checkId === check.id);
+                  const issue = issues.find(i => i.checkId === check.id);
                   const instantRedItem = isInstantRed(check.id);
                   const photoReq = isPhotoRequired(check.id);
 
@@ -620,9 +577,7 @@ export const SecurityChecklist = ({ securityChecklist, camera }) => {
             ? `Answer All Questions (${getAnsweredCount()}/${getTotalChecks()})`
             : !allIssuesComplete && !isGreen
             ? 'Complete All Issue Documentation'
-            : currentZoneIndex < totalZones - 1
-            ? `Next: ${SECURITY_ZONES[SECURITY_ZONE_ORDER[currentZoneIndex + 1]].name} →`
-            : 'View Summary →'}
+            : 'Submit Report →'}
         </button>
       </div>
     </div>

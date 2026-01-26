@@ -1,9 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import {
   SECURITY_ZONES,
-  SECURITY_ZONE_ORDER,
   calculateZoneRating,
-  calculateOverallRating,
   isInstantRed,
   isPhotoRequired
 } from '../data/securityZones';
@@ -18,26 +16,19 @@ const getInitialState = () => ({
   auditorEmail: '',
   startTime: null,
 
-  // Current zone (daily, weekly, monthly, annual)
-  currentZoneId: 'daily',
+  // Which checklist type are we doing (daily, weekly, monthly, annual)
+  checklistType: null,
 
-  // Check results by zone
-  // Structure: { zoneId: { checkId: true/false, ... }, ... }
-  zoneResults: {},
+  // Check results for the selected checklist type only
+  // Structure: { checkId: true/false, ... }
+  checkResults: {},
 
   // Issues for NO answers
-  // Structure: [{ zoneId, checkId, checkText, tier, instantRed, photos: [], explanation, owner, fixDate }, ...]
+  // Structure: [{ checkId, checkText, section, instantRed, photos: [], explanation }, ...]
   issues: [],
 
-  // Zone ratings
-  // Structure: { zoneId: 'GREEN'|'AMBER'|'RED', ... }
-  zoneRatings: {},
-
-  // Overall rating
-  overallRating: null,
-
-  // Daily completion tracking (for 95% threshold)
-  dailyCompletionRate: 1.0, // Assume 100% for now, can be calculated from history
+  // Final rating for this checklist
+  rating: null,
 
   // Completion
   isComplete: false,
@@ -82,14 +73,15 @@ export const useSecurityChecklist = () => {
     localStorage.removeItem(STORAGE_KEY);
   }, []);
 
-  // Initialize checklist
-  const initChecklist = useCallback((campus, campusData, auditor, auditorEmail) => {
+  // Initialize checklist with a specific type (daily, weekly, monthly, annual)
+  const initChecklist = useCallback((campus, campusData, auditor, auditorEmail, checklistType) => {
     setState({
       ...getInitialState(),
       campus,
       campusData,
       auditor,
       auditorEmail,
+      checklistType,
       startTime: new Date().toISOString()
     });
   }, []);
@@ -100,43 +92,30 @@ export const useSecurityChecklist = () => {
     setState(getInitialState());
   }, [clearSavedState]);
 
-  // Get current zone
+  // Get current zone (the selected checklist type)
   const getCurrentZone = useCallback(() => {
-    return SECURITY_ZONES[state.currentZoneId];
-  }, [state.currentZoneId]);
-
-  // Set current zone
-  const setCurrentZone = useCallback((zoneId) => {
-    setState(prev => ({
-      ...prev,
-      currentZoneId: zoneId
-    }));
-  }, []);
+    return state.checklistType ? SECURITY_ZONES[state.checklistType] : null;
+  }, [state.checklistType]);
 
   // Record check result
-  const recordCheckResult = useCallback((zoneId, checkId, result) => {
+  const recordCheckResult = useCallback((checkId, result) => {
     setState(prev => ({
       ...prev,
-      zoneResults: {
-        ...prev.zoneResults,
-        [zoneId]: {
-          ...(prev.zoneResults[zoneId] || {}),
-          [checkId]: result
-        }
+      checkResults: {
+        ...prev.checkResults,
+        [checkId]: result
       }
     }));
   }, []);
 
-  // Record batch results for a zone
+  // Record batch results
   const recordZoneResults = useCallback((zoneId, results) => {
+    // zoneId is ignored since we only have one zone now
     setState(prev => ({
       ...prev,
-      zoneResults: {
-        ...prev.zoneResults,
-        [zoneId]: {
-          ...(prev.zoneResults[zoneId] || {}),
-          ...results
-        }
+      checkResults: {
+        ...prev.checkResults,
+        ...results
       }
     }));
   }, []);
@@ -153,8 +132,6 @@ export const useSecurityChecklist = () => {
         photoRequired: isPhotoRequired(issue.checkId),
         photos: [],
         explanation: '',
-        owner: '',
-        fixDate: '',
         status: 'open',
         ...issue
       }]
@@ -192,68 +169,18 @@ export const useSecurityChecklist = () => {
     }));
   }, []);
 
-  // Get issues for a specific zone
-  const getZoneIssues = useCallback((zoneId) => {
-    return state.issues.filter(issue => issue.zoneId === zoneId);
-  }, [state.issues]);
-
-  // Get open issues count
-  const getOpenIssuesCount = useCallback(() => {
-    return state.issues.filter(issue => issue.status === 'open').length;
-  }, [state.issues]);
-
-  // Calculate and set zone rating
-  const calculateAndSetZoneRating = useCallback((zoneId) => {
-    const zoneResults = state.zoneResults[zoneId] || {};
-    const zoneIssues = state.issues.filter(i => i.zoneId === zoneId);
-    const rating = calculateZoneRating(zoneId, zoneResults, zoneIssues);
-
-    setState(prev => ({
-      ...prev,
-      zoneRatings: {
-        ...prev.zoneRatings,
-        [zoneId]: rating
-      }
-    }));
-
-    return rating;
-  }, [state.zoneResults, state.issues]);
-
-  // Navigate to next zone in order
-  const nextZone = useCallback(() => {
-    const currentIndex = SECURITY_ZONE_ORDER.indexOf(state.currentZoneId);
-    if (currentIndex < SECURITY_ZONE_ORDER.length - 1) {
-      setState(prev => ({
-        ...prev,
-        currentZoneId: SECURITY_ZONE_ORDER[currentIndex + 1]
-      }));
-    }
-  }, [state.currentZoneId]);
-
-  // Navigate to previous zone
-  const prevZone = useCallback(() => {
-    const currentIndex = SECURITY_ZONE_ORDER.indexOf(state.currentZoneId);
-    if (currentIndex > 0) {
-      setState(prev => ({
-        ...prev,
-        currentZoneId: SECURITY_ZONE_ORDER[currentIndex - 1]
-      }));
-    }
-  }, [state.currentZoneId]);
-
-  // Get zone completion status
+  // Get completion status
   const getZoneCompletionStatus = useCallback((zoneId) => {
-    const zone = SECURITY_ZONES[zoneId];
+    const zone = SECURITY_ZONES[zoneId || state.checklistType];
     if (!zone) return { complete: false, answered: 0, total: 0 };
 
-    const results = state.zoneResults[zoneId] || {};
     let totalChecks = 0;
     let answeredChecks = 0;
 
     zone.sections.forEach(section => {
       section.checks.forEach(check => {
         totalChecks++;
-        if (results[check.id] !== undefined) {
+        if (state.checkResults[check.id] !== undefined) {
           answeredChecks++;
         }
       });
@@ -264,7 +191,7 @@ export const useSecurityChecklist = () => {
       answered: answeredChecks,
       total: totalChecks
     };
-  }, [state.zoneResults]);
+  }, [state.checkResults, state.checklistType]);
 
   // Check if all issues have required fields
   const allIssuesComplete = useCallback(() => {
@@ -277,36 +204,29 @@ export const useSecurityChecklist = () => {
     });
   }, [state.issues]);
 
-  // Complete checklist
+  // Complete checklist - calculate rating for this checklist type only
   const completeChecklist = useCallback(() => {
-    // Calculate all zone ratings
-    const finalRatings = {};
-    SECURITY_ZONE_ORDER.forEach(zoneId => {
-      const zoneResults = state.zoneResults[zoneId] || {};
-      const zoneIssues = state.issues.filter(i => i.zoneId === zoneId);
-      finalRatings[zoneId] = calculateZoneRating(zoneId, zoneResults, zoneIssues);
-    });
-
-    const overallRating = calculateOverallRating(finalRatings, state.dailyCompletionRate);
+    const rating = calculateZoneRating(state.checklistType, state.checkResults, state.issues);
 
     setState(prev => ({
       ...prev,
-      zoneRatings: finalRatings,
-      overallRating,
+      rating,
       isComplete: true,
       endTime: new Date().toISOString()
     }));
 
     clearSavedState();
 
-    return { zoneRatings: finalRatings, overallRating };
-  }, [state.zoneResults, state.issues, state.dailyCompletionRate, clearSavedState]);
+    return { rating };
+  }, [state.checklistType, state.checkResults, state.issues, clearSavedState]);
 
   // Get checklist summary data
   const getChecklistData = useCallback(() => {
     const duration = state.startTime && state.endTime
       ? Math.round((new Date(state.endTime) - new Date(state.startTime)) / 60000)
       : null;
+
+    const zone = SECURITY_ZONES[state.checklistType];
 
     return {
       // Meta
@@ -318,10 +238,13 @@ export const useSecurityChecklist = () => {
       auditorEmail: state.auditorEmail,
       duration,
 
+      // Checklist type info
+      checklistType: state.checklistType,
+      checklistName: zone?.name || state.checklistType,
+
       // Results
-      zoneResults: state.zoneResults,
-      zoneRatings: state.zoneRatings,
-      overallRating: state.overallRating,
+      checkResults: state.checkResults,
+      rating: state.rating,
 
       // Issues
       issues: state.issues,
@@ -338,34 +261,40 @@ export const useSecurityChecklist = () => {
   // Check if checklist is in progress
   const isInProgress = state.startTime && !state.isComplete;
 
+  // For compatibility with existing code that expects zoneResults/zoneRatings
+  const zoneResults = { [state.checklistType]: state.checkResults };
+  const zoneRatings = state.rating ? { [state.checklistType]: state.rating } : {};
+
   return {
     // State
     ...state,
     isInProgress,
+    // Compatibility aliases
+    currentZoneId: state.checklistType,
+    zoneResults,
+    zoneRatings,
+    overallRating: state.rating,
 
     // Getters
     getCurrentZone,
     getZoneCompletionStatus,
-    getZoneIssues,
-    getOpenIssuesCount,
     getChecklistData,
     allIssuesComplete,
 
     // Actions
     initChecklist,
     resetChecklist,
-    setCurrentZone,
     recordCheckResult,
     recordZoneResults,
     addIssue,
     updateIssue,
     addPhotoToIssue,
     removeIssue,
-    calculateAndSetZoneRating,
-    nextZone,
-    prevZone,
     completeChecklist,
-    clearSavedState
+    clearSavedState,
+    // No-op for compatibility
+    setCurrentZone: () => {},
+    calculateAndSetZoneRating: () => {}
   };
 };
 

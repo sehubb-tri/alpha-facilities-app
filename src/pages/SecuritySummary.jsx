@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SECURITY_ZONES, SECURITY_ZONE_ORDER, SECURITY_RAG_RULES } from '../data/securityZones';
+import { SECURITY_ZONES, SECURITY_RAG_RULES } from '../data/securityZones';
 import { saveSecurityAudit } from '../supabase/securityService';
 
 export const SecuritySummary = ({ securityChecklist }) => {
@@ -11,10 +11,12 @@ export const SecuritySummary = ({ securityChecklist }) => {
     campus,
     auditor,
     startTime,
-    zoneRatings,
+    checklistType,
     issues,
     completeChecklist
   } = securityChecklist;
+
+  const currentZone = SECURITY_ZONES[checklistType];
 
   // Calculate checklist duration
   const checklistDuration = useMemo(() => {
@@ -33,33 +35,18 @@ export const SecuritySummary = ({ securityChecklist }) => {
     return completeChecklist();
   }, [completeChecklist]);
 
-  const finalRatings = finalResult?.zoneRatings || zoneRatings;
-  const overallRating = finalResult?.overallRating;
-
-  // Count zones by rating
-  const greenCount = Object.values(finalRatings).filter(r => r === 'GREEN').length;
-  const amberCount = Object.values(finalRatings).filter(r => r === 'AMBER').length;
-  const redCount = Object.values(finalRatings).filter(r => r === 'RED').length;
+  const rating = finalResult?.rating;
 
   // Group issues
   const instantRedIssues = issues.filter(i => i.instantRed);
   const otherIssues = issues.filter(i => !i.instantRed);
 
-  const getRatingColor = (rating) => {
-    switch (rating) {
+  const getRatingColor = (r) => {
+    switch (r) {
       case 'GREEN': return '#10b981';
       case 'AMBER': return '#f59e0b';
       case 'RED': return '#ef4444';
       default: return '#6b7280';
-    }
-  };
-
-  const getRatingBg = (rating) => {
-    switch (rating) {
-      case 'GREEN': return '#f0fdf4';
-      case 'AMBER': return '#fef3c7';
-      case 'RED': return '#fee2e2';
-      default: return '#f3f4f6';
     }
   };
 
@@ -81,9 +68,9 @@ export const SecuritySummary = ({ securityChecklist }) => {
     <div style={{ minHeight: '100vh', backgroundColor: '#f3f4f6', paddingBottom: '100px' }}>
       {/* Header */}
       <div style={{
-        background: overallRating === 'GREEN'
+        background: rating === 'GREEN'
           ? 'linear-gradient(180deg, #059669 0%, #047857 100%)'
-          : overallRating === 'AMBER'
+          : rating === 'AMBER'
           ? 'linear-gradient(180deg, #d97706 0%, #b45309 100%)'
           : 'linear-gradient(180deg, #dc2626 0%, #b91c1c 100%)',
         color: '#fff',
@@ -91,20 +78,20 @@ export const SecuritySummary = ({ securityChecklist }) => {
         textAlign: 'center'
       }}>
         <div style={{ fontSize: '48px', marginBottom: '12px' }}>
-          {overallRating === 'GREEN' ? '✅' : overallRating === 'AMBER' ? '⚠️' : '❌'}
+          {rating === 'GREEN' ? '✅' : rating === 'AMBER' ? '⚠️' : '❌'}
         </div>
         <h1 style={{ fontSize: '28px', fontWeight: '700', margin: '0 0 8px 0' }}>
-          {overallRating === 'GREEN'
+          {rating === 'GREEN'
             ? SECURITY_RAG_RULES.green.description
-            : overallRating === 'AMBER'
+            : rating === 'AMBER'
             ? SECURITY_RAG_RULES.amber.description
             : SECURITY_RAG_RULES.red.description}
         </h1>
         <p style={{ fontSize: '16px', opacity: 0.9, margin: 0 }}>
-          {campus} - Security Compliance
+          {currentZone?.name || checklistType}
         </p>
         <p style={{ fontSize: '14px', opacity: 0.8, margin: '4px 0 0 0' }}>
-          Completed by {auditor}
+          {campus} - Completed by {auditor}
         </p>
         {checklistDuration && (
           <div style={{
@@ -125,48 +112,30 @@ export const SecuritySummary = ({ securityChecklist }) => {
       </div>
 
       <div style={{ padding: '20px' }}>
-        {/* Stats Overview */}
+        {/* Rating Badge */}
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '12px',
-          marginBottom: '20px'
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          padding: '20px',
+          marginBottom: '20px',
+          border: `2px solid ${getRatingColor(rating)}`,
+          textAlign: 'center'
         }}>
           <div style={{
-            backgroundColor: '#f0fdf4',
-            padding: '16px',
-            borderRadius: '12px',
-            textAlign: 'center',
-            border: '2px solid #10b981'
+            display: 'inline-block',
+            padding: '12px 32px',
+            borderRadius: '8px',
+            backgroundColor: getRatingColor(rating),
+            color: '#fff',
+            fontSize: '24px',
+            fontWeight: '700'
           }}>
-            <div style={{ fontSize: '32px', fontWeight: '700', color: '#059669' }}>
-              {greenCount}
-            </div>
-            <div style={{ fontSize: '13px', color: '#065f46', fontWeight: '600' }}>GREEN</div>
+            {rating}
           </div>
-          <div style={{
-            backgroundColor: '#fef3c7',
-            padding: '16px',
-            borderRadius: '12px',
-            textAlign: 'center',
-            border: '2px solid #f59e0b'
-          }}>
-            <div style={{ fontSize: '32px', fontWeight: '700', color: '#d97706' }}>
-              {amberCount}
-            </div>
-            <div style={{ fontSize: '13px', color: '#92400e', fontWeight: '600' }}>AMBER</div>
-          </div>
-          <div style={{
-            backgroundColor: '#fee2e2',
-            padding: '16px',
-            borderRadius: '12px',
-            textAlign: 'center',
-            border: '2px solid #ef4444'
-          }}>
-            <div style={{ fontSize: '32px', fontWeight: '700', color: '#dc2626' }}>
-              {redCount}
-            </div>
-            <div style={{ fontSize: '13px', color: '#991b1b', fontWeight: '600' }}>RED</div>
+          <div style={{ fontSize: '14px', color: '#666', marginTop: '12px' }}>
+            {issues.length === 0
+              ? 'All checks passed!'
+              : `${issues.length} issue${issues.length > 1 ? 's' : ''} found`}
           </div>
         </div>
 
@@ -217,74 +186,6 @@ export const SecuritySummary = ({ securityChecklist }) => {
               ≤{SECURITY_RAG_RULES.amber.maxOpenIssues} open issues ({issues.length} total)
             </span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{
-              width: '20px',
-              height: '20px',
-              borderRadius: '50%',
-              backgroundColor: '#10b981',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              fontSize: '12px'
-            }}>
-              ✓
-            </span>
-            <span style={{ fontSize: '14px' }}>
-              Each issue needs owner + fix date within 45 days
-            </span>
-          </div>
-        </div>
-
-        {/* Zone Ratings */}
-        <div style={{
-          backgroundColor: '#fff',
-          borderRadius: '12px',
-          padding: '16px',
-          marginBottom: '20px',
-          border: '1px solid #e5e7eb'
-        }}>
-          <h3 style={{ margin: '0 0 16px 0', fontSize: '18px', color: '#092849' }}>
-            Section Ratings
-          </h3>
-          {SECURITY_ZONE_ORDER.map(zoneId => {
-            const zone = SECURITY_ZONES[zoneId];
-            const rating = finalRatings[zoneId] || 'N/A';
-            const zoneIssues = issues.filter(i => i.zoneId === zoneId);
-
-            return (
-              <div key={zoneId} style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '12px',
-                backgroundColor: getRatingBg(rating),
-                borderRadius: '8px',
-                marginBottom: '8px'
-              }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: '600', fontSize: '15px', color: '#333' }}>
-                    {zone.name}
-                  </div>
-                  {zoneIssues.length > 0 && (
-                    <div style={{ fontSize: '13px', color: '#666', marginTop: '2px' }}>
-                      {zoneIssues.length} issue{zoneIssues.length > 1 ? 's' : ''}
-                    </div>
-                  )}
-                </div>
-                <div style={{
-                  padding: '6px 12px',
-                  borderRadius: '6px',
-                  backgroundColor: getRatingColor(rating),
-                  color: '#fff',
-                  fontWeight: '700',
-                  fontSize: '14px'
-                }}>
-                  {rating}
-                </div>
-              </div>
-            );
-          })}
         </div>
 
         {/* Instant RED Issues */}
@@ -300,7 +201,7 @@ export const SecuritySummary = ({ securityChecklist }) => {
               ⚠️ Instant RED Issues ({instantRedIssues.length})
             </h3>
             <div style={{ fontSize: '13px', color: '#b91c1c', marginBottom: '12px' }}>
-              These issues prevent the campus from achieving Amber or Green status.
+              These issues prevent passing until fixed.
             </div>
             {instantRedIssues.map((issue, idx) => (
               <div key={idx} style={{
@@ -310,7 +211,7 @@ export const SecuritySummary = ({ securityChecklist }) => {
                 marginBottom: '8px'
               }}>
                 <div style={{ fontWeight: '600', color: '#b91c1c' }}>
-                  {issue.zoneName} - {issue.section}
+                  {issue.section}
                 </div>
                 <div style={{ fontSize: '14px', color: '#333', marginTop: '4px' }}>
                   {issue.checkText}
@@ -369,7 +270,7 @@ export const SecuritySummary = ({ securityChecklist }) => {
                 marginBottom: '8px'
               }}>
                 <div style={{ fontWeight: '600', color: '#92400e' }}>
-                  {issue.zoneName} - {issue.section}
+                  {issue.section}
                 </div>
                 <div style={{ fontSize: '14px', color: '#333', marginTop: '4px' }}>
                   {issue.checkText}
@@ -454,7 +355,7 @@ export const SecuritySummary = ({ securityChecklist }) => {
             color: '#fff'
           }}
         >
-          {isSubmitting ? 'Submitting...' : 'Submit Security Checklist →'}
+          {isSubmitting ? 'Submitting...' : 'Submit Report →'}
         </button>
       </div>
     </div>

@@ -3,16 +3,29 @@ import { useNavigate } from 'react-router-dom';
 import { CampusSelector } from '../components/CampusSelector';
 import { Header } from '../components/Header';
 import { CAMPUSES } from '../data/campuses';
-import { SECURITY_ZONES, SECURITY_ZONE_ORDER, SECURITY_RAG_RULES } from '../data/securityZones';
+import { SECURITY_ZONES, SECURITY_RAG_RULES } from '../data/securityZones';
+
+const CHECKLIST_TYPES = [
+  { id: 'daily', name: 'Daily Security Check', icon: '📋', color: '#2563eb' },
+  { id: 'weekly', name: 'Weekly Security Check', icon: '📅', color: '#7c3aed' },
+  { id: 'monthly', name: 'Monthly Security Check', icon: '📆', color: '#059669' },
+  { id: 'annual', name: 'Annual Security Check', icon: '📊', color: '#dc2626' }
+];
 
 export const SecuritySetup = ({ securityChecklist }) => {
   const navigate = useNavigate();
+  const [selectedType, setSelectedType] = useState(null);
   const [campusName, setCampusName] = useState('');
   const [auditorName, setAuditorName] = useState('');
   const [auditorEmail, setAuditorEmail] = useState('');
 
+  const selectedZone = selectedType ? SECURITY_ZONES[selectedType] : null;
+
   const handleBegin = () => {
-    // Validation
+    if (!selectedType) {
+      alert('Please select a checklist type');
+      return;
+    }
     if (!campusName) {
       alert('Please select a campus');
       return;
@@ -28,8 +41,8 @@ export const SecuritySetup = ({ securityChecklist }) => {
 
     const campus = CAMPUSES.find(c => c.name === campusName);
 
-    // Initialize checklist
-    securityChecklist.initChecklist(campusName, campus, auditorName.trim(), auditorEmail.trim());
+    // Initialize checklist with selected type
+    securityChecklist.initChecklist(campusName, campus, auditorName.trim(), auditorEmail.trim(), selectedType);
 
     window.scrollTo(0, 0);
     navigate('/security/checklist');
@@ -44,6 +57,73 @@ export const SecuritySetup = ({ securityChecklist }) => {
       />
 
       <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+
+        {/* Checklist Type Selection */}
+        <div>
+          <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
+            What are you checking today? *
+          </label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            {CHECKLIST_TYPES.map((type) => {
+              const zone = SECURITY_ZONES[type.id];
+              const isSelected = selectedType === type.id;
+              return (
+                <button
+                  key={type.id}
+                  onClick={() => setSelectedType(type.id)}
+                  style={{
+                    padding: '16px',
+                    borderRadius: '12px',
+                    border: isSelected ? `3px solid ${type.color}` : '2px solid #e5e7eb',
+                    backgroundColor: isSelected ? `${type.color}10` : '#fff',
+                    cursor: 'pointer',
+                    textAlign: 'center',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  <div style={{ fontSize: '28px', marginBottom: '8px' }}>{type.icon}</div>
+                  <div style={{
+                    fontSize: '15px',
+                    fontWeight: '600',
+                    color: isSelected ? type.color : '#333'
+                  }}>
+                    {type.name}
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+                    {zone?.timeNeeded}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Selected Checklist Preview */}
+        {selectedZone && (
+          <div style={{
+            backgroundColor: 'rgba(194, 236, 253, 0.4)',
+            border: '1px solid #47C4E6',
+            borderRadius: '12px',
+            padding: '16px'
+          }}>
+            <div style={{ fontWeight: '600', color: '#092849', marginBottom: '12px' }}>
+              {selectedZone.name} - What You'll Check
+            </div>
+            {selectedZone.sections.map((section, idx) => (
+              <div key={idx} style={{
+                padding: '10px 0',
+                borderBottom: idx < selectedZone.sections.length - 1 ? '1px solid rgba(71, 196, 230, 0.3)' : 'none'
+              }}>
+                <div style={{ fontWeight: '500', fontSize: '15px', color: '#333' }}>
+                  {section.name}
+                </div>
+                <div style={{ fontSize: '13px', color: '#666', marginTop: '2px' }}>
+                  {section.checks.length} check{section.checks.length > 1 ? 's' : ''}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Campus Dropdown */}
         <div>
@@ -97,56 +177,6 @@ export const SecuritySetup = ({ securityChecklist }) => {
           />
         </div>
 
-        {/* Security Zones Overview */}
-        <div>
-          <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
-            Check Frequency ({SECURITY_ZONE_ORDER.length} sections)
-          </label>
-          <div style={{
-            backgroundColor: 'rgba(194, 236, 253, 0.4)',
-            border: '1px solid #47C4E6',
-            borderRadius: '12px',
-            padding: '16px'
-          }}>
-            {SECURITY_ZONE_ORDER.map((zoneId, index) => {
-              const zone = SECURITY_ZONES[zoneId];
-              return (
-                <div
-                  key={zoneId}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '12px 0',
-                    borderBottom: index !== SECURITY_ZONE_ORDER.length - 1 ? '1px solid rgba(71, 196, 230, 0.3)' : 'none'
-                  }}
-                >
-                  <span style={{
-                    backgroundColor: '#092849',
-                    color: '#fff',
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginRight: '12px',
-                    fontSize: '14px',
-                    fontWeight: '600'
-                  }}>
-                    {index + 1}
-                  </span>
-                  <div style={{ flex: 1 }}>
-                    <span style={{ fontSize: '17px', fontWeight: '500' }}>{zone.name}</span>
-                    <div style={{ fontSize: '13px', color: '#666', marginTop: '2px' }}>
-                      {zone.description} ({zone.timeNeeded})
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
         {/* RAG Rating Info */}
         <div style={{
           backgroundColor: '#fff',
@@ -158,7 +188,6 @@ export const SecuritySetup = ({ securityChecklist }) => {
             Rating System
           </div>
 
-          {/* GREEN */}
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
             <div style={{
               width: '24px',
@@ -170,11 +199,10 @@ export const SecuritySetup = ({ securityChecklist }) => {
             }} />
             <div>
               <div style={{ fontWeight: '600', color: '#059669' }}>{SECURITY_RAG_RULES.green.description}</div>
-              <div style={{ fontSize: '13px', color: '#666' }}>All checks pass, no open issues</div>
+              <div style={{ fontSize: '13px', color: '#666' }}>All checks pass</div>
             </div>
           </div>
 
-          {/* AMBER */}
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
             <div style={{
               width: '24px',
@@ -186,13 +214,10 @@ export const SecuritySetup = ({ securityChecklist }) => {
             }} />
             <div>
               <div style={{ fontWeight: '600', color: '#d97706' }}>{SECURITY_RAG_RULES.amber.description}</div>
-              <div style={{ fontSize: '13px', color: '#666' }}>
-                Up to {SECURITY_RAG_RULES.amber.maxOpenIssues} issues, each with owner and fix date within {SECURITY_RAG_RULES.amber.maxDaysToFix} days
-              </div>
+              <div style={{ fontSize: '13px', color: '#666' }}>Some issues found, being addressed</div>
             </div>
           </div>
 
-          {/* RED */}
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
             <div style={{
               width: '24px',
@@ -204,9 +229,7 @@ export const SecuritySetup = ({ securityChecklist }) => {
             }} />
             <div>
               <div style={{ fontWeight: '600', color: '#dc2626' }}>{SECURITY_RAG_RULES.red.description}</div>
-              <div style={{ fontSize: '13px', color: '#666' }}>
-                Any instant-red item failed, or issues exceed limits
-              </div>
+              <div style={{ fontSize: '13px', color: '#666' }}>Critical issues need immediate attention</div>
             </div>
           </div>
         </div>
@@ -222,7 +245,7 @@ export const SecuritySetup = ({ securityChecklist }) => {
             Important
           </div>
           <div style={{ fontSize: '14px', color: '#78350f' }}>
-            Some items are marked as <strong>INSTANT RED</strong>. If any of these fail, the campus cannot be Amber or Green until fixed.
+            Some items are marked as <strong>INSTANT RED</strong>. If any of these fail, the campus cannot pass until fixed.
           </div>
           <div style={{ fontSize: '14px', color: '#78350f', marginTop: '8px' }}>
             Every "No" answer requires an explanation.
@@ -232,20 +255,23 @@ export const SecuritySetup = ({ securityChecklist }) => {
         {/* Begin Button */}
         <button
           onClick={handleBegin}
+          disabled={!selectedType}
           style={{
             width: '100%',
-            backgroundColor: '#092849',
+            backgroundColor: selectedType ? '#092849' : '#9ca3af',
             color: '#fff',
             padding: '18px',
             borderRadius: '12px',
             fontSize: '18px',
             fontWeight: '700',
             border: 'none',
-            cursor: 'pointer',
+            cursor: selectedType ? 'pointer' : 'not-allowed',
             marginTop: '8px'
           }}
         >
-          Begin Security Checklist
+          {selectedType
+            ? `Begin ${CHECKLIST_TYPES.find(t => t.id === selectedType)?.name}`
+            : 'Select a Checklist Type'}
         </button>
       </div>
     </div>
