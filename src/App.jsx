@@ -18,7 +18,8 @@ import { History } from './pages/History';
 import { AuditDetails } from './pages/AuditDetails';
 import { ReportStart } from './pages/ReportStart';
 import { ReportPhoto } from './pages/ReportPhoto';
-import { ReportDetails } from './pages/ReportDetails';
+import { ReportDescription } from './pages/ReportDescription';
+import { ReportEmergency } from './pages/ReportEmergency';
 import { ReportComplete } from './pages/ReportComplete';
 import { ReportsList } from './pages/ReportsList';
 import { Settings } from './pages/Settings';
@@ -97,10 +98,11 @@ function App() {
         <Route path="/audit/:id" element={<AuditDetails />} />
         <Route path="/bg/:id" element={<BGDetails />} />
 
-        {/* Report Flow */}
+        {/* Report Flow - Simplified MVP */}
         <Route path="/report" element={<ReportStart report={report} camera={camera} />} />
         <Route path="/report/photo" element={<ReportPhoto report={report} camera={camera} />} />
-        <Route path="/report/details" element={<ReportDetails report={report} />} />
+        <Route path="/report/description" element={<ReportDescription report={report} />} />
+        <Route path="/report/emergency" element={<ReportEmergency report={report} />} />
         <Route path="/report/complete" element={<ReportComplete report={report} />} />
 
         {/* Reports List */}

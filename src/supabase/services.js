@@ -622,3 +622,66 @@ export const getBGWalkthroughById = async (id) => {
     return null;
   }
 };
+
+// ============================================
+// EMAIL SERVICES
+// ============================================
+
+/**
+ * Send B&G Walkthrough report email to the auditor
+ * Uses Supabase Edge Function with Resend
+ */
+export const sendBGWalkthroughEmail = async (walkthroughData) => {
+  try {
+    console.log('[sendBGWalkthroughEmail] Sending email to:', walkthroughData.auditorEmail);
+
+    // Get Supabase URL from config
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('[sendBGWalkthroughEmail] Supabase credentials not configured');
+      throw new Error('Email service not configured');
+    }
+
+    // Call the Edge Function
+    const response = await fetch(`${supabaseUrl}/functions/v1/send-bg-report`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${supabaseAnonKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        date: walkthroughData.date,
+        time: walkthroughData.time,
+        campus: walkthroughData.campus,
+        auditor: walkthroughData.auditor,
+        auditorEmail: walkthroughData.auditorEmail,
+        duration: walkthroughData.duration,
+        campusRating: walkthroughData.campusRating,
+        zoneRatings: walkthroughData.zoneRatings,
+        issues: walkthroughData.issues || [],
+        observations: walkthroughData.observations || [],
+        totalIssues: walkthroughData.totalIssues || 0,
+        totalObservations: walkthroughData.totalObservations || 0,
+        greenZones: walkthroughData.greenZones || 0,
+        amberZones: walkthroughData.amberZones || 0,
+        redZones: walkthroughData.redZones || 0,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('[sendBGWalkthroughEmail] API error:', errorData);
+      throw new Error(errorData.error || 'Failed to send email');
+    }
+
+    const result = await response.json();
+    console.log('[sendBGWalkthroughEmail] Email sent successfully:', result);
+    return result;
+
+  } catch (error) {
+    console.error('[sendBGWalkthroughEmail] Error:', error);
+    throw error;
+  }
+};

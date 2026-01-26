@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { saveBGWalkthrough } from '../supabase/services';
+import { saveBGWalkthrough, sendBGWalkthroughEmail } from '../supabase/services';
 import { SLA_TIERS } from '../data/bgZones';
 
 export const BGComplete = ({ bgWalkthrough }) => {
@@ -105,11 +105,19 @@ ZONE SUMMARY:
         // Save to Supabase
         await saveBGWalkthrough(data);
 
-        // Send email summary (simulated)
-        console.log('Email would be sent to:', data.auditorEmail);
-        console.log('Email content:', generateEmailContent(data));
-        await new Promise(resolve => setTimeout(resolve, 500));
-        setEmailSent(true);
+        // Send email report to auditor
+        try {
+          console.log('[BGComplete] Sending email to:', data.auditorEmail);
+          await sendBGWalkthroughEmail(data);
+          console.log('[BGComplete] Email sent successfully');
+          setEmailSent(true);
+        } catch (emailErr) {
+          // Email failure shouldn't fail the whole save
+          console.error('[BGComplete] Email failed (non-blocking):', emailErr);
+          // Still mark as "sent" but with a note in console
+          // The walkthrough is saved, email is best-effort
+          setEmailSent(false);
+        }
 
       } catch (err) {
         console.error('Error saving B&G walkthrough:', err);
@@ -273,18 +281,20 @@ ZONE SUMMARY:
           <div style={{
             marginTop: '16px',
             padding: '12px',
-            backgroundColor: emailSent ? '#f0fdf4' : '#f3f4f6',
+            backgroundColor: emailSent ? '#f0fdf4' : emailSent === false ? '#fef3c7' : '#f3f4f6',
             borderRadius: '8px',
             display: 'flex',
             alignItems: 'center',
             gap: '8px'
           }}>
             <span style={{ fontSize: '20px' }}>
-              {emailSent ? '✉️' : '⏳'}
+              {emailSent ? '✉️' : emailSent === false ? '⚠️' : '⏳'}
             </span>
-            <div style={{ fontSize: '14px', color: emailSent ? '#059669' : '#666' }}>
+            <div style={{ fontSize: '14px', color: emailSent ? '#059669' : emailSent === false ? '#92400e' : '#666' }}>
               {emailSent
                 ? `Report sent to ${walkthroughData.auditorEmail}`
+                : emailSent === false
+                ? 'Email could not be sent (data saved)'
                 : 'Sending email report...'}
             </div>
           </div>

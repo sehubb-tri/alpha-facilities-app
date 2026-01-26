@@ -19,7 +19,7 @@ export const ReportStart = ({ report, camera }) => {
     report.setCampus(campus);
 
     camera.openCamera((imageData) => {
-      report.setPhoto(imageData);
+      report.addPhoto(imageData);
       navigate('/report/photo');
     }, 'Capture Issue');
   };

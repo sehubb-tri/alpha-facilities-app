@@ -1,21 +1,23 @@
 import { useNavigate } from 'react-router-dom';
-import { ISSUE_CATEGORIES } from '../data/issueCategories';
 
 export const ReportComplete = ({ report }) => {
   const navigate = useNavigate();
-  const { campus, category, location, resetReport } = report;
-
-  const cat = ISSUE_CATEGORIES.find(c => c.id === category);
+  const { campus, location, description, isEmergency, resetReport } = report;
 
   const handleDone = () => {
     resetReport();
     navigate('/');
   };
 
+  const handleViewHistory = () => {
+    resetReport();
+    navigate('/reports');
+  };
+
   return (
     <div style={{
       minHeight: '100vh',
-      backgroundColor: '#2B57D0',
+      backgroundColor: isEmergency ? '#dc2626' : '#2B57D0',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -24,9 +26,18 @@ export const ReportComplete = ({ report }) => {
       color: '#fff',
       textAlign: 'center'
     }}>
-      <div style={{ fontSize: '96px', marginBottom: '24px' }}>✅</div>
-      <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '10px' }}>Submitted!</h1>
-      <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '20px' }}>{cat?.team || 'Facilities'} notified</p>
+      <div style={{ fontSize: '96px', marginBottom: '24px' }}>
+        {isEmergency ? '🚨' : '✅'}
+      </div>
+      <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '10px' }}>
+        {isEmergency ? 'Emergency Reported!' : 'Report Submitted!'}
+      </h1>
+      <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '8px' }}>
+        {isEmergency ? 'Facilities Manager has been alerted' : 'Your report has been received'}
+      </p>
+      <p style={{ fontSize: '16px', opacity: 0.8, marginBottom: '24px' }}>
+        Added to recent history
+      </p>
 
       <div style={{
         backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -37,29 +48,60 @@ export const ReportComplete = ({ report }) => {
         maxWidth: '320px',
         textAlign: 'left'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-          <span style={{ fontSize: '28px', marginRight: '10px' }}>{cat?.icon || '📋'}</span>
-          <span style={{ fontWeight: '700', fontSize: '18px' }}>{cat?.name || 'Issue'}</span>
+        <div style={{
+          fontSize: '16px',
+          fontWeight: '500',
+          marginBottom: '8px',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical'
+        }}>
+          {description || 'Issue reported'}
         </div>
-        <div style={{ fontSize: '16px', opacity: 0.9 }}>{campus?.name || ''}</div>
-        <div style={{ fontSize: '16px', opacity: 0.9, marginTop: '4px' }}>{location}</div>
+        <div style={{ fontSize: '15px', opacity: 0.9 }}>
+          📍 {campus?.name || 'Campus'}
+        </div>
+        <div style={{ fontSize: '15px', opacity: 0.9, marginTop: '4px' }}>
+          {location}
+        </div>
       </div>
 
-      <button
-        onClick={handleDone}
-        style={{
-          backgroundColor: '#fff',
-          color: '#092849',
-          padding: '16px 40px',
-          borderRadius: '12px',
-          fontWeight: '700',
-          fontSize: '18px',
-          border: 'none',
-          cursor: 'pointer'
-        }}
-      >
-        Done
-      </button>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', maxWidth: '320px' }}>
+        <button
+          onClick={handleDone}
+          style={{
+            backgroundColor: '#fff',
+            color: '#092849',
+            padding: '16px 40px',
+            borderRadius: '12px',
+            fontWeight: '700',
+            fontSize: '18px',
+            border: 'none',
+            cursor: 'pointer',
+            width: '100%'
+          }}
+        >
+          Done
+        </button>
+        <button
+          onClick={handleViewHistory}
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+            color: '#fff',
+            padding: '14px 40px',
+            borderRadius: '12px',
+            fontWeight: '600',
+            fontSize: '16px',
+            border: '2px solid rgba(255, 255, 255, 0.3)',
+            cursor: 'pointer',
+            width: '100%'
+          }}
+        >
+          View Recent Reports
+        </button>
+      </div>
     </div>
   );
 };
