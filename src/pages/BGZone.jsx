@@ -66,6 +66,20 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
   const currentRoom = allRooms[currentRoomIndex];
   const totalRooms = allRooms.length;
 
+  // Get the appropriate sections based on room type
+  const getCurrentSections = () => {
+    if (isRoomBased && currentRoom) {
+      if (currentRoom.type === 'classroom' && currentZone.classroomSections) {
+        return currentZone.classroomSections;
+      } else if (currentRoom.type === 'bathroom' && currentZone.bathroomSections) {
+        return currentZone.bathroomSections;
+      }
+    }
+    return currentZone?.sections || [];
+  };
+
+  const currentSections = getCurrentSections();
+
   // Get the right results object
   const getResultsKey = () => {
     if (isRoomBased && currentRoom) {
@@ -91,7 +105,7 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
 
     // Expand all sections by default
     const sections = {};
-    currentZone?.sections?.forEach(section => {
+    currentSections?.forEach(section => {
       sections[section.name] = true;
     });
     setExpandedSections(() => sections);
@@ -123,7 +137,7 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
 
   // Count answered questions
   const getTotalChecks = () => {
-    return currentZone?.sections?.reduce((acc, section) => acc + section.checks.length, 0) || 0;
+    return currentSections?.reduce((acc, section) => acc + section.checks.length, 0) || 0;
   };
 
   const getAnsweredCount = () => {
@@ -135,7 +149,7 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
   // Get failed checks for creating issues
   const getFailedChecks = () => {
     const failed = [];
-    currentZone?.sections?.forEach(section => {
+    currentSections?.forEach(section => {
       section.checks.forEach(check => {
         if (localResults[check.id] === false) {
           failed.push({
@@ -325,11 +339,13 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
           </button>
           <div style={{ textAlign: 'center' }}>
             <h1 style={{ fontSize: '20px', fontWeight: '700', margin: 0 }}>
-              {currentZone.name}
+              {isRoomBased && currentRoom
+                ? `${currentRoom.type === 'classroom' ? 'Classroom' : 'Restroom'} ${currentRoom.name}`
+                : currentZone.name}
             </h1>
             {isRoomBased && currentRoom && (
               <p style={{ fontSize: '16px', margin: '4px 0 0 0', color: '#C2ECFD' }}>
-                {currentRoom.type === 'classroom' ? '📚' : '🚽'} {currentRoom.name}
+                {currentRoom.type === 'classroom' ? '📚' : '🚽'} {currentZone.name}
               </p>
             )}
             <p style={{ fontSize: '14px', opacity: 0.8, margin: '4px 0 0 0' }}>
@@ -374,13 +390,17 @@ export const BGZone = ({ bgWalkthrough, camera }) => {
         borderRadius: '8px'
       }}>
         <div style={{ fontSize: '14px', color: '#141685' }}>
-          {currentZone.description}
+          {isRoomBased && currentRoom
+            ? currentRoom.type === 'classroom'
+              ? 'Walls, floors, ceilings, doors/windows, baseboards, lighting, furniture, whiteboard'
+              : 'Walls, floors, ceilings, toilets, sinks, mirrors, dispensers, doors, partitions'
+            : currentZone.description}
         </div>
       </div>
 
       {/* Sections and Checks */}
       <div style={{ padding: '0 20px' }}>
-        {currentZone.sections?.map((section) => (
+        {currentSections?.map((section) => (
           <div key={section.name} style={{ marginBottom: '16px' }}>
             {/* Section Header */}
             <button

@@ -321,6 +321,172 @@ export const BG_ZONES = {
       classroom: { min: 3, label: 'Classrooms' },
       bathroom: { min: 2, label: 'Bathrooms' }
     },
+    // Classroom-specific sections
+    classroomSections: [
+      {
+        name: 'Interior Walls',
+        checks: [
+          { id: 'int_walls_paint', text: 'Paint is in good condition (no peeling, flaking, or chipping spots bigger than a quarter)?', tier: 3 },
+          { id: 'int_walls_bubbling', text: 'Walls are flat (no bubbles, blisters, or bumps in the paint)?', tier: 3 },
+          { id: 'int_walls_touchup', text: 'Touch-up paint matches (no obvious patches of different colored paint)?', tier: 3 },
+          { id: 'int_walls_water', text: 'No water damage (no water stains, brown spots, or damp areas bigger than your hand)?', tier: 1, amberIneligible: true },
+          { id: 'int_walls_holes', text: 'Walls are intact (no holes or gouges bigger than a quarter)?', tier: 3 },
+          { id: 'int_walls_cracks', text: 'No deep cracks (no cracks with visible depth or shadow inside them)?', tier: 2 },
+          { id: 'int_walls_seams', text: 'Drywall looks smooth (no visible tape lines, seams, or joints when standing arm\'s length away)?', tier: 3 },
+          { id: 'int_walls_scuffs', text: 'Walls are mostly scuff-free (no more than 3 scuff marks on any wall)?', tier: 3, amberEligible: true }
+        ]
+      },
+      {
+        name: 'Floors',
+        checks: [
+          { id: 'int_floors_cracks', text: 'Hard floors are intact (no cracks bigger than a quarter)?', tier: 2 },
+          { id: 'int_floors_chips', text: 'No chipped edges (no chips or lips that could catch your foot or trip someone)?', tier: 1 },
+          { id: 'int_floors_tiles', text: 'Tiles are secure (no loose, wobbly, or cracked tiles)?', tier: 2 },
+          { id: 'int_floors_grout', text: 'Grout is solid (no missing grout, no gaps wider than a pencil between tiles)?', tier: 3 },
+          { id: 'int_floors_carpet_wear', text: 'Carpet looks good (no worn paths or bald spots you can see from 10 feet away)?', tier: 3 },
+          { id: 'int_floors_carpet_fray', text: 'Carpet edges are intact (no fraying, unraveling, or loose threads at edges or seams)?', tier: 3, amberEligible: true },
+          { id: 'int_floors_carpet_ripples', text: 'Carpet is flat (no bumps, ripples, or waves in the carpet)?', tier: 2 },
+          { id: 'int_floors_transitions', text: 'Floor transitions are secure (metal strips between floor types are tight and don\'t move when stepped on)?', tier: 2 }
+        ]
+      },
+      {
+        name: 'Ceilings',
+        checks: [
+          { id: 'int_ceilings_flush', text: 'Ceiling tiles are in place (all tiles sitting flat in the grid, no gaps)?', tier: 3 },
+          { id: 'int_ceilings_sag', text: 'Ceiling tiles are level (no tiles sagging or hanging below the others)?', tier: 2 },
+          { id: 'int_ceilings_stains', text: 'No ceiling stains (no brown spots or water marks bigger than your hand)?', tier: 1, amberIneligible: true },
+          { id: 'int_ceilings_cracks', text: 'No deep cracks (no cracks with visible depth or shadow inside them)?', tier: 2 },
+          { id: 'int_ceilings_fixtures', text: 'Ceiling fixtures are secure (lights, vents, and speakers are sitting properly in ceiling)?', tier: 3 }
+        ]
+      },
+      {
+        name: 'Doors and Windows',
+        checks: [
+          { id: 'int_doors_latch', text: 'Doors close properly (door latches shut on the first try without extra pushing)?', tier: 2, amberEligible: true },
+          { id: 'int_doors_wobble', text: 'Door handles are tight (no wobble or looseness when you turn the handle)?', tier: 3 },
+          { id: 'int_doors_components', text: 'Door hardware is complete (all parts present - handle, latch plate, hinges)?', tier: 3 },
+          { id: 'int_doors_hinges', text: 'Doors hang straight (door closes flush against the frame, no gaps or rubbing)?', tier: 3 },
+          { id: 'int_doors_glass', text: 'Window glass is intact (no cracks, chips, or broken panes of any size)?', tier: 2, amberEligible: true },
+          { id: 'int_doors_frames', text: 'Door and window frames are undamaged (no dents, chips, or missing pieces)?', tier: 3 }
+        ]
+      },
+      {
+        name: 'Baseboards and Trim',
+        checks: [
+          { id: 'int_baseboards_gaps', text: 'Baseboards are tight to wall (no gaps you can see when standing up)?', tier: 3, amberEligible: true },
+          { id: 'int_baseboards_damage', text: 'Baseboards are in good shape (no damaged sections longer than your hand)?', tier: 3 },
+          { id: 'int_baseboards_missing', text: 'All baseboards are present (no missing sections of baseboard)?', tier: 2 },
+          { id: 'int_baseboards_paint', text: 'Baseboard paint is good (no peeling, flaking, or chipping bigger than a quarter)?', tier: 3 }
+        ]
+      },
+      {
+        name: 'Lighting and Electrical',
+        checks: [
+          { id: 'class_lights_working', text: 'All lights work (no burnt out bulbs or flickering lights)?', tier: 2 },
+          { id: 'class_lights_covers', text: 'Light covers are in place and clean (no missing or damaged covers)?', tier: 3 },
+          { id: 'class_outlets_covers', text: 'All outlet and switch covers are in place (no missing or broken covers)?', tier: 3 },
+          { id: 'class_outlets_secure', text: 'Outlets are secure (no loose outlets that move when plugging in)?', tier: 2 }
+        ]
+      },
+      {
+        name: 'Furniture (Tables, Chairs, Desks)',
+        checks: [
+          { id: 'int_furniture_wobble', text: 'Furniture is stable (no wobbling when you sit down or lean on it)?', tier: 2 },
+          { id: 'int_furniture_legs', text: 'All legs and supports are intact (no broken, bent, or missing legs)?', tier: 2 },
+          { id: 'int_furniture_broken', text: 'Furniture is complete (no broken drawers, missing parts, or damaged pieces)?', tier: 2 },
+          { id: 'int_furniture_edges', text: 'No sharp edges exposed (no broken corners, exposed metal, or splintered wood)?', tier: 1 },
+          { id: 'int_furniture_upholstery', text: 'Fabric is intact (no tears, rips, or seams coming apart on upholstered items)?', tier: 3 }
+        ]
+      },
+      {
+        name: 'Whiteboard/Teaching Surfaces',
+        checks: [
+          { id: 'class_whiteboard_surface', text: 'Whiteboard surface is undamaged (no dents, scratches, cracks, or delamination)?', tier: 3 },
+          { id: 'class_whiteboard_secure', text: 'Whiteboard is securely mounted (no wobble or movement)?', tier: 2 },
+          { id: 'class_markers_tray', text: 'Marker tray is intact (no broken or missing tray)?', tier: 3 }
+        ]
+      }
+    ],
+    // Bathroom-specific sections
+    bathroomSections: [
+      {
+        name: 'Walls and Partitions',
+        checks: [
+          { id: 'bath_walls_paint', text: 'Paint is in good condition (no peeling, flaking, or chipping)?', tier: 3 },
+          { id: 'bath_walls_water', text: 'No water damage (no water stains, brown spots, or mold)?', tier: 1, amberIneligible: true },
+          { id: 'bath_walls_holes', text: 'Walls are intact (no holes or damage bigger than a quarter)?', tier: 3 },
+          { id: 'bath_partitions_stable', text: 'Stall partitions are stable (no wobbling or loose partitions)?', tier: 2 },
+          { id: 'bath_partitions_hardware', text: 'Partition hardware is complete (all hinges, latches, and hooks present)?', tier: 3 },
+          { id: 'bath_partitions_gaps', text: 'Partitions provide privacy (no large gaps between panels)?', tier: 3 }
+        ]
+      },
+      {
+        name: 'Floors',
+        checks: [
+          { id: 'bath_floors_cracks', text: 'Floor tiles are intact (no cracks or chips bigger than a quarter)?', tier: 2 },
+          { id: 'bath_floors_grout', text: 'Grout is solid and sealed (no missing, crumbling, or discolored grout)?', tier: 3 },
+          { id: 'bath_floors_trip', text: 'No trip hazards (no raised edges, loose tiles, or uneven surfaces)?', tier: 1 },
+          { id: 'bath_floors_drain', text: 'Floor drains are clear (no standing water around drains)?', tier: 2 }
+        ]
+      },
+      {
+        name: 'Ceilings',
+        checks: [
+          { id: 'bath_ceilings_stains', text: 'No ceiling stains (no water marks or discoloration)?', tier: 1, amberIneligible: true },
+          { id: 'bath_ceilings_tiles', text: 'Ceiling tiles are in place (no missing or sagging tiles)?', tier: 2 },
+          { id: 'bath_ceilings_vent', text: 'Exhaust vent is present and appears functional?', tier: 2 }
+        ]
+      },
+      {
+        name: 'Toilets and Urinals',
+        checks: [
+          { id: 'bath_toilets_secure', text: 'Toilets are securely mounted (no rocking or movement)?', tier: 2 },
+          { id: 'bath_toilets_flush', text: 'Toilets flush properly (water drains and refills correctly)?', tier: 2 },
+          { id: 'bath_toilets_seats', text: 'Toilet seats are intact (no cracks, chips, or loose seats)?', tier: 3 },
+          { id: 'bath_toilets_handles', text: 'Flush handles work (no broken or missing handles)?', tier: 2 },
+          { id: 'bath_urinals_flush', text: 'Urinals flush properly (if applicable)?', tier: 2 },
+          { id: 'bath_urinals_dividers', text: 'Urinal dividers are in place and secure (if applicable)?', tier: 3 }
+        ]
+      },
+      {
+        name: 'Sinks and Counters',
+        checks: [
+          { id: 'bath_sinks_secure', text: 'Sinks are securely mounted (no wobble or movement)?', tier: 2 },
+          { id: 'bath_sinks_drain', text: 'Sinks drain properly (no slow drains or standing water)?', tier: 2 },
+          { id: 'bath_sinks_faucets', text: 'Faucets work correctly (no leaks, proper hot/cold)?', tier: 2 },
+          { id: 'bath_sinks_handles', text: 'Faucet handles are intact (no loose or missing handles)?', tier: 3 },
+          { id: 'bath_counters_surface', text: 'Counter surfaces are intact (no chips, cracks, or delamination)?', tier: 3 },
+          { id: 'bath_counters_caulk', text: 'Caulking around sinks is intact (no gaps or peeling)?', tier: 3 }
+        ]
+      },
+      {
+        name: 'Mirrors',
+        checks: [
+          { id: 'bath_mirrors_intact', text: 'Mirrors are intact (no cracks, chips, or damage)?', tier: 2 },
+          { id: 'bath_mirrors_secure', text: 'Mirrors are securely mounted (no loose or angled mirrors)?', tier: 2 }
+        ]
+      },
+      {
+        name: 'Dispensers and Accessories',
+        checks: [
+          { id: 'bath_soap_dispenser', text: 'Soap dispensers are present and functional?', tier: 2 },
+          { id: 'bath_paper_dispenser', text: 'Paper towel dispensers are present and functional?', tier: 2 },
+          { id: 'bath_tp_holders', text: 'Toilet paper holders are present and secure?', tier: 3 },
+          { id: 'bath_trash_cans', text: 'Trash receptacles are present and functional?', tier: 3 },
+          { id: 'bath_sanitary', text: 'Sanitary product dispensers work (if applicable)?', tier: 3 }
+        ]
+      },
+      {
+        name: 'Doors',
+        checks: [
+          { id: 'bath_door_main', text: 'Main door closes and latches properly?', tier: 2 },
+          { id: 'bath_door_stalls', text: 'Stall doors close and latch properly?', tier: 2 },
+          { id: 'bath_door_hardware', text: 'Door hardware is complete (handles, locks work)?', tier: 3 },
+          { id: 'bath_door_gaps', text: 'Door frames are intact (no large gaps or damage)?', tier: 3 }
+        ]
+      }
+    ],
+    // Default sections (fallback - used for backwards compatibility)
     sections: [
       {
         name: 'Interior Walls',
