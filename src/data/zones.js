@@ -140,11 +140,27 @@ export const ZONES = {
       "Free of bad odors (no spoiled food, garbage, or drain smell)?",
       "Area is safe (no wet floors, broken chairs, or hazards)?"
     ]
+  },
+  alpha_standard: {
+    name: "Alpha Standard",
+    type: "final",
+    amberEligible: false,
+    description: "Final campus review - does this property meet the Alpha Standard?",
+    cleanliness: [
+      "Taking one final look at the entire campus - does this property meet the Alpha Standard?"
+    ],
+    improvementQuestion: {
+      text: "Even if everything passes, note one thing you would recommend we upgrade to raise the bar.",
+      placeholder: "What one improvement would you recommend?"
+    }
   }
 };
 
 // Tour route zones (non-restroom mandatory zones)
 export const TOUR_ROUTE_ZONE_IDS = ['entry', 'hallway', 'commons', 'supply_closet'];
+
+// Final zone (always at end of walkthrough)
+export const FINAL_ZONE_IDS = ['alpha_standard'];
 
 // Optional zones (can be added to walkthrough)
 export const OPTIONAL_ZONE_IDS = ['classroom', 'office', 'gym', 'cafeteria'];

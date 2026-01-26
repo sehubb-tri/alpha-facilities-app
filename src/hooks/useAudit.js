@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { ZONES, TOUR_ROUTE_ZONE_IDS, createRestroomZone } from '../data/zones';
+import { ZONES, TOUR_ROUTE_ZONE_IDS, FINAL_ZONE_IDS, createRestroomZone } from '../data/zones';
 
 export const useAudit = () => {
   const [campus, setCampus] = useState(null);
@@ -19,9 +19,9 @@ export const useAudit = () => {
     return Array.from({ length: restroomCount }, (_, i) => `restroom_${i + 1}`);
   }, [restroomCount]);
 
-  // All zones: tour route + optional + restrooms
+  // All zones: tour route + optional + restrooms + final (Alpha Standard)
   const allZones = useMemo(() =>
-    [...TOUR_ROUTE_ZONE_IDS, ...selectedOptionalZones, ...restroomZoneIds],
+    [...TOUR_ROUTE_ZONE_IDS, ...selectedOptionalZones, ...restroomZoneIds, ...FINAL_ZONE_IDS],
     [selectedOptionalZones, restroomZoneIds]
   );
 

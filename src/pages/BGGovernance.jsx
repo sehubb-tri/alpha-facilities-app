@@ -66,7 +66,17 @@ export const BGGovernance = ({ bgWalkthrough }) => {
   ) || [];
 
   const getTotalChecks = () => governanceChecks.length;
-  const getAnsweredCount = () => Object.keys(localResults).filter(k => localResults[k] !== undefined).length;
+  const getAnsweredCount = () => {
+    return governanceChecks.filter(check => {
+      const result = localResults[check.id];
+      // For text inputs, check if there's a non-empty string
+      if (check.isTextInput) {
+        return typeof result === 'string' && result.trim().length > 0;
+      }
+      // For yes/no, check if result is defined
+      return result !== undefined;
+    }).length;
+  };
   const isComplete = getAnsweredCount() === getTotalChecks();
 
   // Check for failed items
@@ -304,6 +314,58 @@ export const BGGovernance = ({ bgWalkthrough }) => {
 
               {section.checks.map(check => {
                 const result = localResults[check.id];
+
+                // Special handling for text input checks (Alpha Standard)
+                if (check.isTextInput) {
+                  return (
+                    <div key={check.id} style={{ marginBottom: '16px' }}>
+                      <div style={{
+                        backgroundColor: '#f8fafc',
+                        borderRadius: '12px',
+                        padding: '16px',
+                        marginBottom: '12px',
+                        borderLeft: '4px solid #092849'
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          <span style={{ fontSize: '24px' }}>⭐</span>
+                          <span style={{ fontSize: '16px', fontWeight: '600', color: '#092849' }}>
+                            Continuous Improvement
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '15px', color: '#333', lineHeight: '1.5' }}>
+                          {check.text}
+                        </div>
+                      </div>
+                      <textarea
+                        value={result || ''}
+                        onChange={(e) => handleResponse(check.id, e.target.value)}
+                        placeholder={check.placeholder || 'Enter your recommendation...'}
+                        style={{
+                          width: '100%',
+                          padding: '14px',
+                          borderRadius: '10px',
+                          border: '2px solid #e5e7eb',
+                          fontSize: '15px',
+                          resize: 'none',
+                          minHeight: '100px',
+                          fontFamily: 'inherit',
+                          boxSizing: 'border-box',
+                          lineHeight: '1.5'
+                        }}
+                      />
+                      <div style={{
+                        fontSize: '12px',
+                        color: '#6b7280',
+                        marginTop: '6px',
+                        textAlign: 'right'
+                      }}>
+                        {(result || '').length > 0 ? '✓ Recommendation entered' : 'Required'}
+                      </div>
+                    </div>
+                  );
+                }
+
+                // Regular yes/no check
                 return (
                   <div key={check.id} style={{ marginBottom: '16px' }}>
                     <div style={{ fontSize: '15px', marginBottom: '10px', color: '#333', lineHeight: '1.4' }}>

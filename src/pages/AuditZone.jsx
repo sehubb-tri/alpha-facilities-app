@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useI18n } from '../i18n';
+import { ZONES } from '../data/zones';
 
 export const AuditZone = ({ audit, camera }) => {
   const navigate = useNavigate();
   const { t, getChecklist, getZoneName } = useI18n();
+  const [alphaStandardText, setAlphaStandardText] = useState('');
 
   const {
     currentZoneIndex,
@@ -23,11 +26,19 @@ export const AuditZone = ({ audit, camera }) => {
   const results = zoneResults[currentZoneId] || {};
   const answeredCount = Object.keys(results).length;
 
+  // Check if this is the Alpha Standard (final) zone
+  const isAlphaStandard = currentZone?.type === 'final';
+  const zoneConfig = ZONES[currentZoneId];
+
   // Get translated checklist questions for current zone
   const zoneType = currentZone?.type === 'restroom' ? 'restroom' : currentZoneId;
   const translatedQuestions = getChecklist(zoneType);
   const totalQuestions = translatedQuestions?.length || currentZone?.cleanliness?.length || 0;
-  const complete = isZoneComplete(currentZoneId);
+
+  // For Alpha Standard, complete means: yes/no answered AND improvement text entered
+  const complete = isAlphaStandard
+    ? (results[0] !== undefined && results['alpha_improvement'] && results['alpha_improvement'].length > 0)
+    : isZoneComplete(currentZoneId);
 
   // B&G condition alert state
   const alert = getConditionAlert(currentZoneId);
@@ -37,7 +48,10 @@ export const AuditZone = ({ audit, camera }) => {
   const bgComplete = alert?.hasIssue === false || (alert?.hasIssue === true && alertPhotos.length > 0 && alert?.note?.length > 0);
 
   const handleComplete = () => {
-    if (complete && bgComplete) {
+    // For Alpha Standard zone, skip the B&G check requirement
+    const canProceed = isAlphaStandard ? complete : (complete && bgComplete);
+
+    if (canProceed) {
       // Skip the condition page, go directly to next zone or tour-ready
       if (currentZoneIndex < allZones.length - 1) {
         setCurrentZoneIndex(currentZoneIndex + 1);
@@ -48,6 +62,14 @@ export const AuditZone = ({ audit, camera }) => {
         navigate('/audit/tour-ready');
       }
     }
+  };
+
+  // Handle Alpha Standard text input
+  const handleAlphaStandardChange = (e) => {
+    const text = e.target.value;
+    setAlphaStandardText(text);
+    // Store in zone results
+    setResponse(currentZoneId, 'alpha_improvement', text);
   };
 
   const handleNoteChange = (e) => {
@@ -124,8 +146,8 @@ export const AuditZone = ({ audit, camera }) => {
         />
       </div>
 
-      {/* Warning Banner */}
-      {!currentZone?.amberEligible && (
+      {/* Warning Banner - Not shown for Alpha Standard */}
+      {!currentZone?.amberEligible && !isAlphaStandard && (
         <div style={{
           backgroundColor: 'rgba(194, 236, 253, 0.5)',
           borderLeft: '4px solid #2B57D0',
@@ -139,58 +161,169 @@ export const AuditZone = ({ audit, camera }) => {
         </div>
       )}
 
-      {/* Questions */}
-      <div style={{ padding: '20px' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          {translatedQuestions?.map((question, idx) => (
-            <div key={idx} style={{
-              backgroundColor: '#fff',
-              borderRadius: '12px',
-              padding: '16px',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-            }}>
-              <div style={{ fontSize: '16px', marginBottom: '14px', color: '#333', lineHeight: '1.4' }}>
-                {idx + 1}. {question}
-              </div>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <button
-                  onClick={() => setResponse(currentZoneId, idx, 'yes')}
-                  style={{
-                    flex: 1,
-                    padding: '14px',
-                    borderRadius: '10px',
-                    fontWeight: '600',
-                    fontSize: '16px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    backgroundColor: results[idx] === 'yes' ? '#47C4E6' : '#f3f4f6',
-                    color: results[idx] === 'yes' ? '#fff' : '#333'
-                  }}
-                >
-                  ✓ {t('common.yes')}
-                </button>
-                <button
-                  onClick={() => setResponse(currentZoneId, idx, 'no')}
-                  style={{
-                    flex: 1,
-                    padding: '14px',
-                    borderRadius: '10px',
-                    fontWeight: '600',
-                    fontSize: '16px',
-                    border: 'none',
-                    cursor: 'pointer',
-                    backgroundColor: results[idx] === 'no' ? '#141685' : '#f3f4f6',
-                    color: results[idx] === 'no' ? '#fff' : '#333'
-                  }}
-                >
-                  ✗ {t('common.no')}
-                </button>
-              </div>
+      {/* Alpha Standard Zone - Special UI */}
+      {isAlphaStandard ? (
+        <div style={{ padding: '20px' }}>
+          {/* Header */}
+          <div style={{
+            backgroundColor: '#fff',
+            borderRadius: '16px',
+            padding: '24px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            borderTop: '4px solid #092849',
+            marginBottom: '16px'
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '48px', marginBottom: '12px' }}>⭐</div>
+              <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#092849', margin: '0 0 8px 0' }}>
+                Alpha Standard
+              </h2>
+              <p style={{ fontSize: '15px', color: '#666', margin: 0, lineHeight: '1.5' }}>
+                Take one final look at the entire campus.
+              </p>
             </div>
-          ))}
-        </div>
+          </div>
 
-        {/* B&G Question - Inline */}
+          {/* Main Question: Does it meet Alpha Standard? */}
+          <div style={{
+            backgroundColor: '#fff',
+            borderRadius: '12px',
+            padding: '16px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            marginBottom: '16px'
+          }}>
+            <div style={{ fontSize: '16px', marginBottom: '14px', color: '#333', lineHeight: '1.4' }}>
+              Does this property meet the <strong>Alpha Standard</strong>?
+            </div>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={() => setResponse(currentZoneId, 0, 'yes')}
+                style={{
+                  flex: 1,
+                  padding: '14px',
+                  borderRadius: '10px',
+                  fontWeight: '600',
+                  fontSize: '16px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  backgroundColor: results[0] === 'yes' ? '#10b981' : '#f3f4f6',
+                  color: results[0] === 'yes' ? '#fff' : '#333'
+                }}
+              >
+                ✓ Yes
+              </button>
+              <button
+                onClick={() => setResponse(currentZoneId, 0, 'no')}
+                style={{
+                  flex: 1,
+                  padding: '14px',
+                  borderRadius: '10px',
+                  fontWeight: '600',
+                  fontSize: '16px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  backgroundColor: results[0] === 'no' ? '#ef4444' : '#f3f4f6',
+                  color: results[0] === 'no' ? '#fff' : '#333'
+                }}
+              >
+                ✗ No
+              </button>
+            </div>
+          </div>
+
+          {/* Improvement Question */}
+          <div style={{
+            backgroundColor: '#fff',
+            borderRadius: '12px',
+            padding: '16px',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            borderLeft: '4px solid #092849'
+          }}>
+            <div style={{ fontSize: '15px', marginBottom: '12px', color: '#333', lineHeight: '1.5' }}>
+              Even if everything passes, note <strong>one thing</strong> you would recommend we upgrade to raise the bar.
+            </div>
+            <textarea
+              value={results['alpha_improvement'] || alphaStandardText}
+              onChange={handleAlphaStandardChange}
+              placeholder={zoneConfig?.improvementQuestion?.placeholder || "What one improvement would you recommend?"}
+              style={{
+                width: '100%',
+                padding: '14px',
+                borderRadius: '10px',
+                border: '2px solid #e5e7eb',
+                fontSize: '15px',
+                resize: 'none',
+                minHeight: '100px',
+                fontFamily: 'inherit',
+                boxSizing: 'border-box',
+                lineHeight: '1.5'
+              }}
+            />
+            <div style={{
+              fontSize: '12px',
+              color: '#6b7280',
+              marginTop: '6px',
+              textAlign: 'right'
+            }}>
+              {(results['alpha_improvement'] || alphaStandardText || '').length > 0 ? '✓ ' : ''}
+              Your recommendation helps us continuously improve
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Regular Questions */}
+          <div style={{ padding: '20px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {translatedQuestions?.map((question, idx) => (
+                <div key={idx} style={{
+                  backgroundColor: '#fff',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                }}>
+                  <div style={{ fontSize: '16px', marginBottom: '14px', color: '#333', lineHeight: '1.4' }}>
+                    {idx + 1}. {question}
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                      onClick={() => setResponse(currentZoneId, idx, 'yes')}
+                      style={{
+                        flex: 1,
+                        padding: '14px',
+                        borderRadius: '10px',
+                        fontWeight: '600',
+                        fontSize: '16px',
+                        border: 'none',
+                        cursor: 'pointer',
+                        backgroundColor: results[idx] === 'yes' ? '#47C4E6' : '#f3f4f6',
+                        color: results[idx] === 'yes' ? '#fff' : '#333'
+                      }}
+                    >
+                      ✓ {t('common.yes')}
+                    </button>
+                    <button
+                      onClick={() => setResponse(currentZoneId, idx, 'no')}
+                      style={{
+                        flex: 1,
+                        padding: '14px',
+                        borderRadius: '10px',
+                        fontWeight: '600',
+                        fontSize: '16px',
+                        border: 'none',
+                        cursor: 'pointer',
+                        backgroundColor: results[idx] === 'no' ? '#141685' : '#f3f4f6',
+                        color: results[idx] === 'no' ? '#fff' : '#333'
+                      }}
+                    >
+                      ✗ {t('common.no')}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* B&G Question - Inline */}
         <div style={{
           backgroundColor: '#fff',
           borderRadius: '12px',
@@ -359,7 +492,9 @@ export const AuditZone = ({ audit, camera }) => {
             </div>
           )}
         </div>
-      </div>
+          </div>
+        </>
+      )}
 
       {/* Fixed Bottom Button */}
       <div style={{
@@ -371,31 +506,55 @@ export const AuditZone = ({ audit, camera }) => {
         borderTop: '1px solid #e5e7eb',
         padding: '16px 20px'
       }}>
-        <button
-          onClick={handleComplete}
-          disabled={!complete || !bgComplete}
-          style={{
-            width: '100%',
-            padding: '18px',
-            borderRadius: '12px',
-            fontSize: '18px',
-            fontWeight: '700',
-            border: 'none',
-            cursor: (complete && bgComplete) ? 'pointer' : 'not-allowed',
-            backgroundColor: (complete && bgComplete) ? '#092849' : '#d1d5db',
-            color: (complete && bgComplete) ? '#fff' : '#9ca3af'
-          }}
-        >
-          {!complete
-            ? `${t('audit.bg.answerAll')} (${answeredCount}/${totalQuestions})`
-            : !hasBGSelection
-            ? t('audit.bg.selectBGStatus')
-            : alert?.hasIssue && alertPhotos.length === 0
-            ? t('audit.bg.addBGPhoto')
-            : alert?.hasIssue && !alert?.note?.length
-            ? t('audit.bg.describeBGIssue')
-            : `${t('audit.bg.completeZone')} →`}
-        </button>
+        {isAlphaStandard ? (
+          <button
+            onClick={handleComplete}
+            disabled={!complete}
+            style={{
+              width: '100%',
+              padding: '18px',
+              borderRadius: '12px',
+              fontSize: '18px',
+              fontWeight: '700',
+              border: 'none',
+              cursor: complete ? 'pointer' : 'not-allowed',
+              backgroundColor: complete ? '#092849' : '#d1d5db',
+              color: complete ? '#fff' : '#9ca3af'
+            }}
+          >
+            {results[0] === undefined
+              ? 'Answer Alpha Standard Question'
+              : !(results['alpha_improvement'] && results['alpha_improvement'].length > 0)
+              ? 'Enter Your Recommendation'
+              : 'Complete Audit →'}
+          </button>
+        ) : (
+          <button
+            onClick={handleComplete}
+            disabled={!complete || !bgComplete}
+            style={{
+              width: '100%',
+              padding: '18px',
+              borderRadius: '12px',
+              fontSize: '18px',
+              fontWeight: '700',
+              border: 'none',
+              cursor: (complete && bgComplete) ? 'pointer' : 'not-allowed',
+              backgroundColor: (complete && bgComplete) ? '#092849' : '#d1d5db',
+              color: (complete && bgComplete) ? '#fff' : '#9ca3af'
+            }}
+          >
+            {!complete
+              ? `${t('audit.bg.answerAll')} (${answeredCount}/${totalQuestions})`
+              : !hasBGSelection
+              ? t('audit.bg.selectBGStatus')
+              : alert?.hasIssue && alertPhotos.length === 0
+              ? t('audit.bg.addBGPhoto')
+              : alert?.hasIssue && !alert?.note?.length
+              ? t('audit.bg.describeBGIssue')
+              : `${t('audit.bg.completeZone')} →`}
+          </button>
+        )}
       </div>
     </div>
   );

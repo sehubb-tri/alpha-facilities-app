@@ -669,6 +669,13 @@ export const BG_ZONES = {
         checks: [
           { id: 'gov_see_it_empty', text: 'Staff reports have been addressed (See It, Snap It queue is empty or caught up)?', tier: 3 }
         ]
+      },
+      {
+        name: 'Alpha Standard',
+        checks: [
+          { id: 'alpha_standard_pass', text: 'Taking one final look at the entire campus - does this property meet the Alpha Standard?', tier: 2 },
+          { id: 'alpha_standard_improvement', text: 'Even if everything passes, note one thing you would recommend we upgrade to raise the bar.', tier: 4, isTextInput: true, placeholder: 'What one improvement would you recommend?' }
+        ]
       }
     ]
   }
