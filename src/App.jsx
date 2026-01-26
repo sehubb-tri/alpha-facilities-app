@@ -40,12 +40,20 @@ import { SecurityChecklist } from './pages/SecurityChecklist';
 import { SecuritySummary } from './pages/SecuritySummary';
 import { SecurityComplete } from './pages/SecurityComplete';
 
+// Furniture & Decor Checklist Pages (hidden feature for Taraya/Austin)
+import { FurnitureSetup } from './pages/FurnitureSetup';
+import { FurnitureChecklist } from './pages/FurnitureChecklist';
+import { FurnitureSummary } from './pages/FurnitureSummary';
+import { FurnitureComplete } from './pages/FurnitureComplete';
+import { useFurnitureChecklist } from './hooks/useFurnitureChecklist';
+
 function App() {
   const camera = useCamera();
   const audit = useAudit();
   const report = useReport();
   const bgWalkthrough = useBGWalkthrough();
   const securityChecklist = useSecurityChecklist();
+  const furnitureChecklist = useFurnitureChecklist();
 
   return (
     <BrowserRouter>
@@ -124,6 +132,12 @@ function App() {
         <Route path="/security/checklist" element={<SecurityChecklist securityChecklist={securityChecklist} camera={camera} />} />
         <Route path="/security/summary" element={<SecuritySummary securityChecklist={securityChecklist} />} />
         <Route path="/security/complete" element={<SecurityComplete securityChecklist={securityChecklist} />} />
+
+        {/* Furniture & Decor Checklist Flow (Hidden - access via /furniture) */}
+        <Route path="/furniture" element={<FurnitureSetup furnitureChecklist={furnitureChecklist} />} />
+        <Route path="/furniture/checklist" element={<FurnitureChecklist furnitureChecklist={furnitureChecklist} camera={camera} />} />
+        <Route path="/furniture/summary" element={<FurnitureSummary furnitureChecklist={furnitureChecklist} />} />
+        <Route path="/furniture/complete" element={<FurnitureComplete furnitureChecklist={furnitureChecklist} />} />
       </Routes>
     </BrowserRouter>
   );
