@@ -3,6 +3,7 @@ import { useCamera } from './hooks/useCamera';
 import { useAudit } from './hooks/useAudit';
 import { useReport } from './hooks/useReport';
 import { useBGWalkthrough } from './hooks/useBGWalkthrough';
+import { useSecurityChecklist } from './hooks/useSecurityChecklist';
 import { CameraModal } from './components/CameraModal';
 
 // Pages
@@ -33,11 +34,18 @@ import { BGSummary } from './pages/BGSummary';
 import { BGComplete } from './pages/BGComplete';
 import { BGDetails } from './pages/BGDetails';
 
+// Security Checklist Pages (hidden feature for Jake)
+import { SecuritySetup } from './pages/SecuritySetup';
+import { SecurityChecklist } from './pages/SecurityChecklist';
+import { SecuritySummary } from './pages/SecuritySummary';
+import { SecurityComplete } from './pages/SecurityComplete';
+
 function App() {
   const camera = useCamera();
   const audit = useAudit();
   const report = useReport();
   const bgWalkthrough = useBGWalkthrough();
+  const securityChecklist = useSecurityChecklist();
 
   return (
     <BrowserRouter>
@@ -110,6 +118,12 @@ function App() {
 
         {/* Settings */}
         <Route path="/settings" element={<Settings />} />
+
+        {/* Security Checklist Flow (Hidden - access via /security) */}
+        <Route path="/security" element={<SecuritySetup securityChecklist={securityChecklist} />} />
+        <Route path="/security/checklist" element={<SecurityChecklist securityChecklist={securityChecklist} camera={camera} />} />
+        <Route path="/security/summary" element={<SecuritySummary securityChecklist={securityChecklist} />} />
+        <Route path="/security/complete" element={<SecurityComplete securityChecklist={securityChecklist} />} />
       </Routes>
     </BrowserRouter>
   );
