@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAudits, getReports } from '../supabase/services';
+import { getAudits, getReports, getBGWalkthroughs } from '../supabase/services';
 import { ISSUE_CATEGORIES } from '../data/issueCategories';
 import { useI18n } from '../i18n';
 import LanguageSwitcher from '../components/LanguageSwitcher';
@@ -10,6 +10,7 @@ export const Home = () => {
   const { t } = useI18n();
   const [audits, setAudits] = useState([]);
   const [reports, setReports] = useState([]);
+  const [bgWalkthroughs, setBgWalkthroughs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isLandscape, setIsLandscape] = useState(false);
 
@@ -33,12 +34,14 @@ export const Home = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [auditsData, reportsData] = await Promise.all([
+        const [auditsData, reportsData, bgData] = await Promise.all([
           getAudits(10),
-          getReports(10)
+          getReports(10),
+          getBGWalkthroughs(null, 10)
         ]);
         setAudits(auditsData);
         setReports(reportsData);
+        setBgWalkthroughs(bgData);
       } catch (error) {
         console.error('Error loading data:', error);
       } finally {
@@ -56,6 +59,11 @@ export const Home = () => {
         ...a,
         type: 'audit',
         sortDate: new Date(a.createdAt || a.date + ' ' + a.time)
+      })),
+      ...bgWalkthroughs.map(bg => ({
+        ...bg,
+        type: 'bg',
+        sortDate: new Date(bg.createdAt || bg.date + ' ' + bg.time)
       })),
       ...reports.map(r => ({
         ...r,
@@ -102,6 +110,40 @@ export const Home = () => {
                   </div>
                 </div>
                 <span style={{ color: '#9ca3af', fontSize: '20px' }}>›</span>
+              </div>
+            );
+          } else if (item.type === 'bg') {
+            return (
+              <div
+                key={`bg-${item.id || idx}`}
+                onClick={() => item.id && navigate(`/bg/${item.id}`)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '14px',
+                  backgroundColor: '#f5f5f5',
+                  borderRadius: '12px',
+                  cursor: item.id ? 'pointer' : 'default'
+                }}
+              >
+                <span style={{ fontSize: '24px', marginRight: '14px' }}>🏢</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: '600', fontSize: '17px', color: '#092849' }}>{item.campus}</div>
+                  <div style={{ fontSize: '15px', color: '#666', marginTop: '2px' }}>
+                    {item.date} • B&G • {item.campusRating || 'N/A'}
+                  </div>
+                </div>
+                <span style={{
+                  fontSize: '14px',
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  backgroundColor: item.campusRating === 'PASS' ? '#10b981' : '#ef4444',
+                  color: '#fff',
+                  fontWeight: '500'
+                }}>
+                  {item.campusRating || 'N/A'}
+                </span>
+                <span style={{ color: '#9ca3af', fontSize: '20px', marginLeft: '8px' }}>›</span>
               </div>
             );
           } else {

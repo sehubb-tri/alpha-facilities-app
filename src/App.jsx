@@ -30,6 +30,7 @@ import { BGObservations } from './pages/BGObservations';
 import { BGGovernance } from './pages/BGGovernance';
 import { BGSummary } from './pages/BGSummary';
 import { BGComplete } from './pages/BGComplete';
+import { BGDetails } from './pages/BGDetails';
 
 function App() {
   const camera = useCamera();
@@ -94,6 +95,7 @@ function App() {
         {/* History */}
         <Route path="/history" element={<History />} />
         <Route path="/audit/:id" element={<AuditDetails />} />
+        <Route path="/bg/:id" element={<BGDetails />} />
 
         {/* Report Flow */}
         <Route path="/report" element={<ReportStart report={report} camera={camera} />} />
