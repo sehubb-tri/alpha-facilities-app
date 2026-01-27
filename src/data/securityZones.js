@@ -160,6 +160,19 @@ export const SECURITY_ZONES = {
             photoRequired: true
           }
         ]
+      },
+      {
+        name: 'Visitor Management',
+        description: 'Verify the visitor management system is ready for the day.',
+        checks: [
+          {
+            id: 'raptor_functioning',
+            text: 'Is the Raptor Visitor Management System functioning?',
+            helpText: 'System is powered on and responding',
+            tier: 'amber',
+            photoRequired: false
+          }
+        ]
       }
     ]
   },
