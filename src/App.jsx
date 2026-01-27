@@ -47,6 +47,13 @@ import { FurnitureSummary } from './pages/FurnitureSummary';
 import { FurnitureComplete } from './pages/FurnitureComplete';
 import { useFurnitureChecklist } from './hooks/useFurnitureChecklist';
 
+// Food Safety Checklist Pages (hidden feature for Ops)
+import { FoodSafetySetup } from './pages/FoodSafetySetup';
+import { FoodSafetyChecklist } from './pages/FoodSafetyChecklist';
+import { FoodSafetySummary } from './pages/FoodSafetySummary';
+import { FoodSafetyComplete } from './pages/FoodSafetyComplete';
+import { useFoodSafetyChecklist } from './hooks/useFoodSafetyChecklist';
+
 function App() {
   const camera = useCamera();
   const audit = useAudit();
@@ -54,6 +61,7 @@ function App() {
   const bgWalkthrough = useBGWalkthrough();
   const securityChecklist = useSecurityChecklist();
   const furnitureChecklist = useFurnitureChecklist();
+  const foodSafetyChecklist = useFoodSafetyChecklist();
 
   return (
     <BrowserRouter>
@@ -138,6 +146,12 @@ function App() {
         <Route path="/furniture/checklist" element={<FurnitureChecklist furnitureChecklist={furnitureChecklist} camera={camera} />} />
         <Route path="/furniture/summary" element={<FurnitureSummary furnitureChecklist={furnitureChecklist} />} />
         <Route path="/furniture/complete" element={<FurnitureComplete furnitureChecklist={furnitureChecklist} />} />
+
+        {/* Food Safety Checklist Flow (Hidden - access via /food-safety) */}
+        <Route path="/food-safety" element={<FoodSafetySetup foodSafetyChecklist={foodSafetyChecklist} />} />
+        <Route path="/food-safety/checklist" element={<FoodSafetyChecklist foodSafetyChecklist={foodSafetyChecklist} camera={camera} />} />
+        <Route path="/food-safety/summary" element={<FoodSafetySummary foodSafetyChecklist={foodSafetyChecklist} />} />
+        <Route path="/food-safety/complete" element={<FoodSafetyComplete foodSafetyChecklist={foodSafetyChecklist} />} />
       </Routes>
     </BrowserRouter>
   );
