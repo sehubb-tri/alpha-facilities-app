@@ -49,8 +49,12 @@ export const AuditSummary = ({ audit }) => {
       // Submit flagged condition alerts to Wrike if campus is configured
       const flaggedConditionAlerts = conditionAlerts.filter(a => a.hasIssue);
       const campusName = campus?.name;
+      const wrikeEnabled = isCampusWrikeEnabled(campusName);
 
-      if (flaggedConditionAlerts.length > 0 && campusName && isCampusWrikeEnabled(campusName)) {
+      // DEBUG: Show what's happening with Wrike
+      console.log('[Wrike Debug] Campus:', campusName, 'Enabled:', wrikeEnabled, 'Flagged alerts:', flaggedConditionAlerts.length);
+
+      if (flaggedConditionAlerts.length > 0 && campusName && wrikeEnabled) {
         try {
           console.log('[AuditSummary] Submitting condition alerts to Wrike...');
           // Map condition alerts to issue format
@@ -67,9 +71,14 @@ export const AuditSummary = ({ audit }) => {
             { name: auditor, email: auditorEmail }
           );
           console.log('[AuditSummary] Wrike submission complete');
+          alert('Wrike: Submitted ' + mappedIssues.length + ' issues successfully!');
         } catch (wrikeError) {
           console.error('[AuditSummary] Wrike submission failed:', wrikeError);
+          alert('Wrike Error: ' + wrikeError.message);
         }
+      } else if (flaggedConditionAlerts.length > 0 && !wrikeEnabled) {
+        // Debug alert to show why it's not submitting
+        alert('Wrike not enabled for: ' + campusName);
       }
 
       navigate('/audit/complete');
