@@ -54,6 +54,13 @@ import { FoodSafetySummary } from './pages/FoodSafetySummary';
 import { FoodSafetyComplete } from './pages/FoodSafetyComplete';
 import { useFoodSafetyChecklist } from './hooks/useFoodSafetyChecklist';
 
+// Health & Safety Checklist Pages (14.03 Quality Bar)
+import { HealthSafetySetup } from './pages/HealthSafetySetup';
+import { HealthSafetyChecklist } from './pages/HealthSafetyChecklist';
+import { HealthSafetySummary } from './pages/HealthSafetySummary';
+import { HealthSafetyComplete } from './pages/HealthSafetyComplete';
+import { useHealthSafetyChecklist } from './hooks/useHealthSafetyChecklist';
+
 function App() {
   const camera = useCamera();
   const audit = useAudit();
@@ -62,6 +69,7 @@ function App() {
   const securityChecklist = useSecurityChecklist();
   const furnitureChecklist = useFurnitureChecklist();
   const foodSafetyChecklist = useFoodSafetyChecklist();
+  const healthSafetyChecklist = useHealthSafetyChecklist();
 
   return (
     <BrowserRouter>
@@ -152,6 +160,12 @@ function App() {
         <Route path="/food-safety/checklist" element={<FoodSafetyChecklist foodSafetyChecklist={foodSafetyChecklist} camera={camera} />} />
         <Route path="/food-safety/summary" element={<FoodSafetySummary foodSafetyChecklist={foodSafetyChecklist} />} />
         <Route path="/food-safety/complete" element={<FoodSafetyComplete foodSafetyChecklist={foodSafetyChecklist} />} />
+
+        {/* Health & Safety Checklist Flow (14.03 Quality Bar) */}
+        <Route path="/health-safety" element={<HealthSafetySetup healthSafetyChecklist={healthSafetyChecklist} />} />
+        <Route path="/health-safety/checklist" element={<HealthSafetyChecklist healthSafetyChecklist={healthSafetyChecklist} camera={camera} />} />
+        <Route path="/health-safety/summary" element={<HealthSafetySummary healthSafetyChecklist={healthSafetyChecklist} />} />
+        <Route path="/health-safety/complete" element={<HealthSafetyComplete healthSafetyChecklist={healthSafetyChecklist} />} />
       </Routes>
     </BrowserRouter>
   );

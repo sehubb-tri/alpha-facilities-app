@@ -322,7 +322,7 @@ export const Home = () => {
 
       {/* Additional Checklists Row */}
       <div style={{ padding: '0 24px 16px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: isLandscape ? '10px' : '12px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: isLandscape ? '10px' : '12px' }}>
           <button
             onClick={() => navigate('/security')}
             style={{
@@ -330,7 +330,7 @@ export const Home = () => {
               backgroundColor: '#fff',
               color: '#092849',
               borderRadius: isLandscape ? '12px' : '16px',
-              fontSize: isLandscape ? '12px' : '14px',
+              fontSize: isLandscape ? '11px' : '13px',
               fontWeight: '700',
               border: 'none',
               boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
@@ -338,13 +338,13 @@ export const Home = () => {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: isLandscape ? '8px' : '12px',
+              padding: isLandscape ? '8px' : '10px',
               cursor: 'pointer',
-              minHeight: isLandscape ? '60px' : '90px'
+              minHeight: isLandscape ? '60px' : '80px'
             }}
           >
-            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>🔒</span>
-            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Security Check</span>
+            <span style={{ fontSize: isLandscape ? '22px' : '28px', marginBottom: isLandscape ? '4px' : '6px' }}>🔒</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Security</span>
           </button>
 
           <button
@@ -354,7 +354,7 @@ export const Home = () => {
               backgroundColor: '#fff',
               color: '#092849',
               borderRadius: isLandscape ? '12px' : '16px',
-              fontSize: isLandscape ? '12px' : '14px',
+              fontSize: isLandscape ? '11px' : '13px',
               fontWeight: '700',
               border: 'none',
               boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
@@ -362,13 +362,13 @@ export const Home = () => {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: isLandscape ? '8px' : '12px',
+              padding: isLandscape ? '8px' : '10px',
               cursor: 'pointer',
-              minHeight: isLandscape ? '60px' : '90px'
+              minHeight: isLandscape ? '60px' : '80px'
             }}
           >
-            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>🪑</span>
-            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Furniture Check</span>
+            <span style={{ fontSize: isLandscape ? '22px' : '28px', marginBottom: isLandscape ? '4px' : '6px' }}>🪑</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Furniture</span>
           </button>
 
           <button
@@ -378,7 +378,7 @@ export const Home = () => {
               backgroundColor: '#fff',
               color: '#092849',
               borderRadius: isLandscape ? '12px' : '16px',
-              fontSize: isLandscape ? '12px' : '14px',
+              fontSize: isLandscape ? '11px' : '13px',
               fontWeight: '700',
               border: 'none',
               boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
@@ -386,13 +386,37 @@ export const Home = () => {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: isLandscape ? '8px' : '12px',
+              padding: isLandscape ? '8px' : '10px',
               cursor: 'pointer',
-              minHeight: isLandscape ? '60px' : '90px'
+              minHeight: isLandscape ? '60px' : '80px'
             }}
           >
-            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>🍽️</span>
+            <span style={{ fontSize: isLandscape ? '22px' : '28px', marginBottom: isLandscape ? '4px' : '6px' }}>🍽️</span>
             <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Food Safety</span>
+          </button>
+
+          <button
+            onClick={() => navigate('/health-safety')}
+            style={{
+              aspectRatio: isLandscape ? 'auto' : '1',
+              backgroundColor: '#fff',
+              color: '#092849',
+              borderRadius: isLandscape ? '12px' : '16px',
+              fontSize: isLandscape ? '11px' : '13px',
+              fontWeight: '700',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: isLandscape ? '8px' : '10px',
+              cursor: 'pointer',
+              minHeight: isLandscape ? '60px' : '80px'
+            }}
+          >
+            <span style={{ fontSize: isLandscape ? '22px' : '28px', marginBottom: isLandscape ? '4px' : '6px' }}>🏥</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Health & Safety</span>
           </button>
         </div>
       </div>
