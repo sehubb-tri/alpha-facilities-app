@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FURNITURE_ZONES, FURNITURE_RAG_RULES } from '../data/furnitureZones';
 import { saveFurnitureAudit } from '../supabase/furnitureService';
+import { submitChecklistIssuesToWrike, isCampusWrikeEnabled } from '../services/wrikeService';
 
 export const FurnitureSummary = ({ furnitureChecklist }) => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export const FurnitureSummary = ({ furnitureChecklist }) => {
   const {
     campus,
     auditor,
+    auditorEmail,
     startTime,
     checklistType,
     issues,
@@ -55,6 +57,22 @@ export const FurnitureSummary = ({ furnitureChecklist }) => {
     try {
       const auditData = furnitureChecklist.getChecklistData();
       await saveFurnitureAudit(auditData);
+
+      // Submit issues to Wrike if campus is configured
+      if (issues.length > 0 && isCampusWrikeEnabled(campus)) {
+        try {
+          console.log('[FurnitureSummary] Submitting issues to Wrike...');
+          await submitChecklistIssuesToWrike(
+            issues,
+            campus,
+            { name: auditor, email: auditorEmail }
+          );
+          console.log('[FurnitureSummary] Wrike submission complete');
+        } catch (wrikeError) {
+          console.error('[FurnitureSummary] Wrike submission failed:', wrikeError);
+        }
+      }
+
       navigate('/furniture/complete');
     } catch (error) {
       console.error('Error saving furniture audit:', error);

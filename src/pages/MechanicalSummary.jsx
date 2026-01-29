@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { MECHANICAL_ZONES, MECHANICAL_SECTIONS_SUMMARY, calculateZoneRating } from '../data/mechanicalZones';
+import { submitChecklistIssuesToWrike, isCampusWrikeEnabled } from '../services/wrikeService';
 
 export const MechanicalSummary = ({ mechanicalChecklist }) => {
   const navigate = useNavigate();
   const {
     campus,
     auditor,
+    auditorEmail,
     checklistType,
     checkResults,
     issues,
@@ -58,6 +60,21 @@ export const MechanicalSummary = ({ mechanicalChecklist }) => {
     try {
       // Complete the checklist and get the rating
       const { rating } = completeChecklist();
+
+      // Submit issues to Wrike if campus is configured
+      if (issues.length > 0 && isCampusWrikeEnabled(campus)) {
+        try {
+          console.log('[MechanicalSummary] Submitting issues to Wrike...');
+          await submitChecklistIssuesToWrike(
+            issues,
+            campus,
+            { name: auditor, email: auditorEmail }
+          );
+          console.log('[MechanicalSummary] Wrike submission complete');
+        } catch (wrikeError) {
+          console.error('[MechanicalSummary] Wrike submission failed:', wrikeError);
+        }
+      }
 
       // Navigate to complete page
       navigate('/mechanical/complete');

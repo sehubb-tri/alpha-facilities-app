@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FOOD_SAFETY_ZONES, FOOD_SAFETY_RAG_RULES } from '../data/foodSafetyZones';
 import { saveFoodSafetyAudit } from '../supabase/foodSafetyService';
+import { submitChecklistIssuesToWrike, isCampusWrikeEnabled } from '../services/wrikeService';
 
 export const FoodSafetySummary = ({ foodSafetyChecklist }) => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export const FoodSafetySummary = ({ foodSafetyChecklist }) => {
   const {
     campus,
     auditor,
+    auditorEmail,
     startTime,
     checklistType,
     issues,
@@ -58,6 +60,22 @@ export const FoodSafetySummary = ({ foodSafetyChecklist }) => {
     try {
       const auditData = foodSafetyChecklist.getChecklistData();
       await saveFoodSafetyAudit(auditData);
+
+      // Submit issues to Wrike if campus is configured
+      if (issues.length > 0 && isCampusWrikeEnabled(campus)) {
+        try {
+          console.log('[FoodSafetySummary] Submitting issues to Wrike...');
+          await submitChecklistIssuesToWrike(
+            issues,
+            campus,
+            { name: auditor, email: auditorEmail }
+          );
+          console.log('[FoodSafetySummary] Wrike submission complete');
+        } catch (wrikeError) {
+          console.error('[FoodSafetySummary] Wrike submission failed:', wrikeError);
+        }
+      }
+
       navigate('/food-safety/complete');
     } catch (error) {
       console.error('Error saving food safety audit:', error);

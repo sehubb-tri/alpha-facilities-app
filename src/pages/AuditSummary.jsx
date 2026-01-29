@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { saveAudit } from '../supabase/services';
 import { useI18n } from '../i18n';
+import { submitChecklistIssuesToWrike, isCampusWrikeEnabled } from '../services/wrikeService';
 
 export const AuditSummary = ({ audit }) => {
   const navigate = useNavigate();
@@ -10,6 +11,8 @@ export const AuditSummary = ({ audit }) => {
 
   const {
     campus,
+    auditor,
+    auditorEmail,
     allZones,
     conditionAlerts,
     calculateStatus,
@@ -42,6 +45,33 @@ export const AuditSummary = ({ audit }) => {
     try {
       const auditData = buildAuditData();
       await saveAudit(auditData);
+
+      // Submit flagged condition alerts to Wrike if campus is configured
+      const flaggedConditionAlerts = conditionAlerts.filter(a => a.hasIssue);
+      const campusName = campus?.name;
+
+      if (flaggedConditionAlerts.length > 0 && campusName && isCampusWrikeEnabled(campusName)) {
+        try {
+          console.log('[AuditSummary] Submitting condition alerts to Wrike...');
+          // Map condition alerts to issue format
+          const mappedIssues = flaggedConditionAlerts.map(alert => ({
+            checkText: alert.label || alert.condition || 'Condition Alert',
+            section: alert.zoneName || 'Daily QC',
+            explanation: alert.explanation || '',
+            photos: alert.photos || [],
+            instantRed: false
+          }));
+          await submitChecklistIssuesToWrike(
+            mappedIssues,
+            campusName,
+            { name: auditor, email: auditorEmail }
+          );
+          console.log('[AuditSummary] Wrike submission complete');
+        } catch (wrikeError) {
+          console.error('[AuditSummary] Wrike submission failed:', wrikeError);
+        }
+      }
+
       navigate('/audit/complete');
     } catch (error) {
       console.error('Error submitting audit:', error);

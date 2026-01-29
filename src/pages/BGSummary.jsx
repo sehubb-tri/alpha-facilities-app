@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BG_ZONES, BG_ZONE_ORDER, SLA_TIERS } from '../data/bgZones';
+import { submitChecklistIssuesToWrike, isCampusWrikeEnabled } from '../services/wrikeService';
 
 export const BGSummary = ({ bgWalkthrough }) => {
   const navigate = useNavigate();
@@ -8,12 +9,15 @@ export const BGSummary = ({ bgWalkthrough }) => {
   const {
     campus,
     auditor,
+    auditorEmail,
     startTime,
     zoneRatings,
     issues,
     observations,
     completeWalkthrough
   } = bgWalkthrough;
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Calculate walkthrough duration
   const walkthroughDuration = useMemo(() => {
@@ -65,8 +69,34 @@ export const BGSummary = ({ bgWalkthrough }) => {
     }
   };
 
-  const handleComplete = () => {
-    navigate('/bg/complete');
+  const handleComplete = async () => {
+    setIsSubmitting(true);
+    try {
+      // Submit issues to Wrike if campus is configured
+      if (issues.length > 0 && isCampusWrikeEnabled(campus)) {
+        try {
+          console.log('[BGSummary] Submitting issues to Wrike...');
+          // Map BG issues to include instantRed based on tier (Tier 1 = critical)
+          const mappedIssues = issues.map(issue => ({
+            ...issue,
+            instantRed: issue.tier === 1,
+            checkText: issue.description || issue.category,
+            section: `Tier ${issue.tier} - ${issue.zone || 'General'}`
+          }));
+          await submitChecklistIssuesToWrike(
+            mappedIssues,
+            campus,
+            { name: auditor, email: auditorEmail }
+          );
+          console.log('[BGSummary] Wrike submission complete');
+        } catch (wrikeError) {
+          console.error('[BGSummary] Wrike submission failed:', wrikeError);
+        }
+      }
+      navigate('/bg/complete');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

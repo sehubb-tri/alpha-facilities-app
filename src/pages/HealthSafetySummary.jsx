@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { HEALTH_SAFETY_ZONES, HEALTH_SAFETY_RAG_RULES } from '../data/healthSafetyZones';
 import { saveHealthSafetyAudit } from '../supabase/healthSafetyService';
+import { submitChecklistIssuesToWrike, isCampusWrikeEnabled } from '../services/wrikeService';
 
 export const HealthSafetySummary = ({ healthSafetyChecklist }) => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export const HealthSafetySummary = ({ healthSafetyChecklist }) => {
   const {
     campus,
     auditor,
+    auditorEmail,
     startTime,
     checklistType,
     issues,
@@ -55,6 +57,23 @@ export const HealthSafetySummary = ({ healthSafetyChecklist }) => {
     try {
       const auditData = healthSafetyChecklist.getChecklistData();
       await saveHealthSafetyAudit(auditData);
+
+      // Submit issues to Wrike if campus is configured
+      if (issues.length > 0 && isCampusWrikeEnabled(campus)) {
+        try {
+          console.log('[HealthSafetySummary] Submitting issues to Wrike...');
+          await submitChecklistIssuesToWrike(
+            issues,
+            campus,
+            { name: auditor, email: auditorEmail }
+          );
+          console.log('[HealthSafetySummary] Wrike submission complete');
+        } catch (wrikeError) {
+          // Log but don't fail the whole submission if Wrike fails
+          console.error('[HealthSafetySummary] Wrike submission failed:', wrikeError);
+        }
+      }
+
       navigate('/health-safety/complete');
     } catch (error) {
       console.error('Error saving health & safety audit:', error);

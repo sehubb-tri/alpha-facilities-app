@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SECURITY_ZONES, SECURITY_RAG_RULES } from '../data/securityZones';
 import { saveSecurityAudit } from '../supabase/securityService';
+import { submitChecklistIssuesToWrike, isCampusWrikeEnabled } from '../services/wrikeService';
 
 export const SecuritySummary = ({ securityChecklist }) => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export const SecuritySummary = ({ securityChecklist }) => {
   const {
     campus,
     auditor,
+    auditorEmail,
     startTime,
     checklistType,
     issues,
@@ -55,6 +57,22 @@ export const SecuritySummary = ({ securityChecklist }) => {
     try {
       const auditData = securityChecklist.getChecklistData();
       await saveSecurityAudit(auditData);
+
+      // Submit issues to Wrike if campus is configured
+      if (issues.length > 0 && isCampusWrikeEnabled(campus)) {
+        try {
+          console.log('[SecuritySummary] Submitting issues to Wrike...');
+          await submitChecklistIssuesToWrike(
+            issues,
+            campus,
+            { name: auditor, email: auditorEmail }
+          );
+          console.log('[SecuritySummary] Wrike submission complete');
+        } catch (wrikeError) {
+          console.error('[SecuritySummary] Wrike submission failed:', wrikeError);
+        }
+      }
+
       navigate('/security/complete');
     } catch (error) {
       console.error('Error saving security audit:', error);
