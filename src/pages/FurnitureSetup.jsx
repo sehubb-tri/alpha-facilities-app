@@ -6,7 +6,8 @@ import { CAMPUSES } from '../data/campuses';
 import { FURNITURE_ZONES, FURNITURE_RAG_RULES } from '../data/furnitureZones';
 
 const CHECKLIST_TYPES = [
-  { id: 'weekly', name: 'Weekly Pulse Check', icon: '📋', color: '#2563eb' },
+  { id: 'daily', name: 'Daily Pulse Checks', icon: '⚡', color: '#f97316' },
+  { id: 'weekly', name: 'Weekly Pulse Checks', icon: '📋', color: '#2563eb' },
   { id: 'monthly', name: 'Monthly Condition Scan', icon: '📅', color: '#7c3aed' },
   { id: 'quarterly', name: 'Quarterly Deep Review', icon: '📊', color: '#059669' },
   { id: 'annual', name: 'Annual Comprehensive', icon: '📆', color: '#dc2626' }

@@ -320,24 +320,25 @@ export const FurnitureChecklist = ({ furnitureChecklist, camera }) => {
                                   display: 'block',
                                   fontSize: '13px',
                                   fontWeight: '600',
-                                  color: '#333',
+                                  color: '#dc2626',
                                   marginBottom: '6px'
                                 }}>
-                                  Explanation *
+                                  Explanation Required *
                                 </label>
                                 <textarea
                                   value={issue.explanation || ''}
                                   onChange={(e) => handleExplanationChange(issue.id, e.target.value)}
-                                  placeholder="Describe the issue..."
+                                  placeholder="Please describe the issue and what was observed..."
                                   style={{
                                     width: '100%',
-                                    minHeight: '80px',
-                                    padding: '10px',
+                                    minHeight: '100px',
+                                    padding: '12px',
                                     borderRadius: '6px',
-                                    border: '1px solid #ccc',
+                                    border: (!issue.explanation || issue.explanation.trim() === '') ? '2px solid #ef4444' : '1px solid #ccc',
                                     fontSize: '14px',
                                     resize: 'vertical',
-                                    boxSizing: 'border-box'
+                                    boxSizing: 'border-box',
+                                    backgroundColor: (!issue.explanation || issue.explanation.trim() === '') ? '#fef2f2' : '#fff'
                                   }}
                                 />
                               </div>

@@ -1,4 +1,4 @@
-// Furniture & Decor Quality Bar - 14.08 Sustain
+// Furniture & Decor Quality Bar
 // Based on Taraya Voelker & Austin Ray's Quality Bar
 // Pillar: Furniture (Core) + Decor & Environment
 
@@ -49,123 +49,348 @@ export const FURNITURE_RAG_RULES = {
 // These cannot be Amber - NO answer = automatic RED
 // ============================================
 export const INSTANT_RED_CHECKS = [
-  'safety_hazards',
-  'safety_structural',
-  'safety_sharp_edges',
-  'ergonomic_chairs_adjustable',
-  'ergonomic_desks_height'
+  // Weekly - Safety hazards
+  'weekly_safety_hazards',
+  // Monthly - Ergonomic Standards
+  'monthly_ergonomic_chairs_height',
+  'monthly_ergonomic_desks_height',
+  // Monthly - Safety
+  'monthly_safety_sharp_edges',
+  // Biophilic - Dead/dying plants
+  'weekly_biophilic_plants_healthy',
+  // Wayfinding/Branding breaks
+  'weekly_handwritten_signs',
+  // Furniture clutter/alignment
+  'weekly_furniture_misaligned',
+  // Visible garbage/bins
+  'weekly_visible_garbage'
 ];
 
 // ============================================
 // PHOTO REQUIREMENTS
 // ============================================
 export const PHOTO_REQUIRED_CHECKS = [
-  'condition_damage',
-  'condition_wear',
-  'condition_stains',
-  'safety_hazards',
-  'safety_structural',
-  'safety_sharp_edges',
-  'brand_signage_condition',
-  'brand_wall_damage',
-  'lighting_burnt_out',
-  'flooring_damage',
-  'special_spaces_condition'
+  // Daily VIP Checks
+  'daily_vip_glass_clean',
+  'daily_vip_branding_lit',
+  'daily_vip_bathrooms',
+  // Daily Capacity
+  'daily_capacity_overflow',
+  // Weekly
+  'weekly_condition_damage',
+  'weekly_condition_stains',
+  'weekly_safety_hazards',
+  // Monthly
+  'monthly_desks_condition',
+  'monthly_chairs_condition',
+  'monthly_safety_sharp_edges',
+  'monthly_brand_signage',
+  'monthly_brand_wall_damage',
+  'monthly_lighting_burnt_out',
+  'monthly_flooring_damage',
+  // Quarterly
+  'quarterly_special_spaces_condition'
 ];
 
 // ============================================
 // FURNITURE ZONES (CHECK TYPES)
 // ============================================
 export const FURNITURE_ZONES = {
-  weekly: {
-    id: 'weekly',
-    name: 'Weekly Pulse Check',
-    frequency: 'weekly',
+  daily: {
+    id: 'daily',
+    name: 'Daily Pulse Checks',
+    frequency: 'daily',
     order: 1,
-    description: 'Quick visual scan of furniture condition and usage',
-    timeNeeded: '15-20 minutes',
+    description: 'Ensure the 3 C\'s are intact and check for immediate capacity friction',
+    timeNeeded: '20-25 minutes',
     persona: 'Guide or Facilities Staff',
     sections: [
       {
-        name: 'Furniture Condition Scan',
-        description: 'Walk through main areas and visually assess furniture condition.',
+        name: 'A. VIP Ready Pulse (Curb Appeal & Workspace Setup)',
+        description: 'Walk through main entrance and common areas to verify VIP readiness.',
         checks: [
           {
-            id: 'condition_damage',
-            text: 'Is all furniture free of visible damage?',
-            helpText: 'No broken legs, torn upholstery, cracked surfaces',
+            id: 'daily_vip_glass_clean',
+            text: 'Is exterior glass and handles smudge-free? Is there no litter at the doorstep or in parking stalls?',
+            helpText: 'Entrance Check',
             tier: 'amber',
             photoRequired: true
           },
           {
-            id: 'condition_wear',
-            text: 'Is furniture free of excessive wear?',
-            helpText: 'No peeling, fading, or significant scratches',
+            id: 'daily_vip_scent_active',
+            text: 'Is the signature scent active and detectable at the main entrance?',
+            helpText: 'The Scent',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'daily_vip_branding_lit',
+            text: 'Is branding signage illuminated and visible from the street?',
+            helpText: 'First Look',
             tier: 'amber',
             photoRequired: true
           },
           {
-            id: 'condition_stains',
-            text: 'Is upholstered furniture free of stains?',
-            helpText: 'Chairs, sofas, cushions are clean',
+            id: 'daily_vip_power_hubs',
+            text: 'Are all coworking power hubs accessible?',
+            helpText: 'Tech-Check',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'daily_vip_lighting_preset',
+            text: 'Is smart lighting set to the morning light preset?',
+            helpText: 'Tech-Check',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'daily_vip_furniture_tucked',
+            text: 'Are chairs tucked in and lounge furniture straightened from the previous evening\'s use?',
+            helpText: 'Furniture Alignment',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'daily_vip_no_clutter',
+            text: 'Is there no abandoned "temp" signage, loose cables, or left-behind items in common areas?',
+            helpText: 'Clutter Control',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'daily_vip_temperature',
+            text: 'Is the temperature set to the brand standard (not too cold/hot)?',
+            helpText: 'Climate',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'daily_vip_bathrooms',
+            text: 'Are mirrors spotless, surfaces dry, and high-end consumables stocked in the bathrooms?',
+            helpText: 'Bathrooms - VIP Standard',
             tier: 'amber',
             photoRequired: true
           },
           {
-            id: 'condition_functional',
-            text: 'Is all furniture fully functional?',
-            helpText: 'Drawers open, chairs roll, tables stable',
+            id: 'daily_vip_biophilic',
+            text: 'Are there no visible fallen leaves or stagnant water in interior garden features?',
+            helpText: 'Biophilic Check',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'daily_vip_bins_empty',
+            text: 'Are all garbage and sanitary bins empty and liners hidden?',
+            helpText: 'Refuse',
             tier: 'amber',
             photoRequired: false
           }
         ]
       },
       {
-        name: 'Usage Check',
-        description: 'Observe if furniture is being used appropriately.',
+        name: 'B. Capacity Pulse (The "Friction" Check)',
+        description: 'Performed during peak hours to identify capacity issues.',
         checks: [
           {
-            id: 'usage_being_used',
-            text: 'Is furniture being actively used by students/staff?',
-            helpText: 'Not sitting empty or avoided',
+            id: 'daily_capacity_10_percent_open',
+            text: 'Is there at least 10% open seating in every zone?',
+            helpText: 'If 0%, the "Luxury" experience is failing.',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'usage_appropriate',
-            text: 'Is furniture being used for its intended purpose?',
-            helpText: 'Desks for work, chairs for sitting, etc.',
+            id: 'daily_capacity_rooms_intended_use',
+            text: 'Are students using rooms as intended? (e.g., Is a "Quiet Study" room being used for loud "Rec" because the Rec area is full?)',
+            helpText: 'Check for cross-usage due to capacity issues',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'usage_arrangement',
-            text: 'Is furniture arranged to support collaboration and focus?',
-            helpText: 'Proper spacing, not blocking pathways',
+            id: 'daily_capacity_outlet_crowding',
+            text: 'Are students huddled around specific outlets because others are broken or poorly placed?',
+            helpText: 'Outlet distribution check',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'daily_capacity_overflow',
+            text: 'Are students sitting on floors or "non-seat" surfaces (planters, stairs)?',
+            helpText: 'The "Overflow" Check',
+            tier: 'amber',
+            photoRequired: true
+          }
+        ]
+      }
+    ]
+  },
+
+  weekly: {
+    id: 'weekly',
+    name: 'Weekly Pulse Checks',
+    frequency: 'weekly',
+    order: 2,
+    description: 'Quick visual scan of furniture condition and strategic usage, plus a quality audit of the high-end experience',
+    timeNeeded: '30-40 minutes',
+    persona: 'Guide or Facilities Staff',
+    sections: [
+      {
+        name: 'A. Furniture Condition, Usage, and Safety',
+        description: 'Walk through main areas and assess furniture condition and safety.',
+        checks: [
+          {
+            id: 'weekly_condition_damage',
+            text: 'Is furniture in good overall condition (no visible damage or excessive wear)?',
+            helpText: 'Examples: broken parts, cracks, peeling laminate, heavy fading, major scratches.',
+            tier: 'amber',
+            photoRequired: true
+          },
+          {
+            id: 'weekly_condition_stains',
+            text: 'Is upholstered/soft seating free of visible stains or odors?',
+            helpText: 'Includes sofas, cushions, fabric chairs, lounge seating.',
+            tier: 'amber',
+            photoRequired: true
+          },
+          {
+            id: 'weekly_condition_functional',
+            text: 'Is furniture functional as intended?',
+            helpText: 'Examples: drawers open/close, chairs roll/adjust, tables stable, shelves/cabinets open safely.',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'weekly_safety_hazards',
+            text: 'Are there any furniture safety hazards?',
+            helpText: 'Examples: wobbling chairs, unstable shelving, sharp edges, broken wheels, exposed nails/screws, tip risk.',
+            tier: 'red',
+            instantRed: true,
+            photoRequired: true
+          },
+          {
+            id: 'weekly_furniture_appropriate_use',
+            text: 'Is furniture appropriate and used as intended for the space?',
+            helpText: 'Examples: desks used for work, seating supports the activity, no "workarounds" (students sitting on floors because chairs unusable).',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'weekly_furniture_arrangement',
+            text: 'Is furniture arranged to support instruction and movement?',
+            helpText: 'Examples: collaboration areas exist, quiet/focus areas exist, pathways are clear.',
             tier: 'amber',
             photoRequired: false
           }
         ]
       },
       {
-        name: 'Quick Safety Check',
-        description: 'Identify any immediate safety concerns.',
+        name: 'B. Luxury-Tech Standards (Quality Audit)',
+        description: 'Quality audit of the high-end experience elements.',
         checks: [
           {
-            id: 'safety_hazards',
-            text: 'Is the space free of furniture-related safety hazards?',
-            helpText: 'No wobbly chairs, unstable shelving, trip hazards',
-            tier: 'red',
-            instantRed: true,
-            photoRequired: true
+            id: 'weekly_branding_signage_clean',
+            text: 'Is exterior branding signage clean, lit (if applicable), and unobstructed?',
+            helpText: 'Check all exterior brand elements',
+            tier: 'amber',
+            photoRequired: false
           },
           {
-            id: 'safety_structural',
-            text: 'Is all furniture structurally sound?',
-            helpText: 'No loose joints, cracked frames, broken wheels',
+            id: 'weekly_scent_functioning',
+            text: 'Is the signature scent present and functioning at entry (not missing, not overpowering)?',
+            helpText: 'Scent should be subtle but detectable',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'weekly_entry_lighting',
+            text: 'Is entry lighting set to the approved brightness/scene ("Welcome" scene)?',
+            helpText: 'Check lighting presets are correct',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'weekly_wayfinding_signs',
+            text: 'Are wayfinding/directional signs clean and clearly readable?',
+            helpText: 'All directional and informational signage',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'weekly_smart_lighting_scenes',
+            text: 'Are smart lighting scenes functioning correctly (no failed zones, correct scene active)?',
+            helpText: 'Test all lighting zones',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'weekly_forgotten_spots_clean',
+            text: 'Are "forgotten spots" clean and intact (ceilings, corners, acoustic panels - no dust or damage)?',
+            helpText: 'Check areas often overlooked in daily cleaning',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'weekly_furniture_reset',
+            text: 'Is furniture reset to the approved layout (no drift, clear pathways)?',
+            helpText: 'Compare to original layout design',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'weekly_biophilic_plants_healthy',
+            text: 'Are plants healthy and presentable (no dead leaves, not dusty)?',
+            helpText: 'Dead or dying plants are an INSTANT RED',
             tier: 'red',
             instantRed: true,
-            photoRequired: true
+            photoRequired: false
+          },
+          {
+            id: 'weekly_bins_bathrooms_clean',
+            text: 'Are bins emptied/discreet and bathrooms clean + fully stocked (soap/paper/scent items)?',
+            helpText: 'Full bathroom and refuse check',
+            tier: 'amber',
+            photoRequired: false
+          }
+        ]
+      },
+      {
+        name: 'C. Capacity Deep-Dive (The "Strategy" Check)',
+        description: 'Please consult with your CC and Lead Guide on the below.',
+        checks: [
+          {
+            id: 'weekly_capacity_furniture_count_matches',
+            text: 'Does the furniture count in every room type (Learning, Rec, Social) match the original design blueprint?',
+            helpText: 'Inventory vs. Intent',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'weekly_capacity_dead_zones_identified',
+            text: 'Have "Dead Zones" (under-utilized rooms) vs. "Hot Zones" (over-crowded) been identified to inform furniture movement?',
+            helpText: 'Zone Balance',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'weekly_capacity_rec_surface_space',
+            text: 'Are "Rec" areas providing enough surface space for "Learning" if students are cross-using the space?',
+            helpText: 'Furniture Versatility',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'weekly_capacity_high_traffic_integrity',
+            text: 'Has high-traffic seating been checked for structural integrity (as over-capacity leads to faster degradation)?',
+            helpText: 'Wear & Tear per Capita',
+            tier: 'amber',
+            photoRequired: false
+          },
+          {
+            id: 'weekly_capacity_new_level_activity',
+            text: 'Do you have a new learning level starting soon? Or some form of new activity starting soon? (i.e., something that would drive the need for a new space)',
+            helpText: 'Planning for capacity changes',
+            tier: 'amber',
+            photoRequired: false
           }
         ]
       }
@@ -176,38 +401,38 @@ export const FURNITURE_ZONES = {
     id: 'monthly',
     name: 'Monthly Condition Scan',
     frequency: 'monthly',
-    order: 2,
+    order: 3,
     description: 'Detailed assessment of furniture condition and environment',
     timeNeeded: '45-60 minutes',
     persona: 'Facilities Staff',
     sections: [
       {
-        name: 'Detailed Furniture Assessment',
+        name: 'A. Detailed Furniture Assessment',
         description: 'Thoroughly check each furniture category.',
         checks: [
           {
-            id: 'desks_condition',
+            id: 'monthly_desks_condition',
             text: 'Are all desks/tables in good condition?',
             helpText: 'Surfaces smooth, legs stable, no wobble',
             tier: 'amber',
-            photoRequired: false
+            photoRequired: true
           },
           {
-            id: 'chairs_condition',
+            id: 'monthly_chairs_condition',
             text: 'Are all chairs in good condition?',
             helpText: 'Seats intact, backs secure, wheels working',
             tier: 'amber',
-            photoRequired: false
+            photoRequired: true
           },
           {
-            id: 'storage_condition',
+            id: 'monthly_storage_condition',
             text: 'Are all storage units in good condition?',
             helpText: 'Shelves secure, doors close properly, drawers slide',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'soft_seating_condition',
+            id: 'monthly_soft_seating_condition',
             text: 'Is soft seating in good condition?',
             helpText: 'Sofas, lounge chairs - cushions intact, no sagging',
             tier: 'amber',
@@ -216,19 +441,19 @@ export const FURNITURE_ZONES = {
         ]
       },
       {
-        name: 'Ergonomic Standards',
+        name: 'B. Ergonomic Standards',
         description: 'Verify furniture meets ergonomic requirements.',
         checks: [
           {
-            id: 'ergonomic_chairs_adjustable',
-            text: 'Do work chairs have adjustable height?',
+            id: 'monthly_ergonomic_chairs_height',
+            text: 'Do work chairs have appropriate height?',
             helpText: 'Required for proper posture',
             tier: 'red',
             instantRed: true,
             photoRequired: false
           },
           {
-            id: 'ergonomic_desks_height',
+            id: 'monthly_ergonomic_desks_height',
             text: 'Are desks at appropriate working height?',
             helpText: 'Standard 28-30 inches or adjustable',
             tier: 'red',
@@ -236,14 +461,14 @@ export const FURNITURE_ZONES = {
             photoRequired: false
           },
           {
-            id: 'ergonomic_monitor_placement',
+            id: 'monthly_ergonomic_monitor_space',
             text: 'Is there appropriate space for monitor placement?',
             helpText: 'Desk depth allows proper eye distance',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'ergonomic_keyboard_space',
+            id: 'monthly_ergonomic_keyboard_space',
             text: 'Is there adequate space for keyboard/mouse?',
             helpText: 'Comfortable arm position possible',
             tier: 'amber',
@@ -252,11 +477,11 @@ export const FURNITURE_ZONES = {
         ]
       },
       {
-        name: 'Safety Detailed Check',
+        name: 'C. Safety Detailed Check',
         description: 'Thorough safety inspection of all furniture.',
         checks: [
           {
-            id: 'safety_sharp_edges',
+            id: 'monthly_safety_sharp_edges',
             text: 'Is all furniture free of sharp edges or exposed hardware?',
             helpText: 'No protruding screws, sharp corners, rough edges',
             tier: 'red',
@@ -264,14 +489,14 @@ export const FURNITURE_ZONES = {
             photoRequired: true
           },
           {
-            id: 'safety_weight_limits',
+            id: 'monthly_safety_weight_limits',
             text: 'Is furniture being used within weight limits?',
             helpText: 'Shelving not overloaded, chairs appropriate for users',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'safety_tip_hazards',
+            id: 'monthly_safety_tip_hazards',
             text: 'Are tall items secured against tipping?',
             helpText: 'Bookcases, tall shelving units anchored if needed',
             tier: 'amber',
@@ -280,25 +505,25 @@ export const FURNITURE_ZONES = {
         ]
       },
       {
-        name: 'Decor & Brand Standards',
+        name: 'D. Decor & Brand Standards',
         description: 'Check environmental and brand elements.',
         checks: [
           {
-            id: 'brand_signage_condition',
+            id: 'monthly_brand_signage',
             text: 'Is all signage in good condition?',
             helpText: 'Not faded, peeling, or damaged',
             tier: 'amber',
             photoRequired: true
           },
           {
-            id: 'brand_colors_consistent',
+            id: 'monthly_brand_colors_consistent',
             text: 'Are brand colors consistent throughout?',
             helpText: 'Matches Alpha Schools brand guidelines',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'brand_wall_damage',
+            id: 'monthly_brand_wall_damage',
             text: 'Are walls free of damage and marks?',
             helpText: 'No holes, scuffs, or unauthorized postings',
             tier: 'amber',
@@ -307,32 +532,32 @@ export const FURNITURE_ZONES = {
         ]
       },
       {
-        name: 'Lighting & Environment',
+        name: 'E. Lighting & Environment',
         description: 'Check environmental comfort factors.',
         checks: [
           {
-            id: 'lighting_adequate',
+            id: 'monthly_lighting_adequate',
             text: 'Is lighting adequate for all work areas?',
             helpText: 'No dark spots, appropriate brightness',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'lighting_burnt_out',
+            id: 'monthly_lighting_burnt_out',
             text: 'Are all lights working (no burnt out bulbs)?',
             helpText: 'Check overhead and task lighting',
             tier: 'amber',
             photoRequired: true
           },
           {
-            id: 'flooring_condition',
+            id: 'monthly_flooring_condition',
             text: 'Is flooring in good condition?',
             helpText: 'No tears, stains, or trip hazards',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'flooring_damage',
+            id: 'monthly_flooring_damage',
             text: 'Is flooring free of damage needing repair?',
             helpText: 'No loose tiles, carpet edges, or cracks',
             tier: 'amber',
@@ -347,39 +572,39 @@ export const FURNITURE_ZONES = {
     id: 'quarterly',
     name: 'Quarterly Deep Review',
     frequency: 'quarterly',
-    order: 3,
+    order: 4,
     description: 'Comprehensive review including satisfaction and special spaces',
     timeNeeded: '60-90 minutes',
     persona: 'Facilities Manager',
     sections: [
       {
-        name: 'Satisfaction Review',
+        name: 'A. Satisfaction Review',
         description: 'Review feedback from guides and students.',
         checks: [
           {
-            id: 'satisfaction_guide_reviewed',
+            id: 'quarterly_satisfaction_guide_reviewed',
             text: 'Has guide satisfaction feedback been reviewed?',
             helpText: 'Check survey results or gather informal feedback',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'satisfaction_guide_positive',
-            text: 'Is guide satisfaction with furniture positive (3.5+ rating)?',
+            id: 'quarterly_satisfaction_guide_positive',
+            text: 'Is guide satisfaction with furniture positive (4+ rating)?',
             helpText: 'Based on recent surveys or feedback',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'satisfaction_student_reviewed',
+            id: 'quarterly_satisfaction_student_reviewed',
             text: 'Has student satisfaction feedback been reviewed?',
             helpText: 'Check survey results or gather informal feedback',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'satisfaction_student_positive',
-            text: 'Is student satisfaction with furniture positive (3.5+ rating)?',
+            id: 'quarterly_satisfaction_student_positive',
+            text: 'Is student satisfaction with furniture positive (4+ rating)?',
             helpText: 'Based on recent surveys or feedback',
             tier: 'amber',
             photoRequired: false
@@ -387,25 +612,25 @@ export const FURNITURE_ZONES = {
         ]
       },
       {
-        name: 'Special Spaces',
+        name: 'B. Special Spaces',
         description: 'Review specialized areas and their unique furniture needs.',
         checks: [
           {
-            id: 'special_spaces_identified',
+            id: 'quarterly_special_spaces_identified',
             text: 'Are all special spaces identified and documented?',
             helpText: 'Labs, maker spaces, quiet rooms, collaboration zones',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'special_spaces_condition',
+            id: 'quarterly_special_spaces_condition',
             text: 'Is specialized furniture in these spaces in good condition?',
             helpText: 'Lab tables, maker benches, lounge furniture',
             tier: 'amber',
             photoRequired: true
           },
           {
-            id: 'special_spaces_appropriate',
+            id: 'quarterly_special_spaces_appropriate',
             text: 'Is furniture appropriate for each space type?',
             helpText: 'Matches the intended use of the space',
             tier: 'amber',
@@ -414,32 +639,18 @@ export const FURNITURE_ZONES = {
         ]
       },
       {
-        name: 'Biophilic & Comfort Elements',
+        name: 'C. Biophilic & Comfort Elements',
         description: 'Check elements that enhance wellbeing.',
         checks: [
           {
-            id: 'biophilic_plants',
-            text: 'Are indoor plants healthy and well-maintained?',
-            helpText: 'If applicable - no dead plants, proper care',
-            tier: 'amber',
-            photoRequired: false
-          },
-          {
-            id: 'biophilic_natural_light',
+            id: 'quarterly_biophilic_natural_light',
             text: 'Is natural light being maximized?',
             helpText: 'Blinds open when appropriate, windows unobstructed',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'comfort_temperature',
-            text: 'Are temperature controls working properly?',
-            helpText: 'Comfortable working environment',
-            tier: 'amber',
-            photoRequired: false
-          },
-          {
-            id: 'comfort_noise',
+            id: 'quarterly_comfort_noise',
             text: 'Are noise levels appropriate for each space?',
             helpText: 'Quiet zones are quiet, collaboration spaces have acoustic management',
             tier: 'amber',
@@ -448,25 +659,25 @@ export const FURNITURE_ZONES = {
         ]
       },
       {
-        name: 'Replacement Planning',
+        name: 'D. Replacement Planning',
         description: 'Identify items that may need replacement.',
         checks: [
           {
-            id: 'replacement_identified',
+            id: 'quarterly_replacement_identified',
             text: 'Have items needing replacement been identified?',
             helpText: 'Track items past useful life or beyond repair',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'replacement_documented',
+            id: 'quarterly_replacement_documented',
             text: 'Are replacement needs documented and prioritized?',
             helpText: 'List with estimated costs and urgency',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'replacement_budget',
+            id: 'quarterly_replacement_budget',
             text: 'Is there a plan/budget for necessary replacements?',
             helpText: 'Included in facilities planning',
             tier: 'amber',
@@ -481,31 +692,31 @@ export const FURNITURE_ZONES = {
     id: 'annual',
     name: 'Annual Comprehensive Review',
     frequency: 'annual',
-    order: 4,
+    order: 5,
     description: 'Full inventory and strategic planning review',
     timeNeeded: '2-3 hours',
     persona: 'Facilities Manager + Leadership',
     sections: [
       {
-        name: 'Inventory Verification',
+        name: 'A. Inventory Verification',
         description: 'Verify furniture inventory is accurate and complete.',
         checks: [
           {
-            id: 'inventory_exists',
+            id: 'annual_inventory_exists',
             text: 'Does a complete furniture inventory exist?',
             helpText: 'List of all furniture items by location',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'inventory_accurate',
+            id: 'annual_inventory_accurate',
             text: 'Has the inventory been verified against actual items?',
             helpText: 'Walk-through confirms inventory matches reality',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'inventory_ages_tracked',
+            id: 'annual_inventory_ages_tracked',
             text: 'Are furniture ages/purchase dates tracked?',
             helpText: 'Know when items were acquired for replacement planning',
             tier: 'amber',
@@ -514,25 +725,25 @@ export const FURNITURE_ZONES = {
         ]
       },
       {
-        name: 'Vendor & Warranty Review',
+        name: 'B. Vendor & Warranty Review',
         description: 'Review vendor relationships and warranty coverage.',
         checks: [
           {
-            id: 'warranty_tracked',
+            id: 'annual_warranty_tracked',
             text: 'Are warranties tracked and documented?',
             helpText: 'Know what is still under warranty',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'vendor_performance',
+            id: 'annual_vendor_performance',
             text: 'Has vendor performance been reviewed?',
             helpText: 'Quality, delivery, service satisfaction',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'vendor_contracts_current',
+            id: 'annual_vendor_contracts_current',
             text: 'Are vendor contracts current and competitive?',
             helpText: 'Reviewed within last 12 months',
             tier: 'amber',
@@ -541,25 +752,25 @@ export const FURNITURE_ZONES = {
         ]
       },
       {
-        name: 'Strategic Planning',
+        name: 'C. Strategic Planning',
         description: 'Long-term furniture and environment planning.',
         checks: [
           {
-            id: 'strategy_refresh_plan',
+            id: 'annual_strategy_refresh_plan',
             text: 'Is there a furniture refresh/replacement plan?',
             helpText: 'Multi-year plan for systematic updates',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'strategy_budget_allocated',
+            id: 'annual_strategy_budget_adequate',
             text: 'Is annual furniture budget adequate?',
             helpText: 'Covers maintenance, repairs, and planned replacements',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'strategy_standards_documented',
+            id: 'annual_strategy_standards_documented',
             text: 'Are furniture standards documented?',
             helpText: 'Approved brands, specs, and requirements for new purchases',
             tier: 'amber',
@@ -568,25 +779,25 @@ export const FURNITURE_ZONES = {
         ]
       },
       {
-        name: 'Compliance & Accessibility',
+        name: 'D. Compliance & Accessibility',
         description: 'Ensure furniture meets compliance requirements.',
         checks: [
           {
-            id: 'compliance_ada',
+            id: 'annual_compliance_ada',
             text: 'Does furniture meet ADA accessibility requirements?',
             helpText: 'Accessible seating, appropriate heights, clearances',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'compliance_fire_code',
+            id: 'annual_compliance_fire_code',
             text: 'Does furniture arrangement meet fire code?',
             helpText: 'Clear pathways, proper egress, fire-rated materials',
             tier: 'amber',
             photoRequired: false
           },
           {
-            id: 'compliance_certifications',
+            id: 'annual_compliance_certifications',
             text: 'Is furniture from certified/approved manufacturers?',
             helpText: 'BIFMA, GREENGUARD, or equivalent certifications',
             tier: 'amber',
@@ -598,8 +809,8 @@ export const FURNITURE_ZONES = {
   }
 };
 
-// Zone order for navigation (not used for flow, just for display)
-export const FURNITURE_ZONE_ORDER = ['weekly', 'monthly', 'quarterly', 'annual'];
+// Zone order for navigation
+export const FURNITURE_ZONE_ORDER = ['daily', 'weekly', 'monthly', 'quarterly', 'annual'];
 
 // Helper to get all checks for a zone
 export const getZoneChecks = (zoneId) => {
@@ -668,3 +879,29 @@ export const calculateZoneRating = (zoneId, results, issues) => {
   // All failed checks are amber-eligible and within limits
   return 'AMBER';
 };
+
+// Metric 5: Capacity Equilibrium
+// The Goal: Ensure a 1:1.1 seat-to-student ratio across all learning and rec modalities
+// to prevent friction and preserve the "Resort" feel.
+export const CAPACITY_METRIC = {
+  name: 'Capacity Equilibrium',
+  targetRatio: 1.1,
+  description: 'Seat-to-student ratio across all learning and rec modalities'
+};
+
+// Quality Bar Red Flags Summary
+// If you see these, the standard is NOT met - Fix immediately:
+export const RED_FLAG_SUMMARY = [
+  'Wobbly chairs, unstable shelving, trip hazards (Quick Safety Check)',
+  'Loose joints, cracked frames, broken wheels (Quick Safety Check)',
+  'Work chairs without adjustable height (Ergonomic Standards)',
+  'Desks not at appropriate working height (Ergonomic Standards)',
+  'Sharp edges or exposed hardware (Safety Detailed Check)',
+  'Dead or dying plants (Biophilics)',
+  'Handwritten "out of order" or "keep door closed" signs (Breaks Wayfinding/Branding)',
+  'Misaligned furniture "clutter" (Breaks the Luxury Aesthetic)',
+  'Visible garbage or overflowing bins (Breaks the Resort standard)'
+];
+
+// Total questions: 75
+// INSTANT RED items = automatic RED rating if answered NO
