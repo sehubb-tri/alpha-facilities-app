@@ -1,18 +1,9 @@
 // ============================================
 // WRIKE API INTEGRATION
+// Uses Supabase Edge Function to proxy requests (avoids CORS)
 // ============================================
 
-const WRIKE_API_BASE = 'https://www.wrike.com/api/v4';
-
-// Get API token from environment
-const getWrikeToken = () => {
-  const token = import.meta.env.VITE_WRIKE_API_TOKEN;
-  if (!token) {
-    console.error('[Wrike] API token not configured');
-    return null;
-  }
-  return token;
-};
+import { supabase } from '../supabase/config';
 
 // ============================================
 // CAMPUS TO WRIKE FOLDER ID MAPPING
@@ -54,36 +45,37 @@ export const isCampusWrikeEnabled = (campusName) => {
 };
 
 // ============================================
-// API HELPERS
+// API HELPERS - Via Supabase Edge Function
 // ============================================
 
 /**
- * Make an authenticated request to Wrike API
+ * Make an authenticated request to Wrike API via Edge Function
+ * This avoids CORS issues by routing through Supabase
  */
 const wrikeRequest = async (endpoint, options = {}) => {
-  const token = getWrikeToken();
-  if (!token) {
-    throw new Error('Wrike API token not configured');
-  }
+  const { method = 'GET', body } = options;
 
-  const url = `${WRIKE_API_BASE}${endpoint}`;
+  console.log(`[Wrike] Calling Edge Function: ${method} ${endpoint}`);
 
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
+  const { data, error } = await supabase.functions.invoke('wrike-proxy', {
+    body: {
+      endpoint,
+      method,
+      body
+    }
   });
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    console.error('[Wrike] API error:', response.status, errorData);
-    throw new Error(errorData.error || `Wrike API error: ${response.status}`);
+  if (error) {
+    console.error('[Wrike] Edge Function error:', error);
+    throw new Error(error.message || 'Wrike API request failed');
   }
 
-  return response.json();
+  if (data?.error) {
+    console.error('[Wrike] API error:', data.error);
+    throw new Error(data.error);
+  }
+
+  return data;
 };
 
 // ============================================
@@ -118,7 +110,7 @@ export const createWrikeTask = async (folderId, taskData) => {
 
   const result = await wrikeRequest(`/folders/${folderId}/tasks`, {
     method: 'POST',
-    body: JSON.stringify(body),
+    body,
   });
 
   console.log('[Wrike] Task created:', result.data?.[0]?.id);
@@ -133,7 +125,7 @@ export const createWrikeTask = async (folderId, taskData) => {
 export const addWrikeComment = async (taskId, text) => {
   const result = await wrikeRequest(`/tasks/${taskId}/comments`, {
     method: 'POST',
-    body: JSON.stringify({ text }),
+    body: { text },
   });
   return result.data?.[0];
 };
@@ -147,8 +139,8 @@ export const addWrikeComment = async (taskId, text) => {
  */
 export const attachPhotoUrlToTask = async (taskId, url, description = '') => {
   const text = description
-    ? `📷 Photo: ${description}\n${url}`
-    : `📷 Photo attached:\n${url}`;
+    ? `Photo: ${description}\n${url}`
+    : `Photo attached:\n${url}`;
 
   return addWrikeComment(taskId, text);
 };
@@ -174,7 +166,7 @@ export const submitIssueToWrike = async (issueData, campusName, auditorInfo) => 
 
   try {
     // Format the issue as a Wrike task
-    const severity = issueData.instantRed ? '🔴 CRITICAL' : '🟡 Issue';
+    const severity = issueData.instantRed ? 'CRITICAL' : 'Issue';
     const title = `[${campusName}] ${severity}: ${issueData.checkText || issueData.category || 'Issue'}`;
 
     // Build description with all relevant info
@@ -281,7 +273,7 @@ export const submitReportToWrike = async (reportData, campusName) => {
   }
 
   try {
-    const urgentTag = reportData.urgent ? '🚨 URGENT' : '';
+    const urgentTag = reportData.urgent ? 'URGENT' : '';
     const title = `[${campusName}] ${urgentTag} ${reportData.category}: ${reportData.location || 'Reported Issue'}`.trim();
 
     let description = `**Category:** ${reportData.category}\n`;
