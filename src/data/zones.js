@@ -159,8 +159,8 @@ export const ZONES = {
 // Tour route zones (non-restroom mandatory zones)
 export const TOUR_ROUTE_ZONE_IDS = ['entry', 'hallway', 'commons', 'supply_closet'];
 
-// Final zone (always at end of walkthrough)
-export const FINAL_ZONE_IDS = ['alpha_standard'];
+// Final zone (always at end of walkthrough) - Alpha Standard removed per user request
+export const FINAL_ZONE_IDS = [];
 
 // Optional zones (can be added to walkthrough)
 export const OPTIONAL_ZONE_IDS = ['classroom', 'office', 'gym', 'cafeteria'];

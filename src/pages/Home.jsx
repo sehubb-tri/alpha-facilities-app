@@ -4,6 +4,7 @@ import { getAudits, getReports, getBGWalkthroughs } from '../supabase/services';
 import { ISSUE_CATEGORIES } from '../data/issueCategories';
 import { useI18n } from '../i18n';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import { CheckSquare, Building2, Camera, Lock, Armchair, UtensilsCrossed, Hospital, Cog, Globe } from 'lucide-react';
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -243,17 +244,36 @@ export const Home = () => {
       <div style={{ padding: '0 20px 16px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
           {[
-            { path: '/audit/setup', icon: '✅', label: 'Daily Clean' },
-            { path: '/bg/setup', icon: '🏢', label: 'B&G Weekly' },
-            { path: '/report', icon: '📸', label: 'Report It' },
-            { path: '/security', icon: '🔒', label: 'Security' },
-            { path: '/furniture', icon: '🪑', label: 'Furniture' },
-            { path: '/food-safety', icon: '🍽️', label: 'Food' },
-            { path: '/health-safety', icon: '🏥', label: 'Health' },
-            { path: '/mechanical', icon: '⚙️', label: 'Mechanical' },
-            { path: 'https://internet-audit-dashboard.vercel.app/', icon: '🌐', label: 'Internet', external: true }
-          ].map((item) => (
-            item.external ? (
+            { path: '/audit/setup', Icon: CheckSquare, label: 'Daily Clean', bg: '#10b981' },
+            { path: '/bg/setup', Icon: Building2, label: 'B&G Weekly', bg: '#6366f1' },
+            { path: '/report', Icon: Camera, label: 'Report It', bg: '#f97316' },
+            { path: '/security', Icon: Lock, label: 'Security', bg: '#eab308' },
+            { path: '/furniture', Icon: Armchair, label: 'Furniture', bg: '#8b5cf6' },
+            { path: '/food-safety', Icon: UtensilsCrossed, label: 'Food', bg: '#64748b' },
+            { path: '/health-safety', Icon: Hospital, label: 'Health', bg: '#ef4444' },
+            { path: '/mechanical', Icon: Cog, label: 'Mechanical', bg: '#71717a' },
+            { path: 'https://internet-audit-dashboard.vercel.app/', Icon: Globe, label: 'Internet', bg: '#0ea5e9', external: true }
+          ].map((item) => {
+            const IconComponent = item.Icon;
+            const buttonContent = (
+              <>
+                <div style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '10px',
+                  backgroundColor: item.bg,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '8px'
+                }}>
+                  <IconComponent size={24} color="#fff" strokeWidth={2} />
+                </div>
+                <span style={{ textAlign: 'center', lineHeight: '1.2' }}>{item.label}</span>
+              </>
+            );
+
+            return item.external ? (
               <a
                 key={item.path}
                 href={item.path}
@@ -274,11 +294,10 @@ export const Home = () => {
                   padding: '16px 6px',
                   cursor: 'pointer',
                   textDecoration: 'none',
-                  minHeight: '85px'
+                  minHeight: '95px'
                 }}
               >
-                <span style={{ fontSize: '28px', marginBottom: '6px' }}>{item.icon}</span>
-                <span style={{ textAlign: 'center', lineHeight: '1.2' }}>{item.label}</span>
+                {buttonContent}
               </a>
             ) : (
               <button
@@ -298,14 +317,13 @@ export const Home = () => {
                   justifyContent: 'center',
                   padding: '16px 6px',
                   cursor: 'pointer',
-                  minHeight: '85px'
+                  minHeight: '95px'
                 }}
               >
-                <span style={{ fontSize: '28px', marginBottom: '6px' }}>{item.icon}</span>
-                <span style={{ textAlign: 'center', lineHeight: '1.2' }}>{item.label}</span>
+                {buttonContent}
               </button>
-            )
-          ))}
+            );
+          })}
         </div>
       </div>
 
