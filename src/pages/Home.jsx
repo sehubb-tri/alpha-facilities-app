@@ -320,6 +320,83 @@ export const Home = () => {
         </button>
       </div>
 
+      {/* Additional Checklists Row */}
+      <div style={{ padding: '0 24px 16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: isLandscape ? '10px' : '12px' }}>
+          <button
+            onClick={() => navigate('/security')}
+            style={{
+              aspectRatio: isLandscape ? 'auto' : '1',
+              backgroundColor: '#fff',
+              color: '#092849',
+              borderRadius: isLandscape ? '12px' : '16px',
+              fontSize: isLandscape ? '12px' : '14px',
+              fontWeight: '700',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: isLandscape ? '8px' : '12px',
+              cursor: 'pointer',
+              minHeight: isLandscape ? '60px' : '90px'
+            }}
+          >
+            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>🔒</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Security Check</span>
+          </button>
+
+          <button
+            onClick={() => navigate('/furniture')}
+            style={{
+              aspectRatio: isLandscape ? 'auto' : '1',
+              backgroundColor: '#fff',
+              color: '#092849',
+              borderRadius: isLandscape ? '12px' : '16px',
+              fontSize: isLandscape ? '12px' : '14px',
+              fontWeight: '700',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: isLandscape ? '8px' : '12px',
+              cursor: 'pointer',
+              minHeight: isLandscape ? '60px' : '90px'
+            }}
+          >
+            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>🪑</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Furniture Check</span>
+          </button>
+
+          <button
+            onClick={() => navigate('/food-safety')}
+            style={{
+              aspectRatio: isLandscape ? 'auto' : '1',
+              backgroundColor: '#fff',
+              color: '#092849',
+              borderRadius: isLandscape ? '12px' : '16px',
+              fontSize: isLandscape ? '12px' : '14px',
+              fontWeight: '700',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: isLandscape ? '8px' : '12px',
+              cursor: 'pointer',
+              minHeight: isLandscape ? '60px' : '90px'
+            }}
+          >
+            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>🍽️</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Food Safety</span>
+          </button>
+        </div>
+      </div>
+
       {/* Internet Audit Tool */}
       <div style={{ padding: '0 24px 16px' }}>
         <a
@@ -327,28 +404,26 @@ export const Home = () => {
           target="_blank"
           rel="noopener noreferrer"
           style={{
-            aspectRatio: isLandscape ? 'auto' : '2.5',
             backgroundColor: '#fff',
             color: '#092849',
-            borderRadius: isLandscape ? '14px' : '20px',
-            fontSize: isLandscape ? '14px' : '17px',
+            borderRadius: isLandscape ? '12px' : '16px',
+            fontSize: isLandscape ? '14px' : '16px',
             fontWeight: '700',
             border: 'none',
             boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: isLandscape ? '10px' : '16px',
+            gap: '10px',
+            padding: isLandscape ? '12px' : '16px',
             cursor: 'pointer',
-            minHeight: isLandscape ? '70px' : '100px',
             textDecoration: 'none',
             width: '100%',
             boxSizing: 'border-box'
           }}
         >
-          <span style={{ fontSize: isLandscape ? '28px' : '48px', marginBottom: isLandscape ? '4px' : '12px' }}>🌐</span>
-          <span style={{ textAlign: 'center', lineHeight: '1.3' }}>Internet Audit Tool</span>
+          <span style={{ fontSize: isLandscape ? '24px' : '28px' }}>🌐</span>
+          <span>Internet Audit Tool</span>
         </a>
       </div>
 
