@@ -327,25 +327,28 @@ export const Home = () => {
           target="_blank"
           rel="noopener noreferrer"
           style={{
-            width: '100%',
+            aspectRatio: isLandscape ? 'auto' : '2.5',
+            backgroundColor: '#fff',
+            color: '#092849',
+            borderRadius: isLandscape ? '14px' : '20px',
+            fontSize: isLandscape ? '14px' : '17px',
+            fontWeight: '700',
+            border: 'none',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '12px',
-            backgroundColor: 'rgba(71, 196, 230, 0.2)',
-            color: '#fff',
-            borderRadius: '14px',
-            fontSize: '16px',
-            fontWeight: '700',
-            border: '2px solid #47C4E6',
-            padding: '14px 20px',
+            padding: isLandscape ? '10px' : '16px',
             cursor: 'pointer',
-            textDecoration: 'none'
+            minHeight: isLandscape ? '70px' : '100px',
+            textDecoration: 'none',
+            width: '100%',
+            boxSizing: 'border-box'
           }}
         >
-          <span style={{ fontSize: '24px' }}>🌐</span>
-          <span>Internet Audit Tool</span>
-          <span style={{ fontSize: '14px', opacity: 0.8 }}>↗</span>
+          <span style={{ fontSize: isLandscape ? '28px' : '48px', marginBottom: isLandscape ? '4px' : '12px' }}>🌐</span>
+          <span style={{ textAlign: 'center', lineHeight: '1.3' }}>Internet Audit Tool</span>
         </a>
       </div>
 
