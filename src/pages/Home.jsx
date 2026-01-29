@@ -263,7 +263,7 @@ export const Home = () => {
                   backgroundColor: '#fff',
                   color: '#092849',
                   borderRadius: '12px',
-                  fontSize: '11px',
+                  fontSize: '12px',
                   fontWeight: '600',
                   border: 'none',
                   boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
@@ -271,14 +271,14 @@ export const Home = () => {
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: '12px 6px',
+                  padding: '16px 6px',
                   cursor: 'pointer',
                   textDecoration: 'none',
-                  minHeight: '70px'
+                  minHeight: '85px'
                 }}
               >
-                <span style={{ fontSize: '24px', marginBottom: '4px' }}>{item.icon}</span>
-                <span style={{ textAlign: 'center', lineHeight: '1.1' }}>{item.label}</span>
+                <span style={{ fontSize: '28px', marginBottom: '6px' }}>{item.icon}</span>
+                <span style={{ textAlign: 'center', lineHeight: '1.2' }}>{item.label}</span>
               </a>
             ) : (
               <button
@@ -288,7 +288,7 @@ export const Home = () => {
                   backgroundColor: '#fff',
                   color: '#092849',
                   borderRadius: '12px',
-                  fontSize: '11px',
+                  fontSize: '12px',
                   fontWeight: '600',
                   border: 'none',
                   boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
@@ -296,13 +296,13 @@ export const Home = () => {
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: '12px 6px',
+                  padding: '16px 6px',
                   cursor: 'pointer',
-                  minHeight: '70px'
+                  minHeight: '85px'
                 }}
               >
-                <span style={{ fontSize: '24px', marginBottom: '4px' }}>{item.icon}</span>
-                <span style={{ textAlign: 'center', lineHeight: '1.1' }}>{item.label}</span>
+                <span style={{ fontSize: '28px', marginBottom: '6px' }}>{item.icon}</span>
+                <span style={{ textAlign: 'center', lineHeight: '1.2' }}>{item.label}</span>
               </button>
             )
           ))}
