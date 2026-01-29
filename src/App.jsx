@@ -61,6 +61,13 @@ import { HealthSafetySummary } from './pages/HealthSafetySummary';
 import { HealthSafetyComplete } from './pages/HealthSafetyComplete';
 import { useHealthSafetyChecklist } from './hooks/useHealthSafetyChecklist';
 
+// Mechanical Systems Checklist Pages (14.11 Quality Bar)
+import { MechanicalSetup } from './pages/MechanicalSetup';
+import { MechanicalChecklist } from './pages/MechanicalChecklist';
+import { MechanicalSummary } from './pages/MechanicalSummary';
+import { MechanicalComplete } from './pages/MechanicalComplete';
+import { useMechanicalChecklist } from './hooks/useMechanicalChecklist';
+
 function App() {
   const camera = useCamera();
   const audit = useAudit();
@@ -70,6 +77,7 @@ function App() {
   const furnitureChecklist = useFurnitureChecklist();
   const foodSafetyChecklist = useFoodSafetyChecklist();
   const healthSafetyChecklist = useHealthSafetyChecklist();
+  const mechanicalChecklist = useMechanicalChecklist();
 
   return (
     <BrowserRouter>
@@ -166,6 +174,12 @@ function App() {
         <Route path="/health-safety/checklist" element={<HealthSafetyChecklist healthSafetyChecklist={healthSafetyChecklist} camera={camera} />} />
         <Route path="/health-safety/summary" element={<HealthSafetySummary healthSafetyChecklist={healthSafetyChecklist} />} />
         <Route path="/health-safety/complete" element={<HealthSafetyComplete healthSafetyChecklist={healthSafetyChecklist} />} />
+
+        {/* Mechanical Systems Checklist Flow (14.11 Quality Bar) */}
+        <Route path="/mechanical" element={<MechanicalSetup mechanicalChecklist={mechanicalChecklist} />} />
+        <Route path="/mechanical/checklist" element={<MechanicalChecklist mechanicalChecklist={mechanicalChecklist} camera={camera} />} />
+        <Route path="/mechanical/summary" element={<MechanicalSummary mechanicalChecklist={mechanicalChecklist} />} />
+        <Route path="/mechanical/complete" element={<MechanicalComplete mechanicalChecklist={mechanicalChecklist} />} />
       </Routes>
     </BrowserRouter>
   );

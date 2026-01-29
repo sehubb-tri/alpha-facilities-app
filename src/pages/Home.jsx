@@ -239,94 +239,14 @@ export const Home = () => {
         />
       </div>
 
-      {/* Main Action Buttons */}
-      <div style={{ padding: isLandscape ? '0 24px 12px' : '0 24px 24px' }}>
-        {/* Top row: Daily Cleanliness Check and Weekly Building and Grounds Check side by side */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: isLandscape ? '12px' : '20px' }}>
+      {/* Main Action Buttons - 3x3 Grid */}
+      <div style={{ padding: isLandscape ? '0 24px 12px' : '0 24px 20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: isLandscape ? '10px' : '12px' }}>
+          {/* Row 1 */}
           <button
             onClick={() => navigate('/audit/setup')}
             style={{
-              aspectRatio: isLandscape ? 'auto' : '1',
-              backgroundColor: '#fff',
-              color: '#092849',
-              borderRadius: isLandscape ? '14px' : '20px',
-              fontSize: isLandscape ? '14px' : '17px',
-              fontWeight: '700',
-              border: 'none',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: isLandscape ? '10px' : '16px',
-              cursor: 'pointer',
-              minHeight: isLandscape ? '70px' : '120px',
-              maxHeight: isLandscape ? '100px' : '180px'
-            }}
-          >
-            <span style={{ fontSize: isLandscape ? '28px' : '48px', marginBottom: isLandscape ? '4px' : '12px' }}>✅</span>
-            <span style={{ textAlign: 'center', lineHeight: '1.3' }}>{t('nav.audit')}</span>
-          </button>
-
-          <button
-            onClick={() => navigate('/bg/setup')}
-            style={{
-              aspectRatio: isLandscape ? 'auto' : '1',
-              backgroundColor: '#fff',
-              color: '#092849',
-              borderRadius: isLandscape ? '14px' : '20px',
-              fontSize: isLandscape ? '14px' : '17px',
-              fontWeight: '700',
-              border: 'none',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: isLandscape ? '10px' : '16px',
-              cursor: 'pointer',
-              minHeight: isLandscape ? '70px' : '120px',
-              maxHeight: isLandscape ? '100px' : '180px'
-            }}
-          >
-            <span style={{ fontSize: isLandscape ? '28px' : '48px', marginBottom: isLandscape ? '4px' : '12px' }}>🏢</span>
-            <span style={{ textAlign: 'center', lineHeight: '1.3' }}>{t('nav.bgWalkthrough')}</span>
-          </button>
-        </div>
-
-        {/* See It, Report It - Full width button below */}
-        <button
-          onClick={() => navigate('/report')}
-          style={{
-            width: '100%',
-            marginTop: isLandscape ? '10px' : '16px',
-            backgroundColor: 'rgba(255,255,255,0.15)',
-            color: '#fff',
-            borderRadius: isLandscape ? '12px' : '16px',
-            fontSize: isLandscape ? '14px' : '16px',
-            fontWeight: '700',
-            border: '2px solid rgba(255,255,255,0.3)',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: isLandscape ? '10px 16px' : '16px 20px',
-            cursor: 'pointer',
-            gap: '12px'
-          }}
-        >
-          <span style={{ fontSize: isLandscape ? '20px' : '28px' }}>📸</span>
-          <span>{t('nav.report')}</span>
-        </button>
-      </div>
-
-      {/* Additional Checklists Row */}
-      <div style={{ padding: '0 24px 16px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: isLandscape ? '10px' : '12px' }}>
-          <button
-            onClick={() => navigate('/security')}
-            style={{
-              aspectRatio: isLandscape ? 'auto' : '1',
+              aspectRatio: '1',
               backgroundColor: '#fff',
               color: '#092849',
               borderRadius: isLandscape ? '12px' : '16px',
@@ -339,18 +259,87 @@ export const Home = () => {
               alignItems: 'center',
               justifyContent: 'center',
               padding: isLandscape ? '8px' : '10px',
-              cursor: 'pointer',
-              minHeight: isLandscape ? '60px' : '80px'
+              cursor: 'pointer'
             }}
           >
-            <span style={{ fontSize: isLandscape ? '22px' : '28px', marginBottom: isLandscape ? '4px' : '6px' }}>🔒</span>
+            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>✅</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>{t('nav.audit')}</span>
+          </button>
+
+          <button
+            onClick={() => navigate('/bg/setup')}
+            style={{
+              aspectRatio: '1',
+              backgroundColor: '#fff',
+              color: '#092849',
+              borderRadius: isLandscape ? '12px' : '16px',
+              fontSize: isLandscape ? '11px' : '13px',
+              fontWeight: '700',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: isLandscape ? '8px' : '10px',
+              cursor: 'pointer'
+            }}
+          >
+            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>🏢</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>{t('nav.bgWalkthrough')}</span>
+          </button>
+
+          <button
+            onClick={() => navigate('/report')}
+            style={{
+              aspectRatio: '1',
+              backgroundColor: '#fff',
+              color: '#092849',
+              borderRadius: isLandscape ? '12px' : '16px',
+              fontSize: isLandscape ? '11px' : '13px',
+              fontWeight: '700',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: isLandscape ? '8px' : '10px',
+              cursor: 'pointer'
+            }}
+          >
+            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>📸</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>{t('nav.report')}</span>
+          </button>
+
+          {/* Row 2 */}
+          <button
+            onClick={() => navigate('/security')}
+            style={{
+              aspectRatio: '1',
+              backgroundColor: '#fff',
+              color: '#092849',
+              borderRadius: isLandscape ? '12px' : '16px',
+              fontSize: isLandscape ? '11px' : '13px',
+              fontWeight: '700',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: isLandscape ? '8px' : '10px',
+              cursor: 'pointer'
+            }}
+          >
+            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>🔒</span>
             <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Security</span>
           </button>
 
           <button
             onClick={() => navigate('/furniture')}
             style={{
-              aspectRatio: isLandscape ? 'auto' : '1',
+              aspectRatio: '1',
               backgroundColor: '#fff',
               color: '#092849',
               borderRadius: isLandscape ? '12px' : '16px',
@@ -363,18 +352,17 @@ export const Home = () => {
               alignItems: 'center',
               justifyContent: 'center',
               padding: isLandscape ? '8px' : '10px',
-              cursor: 'pointer',
-              minHeight: isLandscape ? '60px' : '80px'
+              cursor: 'pointer'
             }}
           >
-            <span style={{ fontSize: isLandscape ? '22px' : '28px', marginBottom: isLandscape ? '4px' : '6px' }}>🪑</span>
+            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>🪑</span>
             <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Furniture</span>
           </button>
 
           <button
             onClick={() => navigate('/food-safety')}
             style={{
-              aspectRatio: isLandscape ? 'auto' : '1',
+              aspectRatio: '1',
               backgroundColor: '#fff',
               color: '#092849',
               borderRadius: isLandscape ? '12px' : '16px',
@@ -387,18 +375,66 @@ export const Home = () => {
               alignItems: 'center',
               justifyContent: 'center',
               padding: isLandscape ? '8px' : '10px',
-              cursor: 'pointer',
-              minHeight: isLandscape ? '60px' : '80px'
+              cursor: 'pointer'
             }}
           >
-            <span style={{ fontSize: isLandscape ? '22px' : '28px', marginBottom: isLandscape ? '4px' : '6px' }}>🍽️</span>
+            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>🍽️</span>
             <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Food Safety</span>
           </button>
 
+          {/* Row 3 */}
           <button
             onClick={() => navigate('/health-safety')}
             style={{
-              aspectRatio: isLandscape ? 'auto' : '1',
+              aspectRatio: '1',
+              backgroundColor: '#fff',
+              color: '#092849',
+              borderRadius: isLandscape ? '12px' : '16px',
+              fontSize: isLandscape ? '11px' : '13px',
+              fontWeight: '700',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: isLandscape ? '8px' : '10px',
+              cursor: 'pointer'
+            }}
+          >
+            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>🏥</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Health & Safety</span>
+          </button>
+
+          <button
+            onClick={() => navigate('/mechanical')}
+            style={{
+              aspectRatio: '1',
+              backgroundColor: '#fff',
+              color: '#092849',
+              borderRadius: isLandscape ? '12px' : '16px',
+              fontSize: isLandscape ? '11px' : '13px',
+              fontWeight: '700',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: isLandscape ? '8px' : '10px',
+              cursor: 'pointer'
+            }}
+          >
+            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>⚙️</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Mechanical Systems</span>
+          </button>
+
+          <a
+            href="https://internet-audit-dashboard.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              aspectRatio: '1',
               backgroundColor: '#fff',
               color: '#092849',
               borderRadius: isLandscape ? '12px' : '16px',
@@ -412,43 +448,13 @@ export const Home = () => {
               justifyContent: 'center',
               padding: isLandscape ? '8px' : '10px',
               cursor: 'pointer',
-              minHeight: isLandscape ? '60px' : '80px'
+              textDecoration: 'none'
             }}
           >
-            <span style={{ fontSize: isLandscape ? '22px' : '28px', marginBottom: isLandscape ? '4px' : '6px' }}>🏥</span>
-            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Health & Safety</span>
-          </button>
+            <span style={{ fontSize: isLandscape ? '24px' : '32px', marginBottom: isLandscape ? '4px' : '8px' }}>🌐</span>
+            <span style={{ textAlign: 'center', lineHeight: '1.2' }}>Internet Audit</span>
+          </a>
         </div>
-      </div>
-
-      {/* Internet Audit Tool */}
-      <div style={{ padding: '0 24px 16px' }}>
-        <a
-          href="https://internet-audit-dashboard.vercel.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            backgroundColor: '#fff',
-            color: '#092849',
-            borderRadius: isLandscape ? '12px' : '16px',
-            fontSize: isLandscape ? '14px' : '16px',
-            fontWeight: '700',
-            border: 'none',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '10px',
-            padding: isLandscape ? '12px' : '16px',
-            cursor: 'pointer',
-            textDecoration: 'none',
-            width: '100%',
-            boxSizing: 'border-box'
-          }}
-        >
-          <span style={{ fontSize: isLandscape ? '24px' : '28px' }}>🌐</span>
-          <span>Internet Audit Tool</span>
-        </a>
       </div>
 
       {/* Stats Row */}
