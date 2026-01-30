@@ -1,35 +1,81 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Zap, Home, RotateCcw, Share2 } from 'lucide-react';
-// import { saveGreenStreakWalk } from '../supabase/services';
+import { Zap, Home, RotateCcw, CheckCircle, AlertCircle, Loader } from 'lucide-react';
+import { saveGreenStreakWalk } from '../supabase/greenStreakService';
+import {
+  createWrikeTask,
+  getWrikeFolderForCampus,
+  submitIssueToWrike,
+  addWrikeComment
+} from '../services/wrikeService';
+import { GREEN_STREAK_METRICS } from '../data/greenStreakZones';
 
 export const GreenStreakComplete = ({ greenStreakWalk }) => {
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [wrikeStatus, setWrikeStatus] = useState(null); // null, 'sending', 'sent', 'error', 'skipped'
+  const [error, setError] = useState(null);
 
   const walkData = greenStreakWalk.getWalkData();
   const isGreen = walkData.overallStatus === 'GREEN';
 
-  // Save to database on mount
+  // Calculate duration
+  const duration = walkData.startTime && walkData.endTime
+    ? Math.round((new Date(walkData.endTime) - new Date(walkData.startTime)) / 60000)
+    : null;
+
+  // Save to database and send to Wrike on mount
   useEffect(() => {
-    const saveWalk = async () => {
+    const saveAndNotify = async () => {
       if (saved || saving) return;
 
       setSaving(true);
+      setError(null);
+
       try {
-        // TODO: Implement saveGreenStreakWalk in supabase/services
-        // await saveGreenStreakWalk(walkData);
-        console.log('Walk data to save:', walkData);
+        // 1. Save to Supabase
+        await saveGreenStreakWalk(walkData);
+        console.log('[GreenStreak] Walk saved to Supabase');
         setSaved(true);
-      } catch (error) {
-        console.error('Error saving walk:', error);
+
+        // 2. Send to Wrike
+        const folderId = getWrikeFolderForCampus(walkData.campus);
+
+        if (!folderId) {
+          console.log('[GreenStreak] Campus not configured for Wrike:', walkData.campus);
+          setWrikeStatus('skipped');
+        } else {
+          setWrikeStatus('sending');
+
+          // Create summary task for the walk
+          const summaryTask = await createWalkSummaryTask(walkData, folderId);
+          console.log('[GreenStreak] Summary task created:', summaryTask?.id);
+
+          // Create individual tasks for each issue
+          if (walkData.issues && walkData.issues.length > 0) {
+            for (const issue of walkData.issues) {
+              try {
+                await submitGreenStreakIssue(issue, walkData, folderId);
+              } catch (issueError) {
+                console.error('[GreenStreak] Error submitting issue:', issueError);
+              }
+            }
+          }
+
+          setWrikeStatus('sent');
+        }
+
+      } catch (err) {
+        console.error('Error saving walk:', err);
+        setError(err.message);
+        setSaved(false);
       } finally {
         setSaving(false);
       }
     };
 
-    saveWalk();
+    saveAndNotify();
   }, []);
 
   const handleNewWalk = () => {
@@ -41,11 +87,6 @@ export const GreenStreakComplete = ({ greenStreakWalk }) => {
     greenStreakWalk.resetWalk();
     navigate('/');
   };
-
-  // Calculate duration
-  const duration = walkData.startTime && walkData.endTime
-    ? Math.round((new Date(walkData.endTime) - new Date(walkData.startTime)) / 60000)
-    : null;
 
   return (
     <div className="min-h-screen" style={{
@@ -141,6 +182,52 @@ export const GreenStreakComplete = ({ greenStreakWalk }) => {
         ))}
       </div>
 
+      {/* Sync Status */}
+      <div style={{
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        borderRadius: '12px',
+        padding: '12px 16px',
+        marginBottom: '24px',
+        width: '100%',
+        maxWidth: '300px',
+        fontSize: '14px'
+      }}>
+        {/* Supabase status */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+          {saving && !saved ? (
+            <Loader size={16} className="animate-spin" />
+          ) : saved ? (
+            <CheckCircle size={16} color="#86efac" />
+          ) : error ? (
+            <AlertCircle size={16} color="#fca5a5" />
+          ) : null}
+          <span>
+            {saving && !saved ? 'Saving to database...' :
+             saved ? 'Saved to database' :
+             error ? 'Error saving' : ''}
+          </span>
+        </div>
+
+        {/* Wrike status */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {wrikeStatus === 'sending' ? (
+            <Loader size={16} className="animate-spin" />
+          ) : wrikeStatus === 'sent' ? (
+            <CheckCircle size={16} color="#86efac" />
+          ) : wrikeStatus === 'skipped' ? (
+            <span style={{ opacity: 0.6 }}>-</span>
+          ) : wrikeStatus === 'error' ? (
+            <AlertCircle size={16} color="#fca5a5" />
+          ) : null}
+          <span>
+            {wrikeStatus === 'sending' ? 'Sending to Wrike...' :
+             wrikeStatus === 'sent' ? 'Sent to Wrike' :
+             wrikeStatus === 'skipped' ? 'Wrike not configured for campus' :
+             wrikeStatus === 'error' ? 'Wrike error' : ''}
+          </span>
+        </div>
+      </div>
+
       {/* Actions */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', maxWidth: '300px' }}>
         <button
@@ -188,13 +275,6 @@ export const GreenStreakComplete = ({ greenStreakWalk }) => {
         </button>
       </div>
 
-      {/* Saving indicator */}
-      {saving && (
-        <div style={{ marginTop: '24px', fontSize: '14px', opacity: 0.8 }}>
-          Saving walk data...
-        </div>
-      )}
-
       {/* Timestamp */}
       <div style={{ marginTop: '32px', fontSize: '13px', opacity: 0.6 }}>
         Completed {new Date(walkData.endTime || Date.now()).toLocaleString()}
@@ -202,3 +282,109 @@ export const GreenStreakComplete = ({ greenStreakWalk }) => {
     </div>
   );
 };
+
+// ============================================
+// WRIKE INTEGRATION HELPERS
+// ============================================
+
+/**
+ * Create a summary task for the completed Green Streak Walk
+ */
+async function createWalkSummaryTask(walkData, folderId) {
+  const statusEmoji = walkData.overallStatus === 'GREEN' ? '✅' : '🔴';
+  const date = new Date(walkData.date || Date.now()).toLocaleDateString();
+
+  const title = `${statusEmoji} [${walkData.campus}] Green Streak Walk - ${date}`;
+
+  // Build description
+  let description = `**Green Streak Daily Walk Summary**\n\n`;
+  description += `**Campus:** ${walkData.campus}\n`;
+  description += `**Coordinator:** ${walkData.coordinator}\n`;
+  description += `**Date:** ${date}\n`;
+  description += `**Duration:** ${walkData.startTime && walkData.endTime
+    ? Math.round((new Date(walkData.endTime) - new Date(walkData.startTime)) / 60000) + ' minutes'
+    : 'N/A'}\n\n`;
+
+  description += `**Overall Status:** ${walkData.overallStatus}\n\n`;
+
+  // Add metric statuses
+  description += `**Metric Results:**\n`;
+  Object.entries(walkData.metricStatuses || {}).forEach(([metricId, status]) => {
+    const metric = GREEN_STREAK_METRICS[metricId];
+    const icon = status === 'GREEN' ? '✓' : '✗';
+    description += `${icon} ${metric?.name || metricId}: ${status}\n`;
+  });
+
+  // Add rooms checked
+  if (walkData.roomSelections) {
+    description += `\n**Spaces Checked:**\n`;
+    if (walkData.roomSelections.learning?.length > 0) {
+      description += `Learning Spaces: ${walkData.roomSelections.learning.join(', ')}\n`;
+    }
+    if (walkData.roomSelections.restroom?.length > 0) {
+      description += `Restrooms: ${walkData.roomSelections.restroom.join(', ')}\n`;
+    }
+  }
+
+  // Add issues summary
+  if (walkData.totalIssues > 0) {
+    description += `\n**Issues Found:** ${walkData.totalIssues}\n`;
+    description += `(See separate tasks for each issue)\n`;
+  }
+
+  const priority = walkData.overallStatus === 'GREEN' ? 'Normal' : 'High';
+
+  return createWrikeTask(folderId, {
+    title,
+    description,
+    priority
+  });
+}
+
+/**
+ * Submit a Green Streak issue to Wrike
+ */
+async function submitGreenStreakIssue(issue, walkData, folderId) {
+  const metric = GREEN_STREAK_METRICS[issue.metric];
+  const date = new Date(walkData.date || Date.now()).toLocaleDateString();
+
+  const title = `[${walkData.campus}] Green Streak Issue: ${metric?.name || issue.metric} - ${issue.stopName}`;
+
+  let description = `**Green Streak Walk Issue**\n\n`;
+  description += `**Campus:** ${walkData.campus}\n`;
+  description += `**Coordinator:** ${walkData.coordinator}\n`;
+  description += `**Date:** ${date}\n\n`;
+
+  description += `**Metric:** ${metric?.name || issue.metric}\n`;
+  description += `**Location:** ${issue.stopName}`;
+  if (issue.roomName) {
+    description += ` - ${issue.roomName}`;
+  }
+  description += `\n\n`;
+
+  description += `**Check:** ${issue.question}\n\n`;
+  description += `**Issue Description:**\n${issue.description}\n`;
+
+  if (metric?.escalation) {
+    description += `\n**Escalate to:** ${metric.escalation}\n`;
+  }
+
+  const task = await createWrikeTask(folderId, {
+    title,
+    description,
+    priority: 'High'
+  });
+
+  // Add photos as comments if present
+  if (task && issue.photos && issue.photos.length > 0) {
+    for (let i = 0; i < issue.photos.length; i++) {
+      const photo = issue.photos[i];
+      const photoUrl = photo.url || photo;
+      if (photoUrl && !photoUrl.startsWith('data:')) {
+        await addWrikeComment(task.id, `Photo ${i + 1}:\n${photoUrl}`);
+      }
+    }
+  }
+
+  return task;
+}
