@@ -347,3 +347,46 @@ export const getWrikeFolderInfo = async (folderId) => {
     return null;
   }
 };
+
+/**
+ * Get folder info from a Wrike permalink (to find the alphanumeric v4 ID)
+ * @param {string} numericId - The numeric folder ID from the URL
+ * @returns {object|null} - Folder info including the v4 ID
+ */
+export const getFolderFromPermalink = async (numericId) => {
+  try {
+    const permalink = `https://www.wrike.com/open.htm?id=${numericId}`;
+    console.log('[Wrike] Looking up folder from permalink:', permalink);
+    const result = await wrikeRequest(`/folders?permalink=${encodeURIComponent(permalink)}`);
+    console.log('[Wrike] Folder lookup result:', result);
+    if (result.data && result.data.length > 0) {
+      const folder = result.data[0];
+      console.log('[Wrike] Found folder!');
+      console.log('[Wrike] Title:', folder.title);
+      console.log('[Wrike] Alphanumeric ID (use this!):', folder.id);
+      return folder;
+    }
+    return null;
+  } catch (error) {
+    console.error('[Wrike] Error looking up folder:', error);
+    return null;
+  }
+};
+
+/**
+ * List all folders (to help find folder IDs)
+ */
+export const listAllFolders = async () => {
+  try {
+    console.log('[Wrike] Fetching all folders...');
+    const result = await wrikeRequest('/folders');
+    console.log('[Wrike] Found', result.data?.length, 'folders');
+    result.data?.forEach(f => {
+      console.log(`[Wrike] Folder: "${f.title}" -> ID: ${f.id}`);
+    });
+    return result.data;
+  } catch (error) {
+    console.error('[Wrike] Error listing folders:', error);
+    return null;
+  }
+};
