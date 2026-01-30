@@ -9,8 +9,6 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
   const [currentIssue, setCurrentIssue] = useState(null);
   const [issueDescription, setIssueDescription] = useState('');
   const [issuePhotos, setIssuePhotos] = useState([]);
-  const [showRoomInput, setShowRoomInput] = useState(false);
-  const [roomInput, setRoomInput] = useState('');
 
   const currentStop = greenStreakWalk.getCurrentStop();
   const currentCheck = greenStreakWalk.getCurrentCheck();
@@ -26,19 +24,6 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
     }
     return checkId;
   };
-
-  // Check if we need room selection for this stop/room
-  useEffect(() => {
-    if (currentStop?.requiresRoomSelection && greenStreakWalk.currentCheckIndex === 0) {
-      const existingSelections = greenStreakWalk.roomSelections[currentStop.id] || [];
-      const hasCurrentRoom = existingSelections[currentRoomIndex];
-
-      if (!hasCurrentRoom) {
-        setShowRoomInput(true);
-        setRoomInput('');
-      }
-    }
-  }, [currentStop, greenStreakWalk.currentCheckIndex, currentRoomIndex]);
 
   // Redirect if no walk in progress
   useEffect(() => {
@@ -128,109 +113,10 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
     setIssuePhotos(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleRoomSubmit = () => {
-    if (!roomInput.trim()) {
-      alert('Please enter the room/location you are checking');
-      return;
-    }
-    greenStreakWalk.setRoomSelection(currentStop.id, roomInput.trim(), currentRoomIndex);
-    setShowRoomInput(false);
-  };
-
   const handleSkip = () => {
     // Skip optional checks
     greenStreakWalk.nextCheck();
   };
-
-  // Room selection modal
-  if (showRoomInput) {
-    const roomLabel = currentStop.id === 'learning' ? 'room' : 'restroom';
-    const roomNumber = currentRoomIndex + 1;
-
-    return (
-      <div className="min-h-screen bg-gray-100">
-        {/* Header */}
-        <div style={{
-          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-          padding: '20px',
-          color: '#fff'
-        }}>
-          <div style={{ fontSize: '14px', opacity: 0.9, marginBottom: '4px' }}>
-            Stop {currentStop.order}: {currentStop.name}
-          </div>
-          <div style={{ fontSize: '20px', fontWeight: '700' }}>
-            Which {roomLabel} are you checking?
-          </div>
-          {roomCount > 1 && (
-            <div style={{
-              marginTop: '8px',
-              backgroundColor: 'rgba(255,255,255,0.2)',
-              padding: '6px 12px',
-              borderRadius: '12px',
-              display: 'inline-block',
-              fontSize: '14px'
-            }}>
-              {roomLabel.charAt(0).toUpperCase() + roomLabel.slice(1)} {roomNumber} of {roomCount}
-            </div>
-          )}
-        </div>
-
-        <div style={{ padding: '24px' }}>
-          {currentStop.rotationNote && (
-            <div style={{
-              backgroundColor: 'rgba(194, 236, 253, 0.4)',
-              border: '1px solid #47C4E6',
-              borderRadius: '12px',
-              padding: '16px',
-              marginBottom: '20px',
-              fontSize: '14px',
-              color: '#0369a1'
-            }}>
-              <strong>Tip:</strong> {currentStop.rotationNote}
-            </div>
-          )}
-
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '16px', fontWeight: '600', marginBottom: '8px' }}>
-              {currentStop.id === 'learning' ? 'Room Name/Number' : 'Restroom Location'} #{roomNumber}
-            </label>
-            <input
-              type="text"
-              value={roomInput}
-              onChange={(e) => setRoomInput(e.target.value)}
-              placeholder={currentStop.id === 'learning' ? 'e.g., Room 101, Pod A' : 'e.g., Main hallway, Near gym'}
-              style={{
-                width: '100%',
-                padding: '16px',
-                fontSize: '17px',
-                border: '2px solid #e5e7eb',
-                borderRadius: '12px',
-                boxSizing: 'border-box'
-              }}
-              autoFocus
-            />
-          </div>
-
-          <button
-            onClick={handleRoomSubmit}
-            style={{
-              width: '100%',
-              backgroundColor: '#10b981',
-              color: '#fff',
-              padding: '16px',
-              borderRadius: '12px',
-              fontSize: '17px',
-              fontWeight: '600',
-              border: 'none',
-              cursor: 'pointer'
-            }}
-          >
-            Continue
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-100" style={{ display: 'flex', flexDirection: 'column' }}>

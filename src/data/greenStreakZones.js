@@ -168,9 +168,7 @@ export const GREEN_STREAK_STOPS = [
         id: 'commons_4',
         question: 'Is AED accessible and showing charged?',
         metric: 'HEALTH_SAFETY',
-        lookingFor: 'Visible, not blocked, indicator shows charged',
-        optional: true,
-        optionalNote: 'If campus has AED'
+        lookingFor: 'Visible, not blocked, indicator shows charged'
       },
       {
         id: 'commons_5',

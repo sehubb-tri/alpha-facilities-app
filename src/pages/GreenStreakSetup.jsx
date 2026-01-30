@@ -4,13 +4,19 @@ import { CampusSelector } from '../components/CampusSelector';
 import { Header } from '../components/Header';
 import { CAMPUSES } from '../data/campuses';
 import { GREEN_STREAK_STOPS, GREEN_STREAK_METRICS } from '../data/greenStreakZones';
-import { Zap, Clock, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Zap, Clock, CheckCircle, AlertTriangle, MapPin } from 'lucide-react';
 
 export const GreenStreakSetup = ({ greenStreakWalk }) => {
   const navigate = useNavigate();
   const [campusName, setCampusName] = useState('');
   const [coordinatorName, setCoordinatorName] = useState('');
   const [coordinatorEmail, setCoordinatorEmail] = useState('');
+
+  // Room selections - collected upfront
+  const [learningRoom1, setLearningRoom1] = useState('');
+  const [learningRoom2, setLearningRoom2] = useState('');
+  const [restroom1, setRestroom1] = useState('');
+  const [restroom2, setRestroom2] = useState('');
 
   // Calculate total checks
   const totalChecks = GREEN_STREAK_STOPS.reduce((sum, stop) => sum + stop.checks.length, 0);
@@ -32,10 +38,24 @@ export const GreenStreakSetup = ({ greenStreakWalk }) => {
       alert('Please enter a valid email address');
       return;
     }
+    if (!learningRoom1.trim() || !learningRoom2.trim()) {
+      alert('Please enter both learning spaces you will check');
+      return;
+    }
+    if (!restroom1.trim() || !restroom2.trim()) {
+      alert('Please enter both restroom locations you will check');
+      return;
+    }
 
     const campus = CAMPUSES.find(c => c.name === campusName);
 
-    greenStreakWalk.initWalk(campusName, campus, coordinatorName.trim(), coordinatorEmail.trim());
+    // Pass room selections to initWalk
+    const roomSelections = {
+      learning: [learningRoom1.trim(), learningRoom2.trim()],
+      restroom: [restroom1.trim(), restroom2.trim()]
+    };
+
+    greenStreakWalk.initWalk(campusName, campus, coordinatorName.trim(), coordinatorEmail.trim(), roomSelections);
 
     window.scrollTo(0, 0);
     navigate('/green-streak/walk');
@@ -75,84 +95,6 @@ export const GreenStreakSetup = ({ greenStreakWalk }) => {
               <CheckCircle size={18} />
               <span style={{ fontSize: '15px' }}>{totalChecks} checks</span>
             </div>
-          </div>
-        </div>
-
-        {/* Walk Overview */}
-        <div style={{
-          backgroundColor: '#fff',
-          borderRadius: '12px',
-          padding: '16px',
-          border: '1px solid #e5e7eb'
-        }}>
-          <div style={{ fontWeight: '600', color: '#092849', marginBottom: '12px' }}>
-            Walk Route
-          </div>
-          {GREEN_STREAK_STOPS.map((stop, idx) => (
-            <div key={stop.id} style={{
-              display: 'flex',
-              alignItems: 'center',
-              padding: '12px 0',
-              borderBottom: idx < GREEN_STREAK_STOPS.length - 1 ? '1px solid #f3f4f6' : 'none'
-            }}>
-              <div style={{
-                width: '28px',
-                height: '28px',
-                borderRadius: '50%',
-                backgroundColor: '#10b981',
-                color: '#fff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: '700',
-                fontSize: '14px',
-                marginRight: '12px'
-              }}>
-                {idx + 1}
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: '500', color: '#333' }}>{stop.name}</div>
-                <div style={{ fontSize: '13px', color: '#666' }}>
-                  {stop.checks.length} checks - {stop.timeEstimate}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* What You're Checking */}
-        <div style={{
-          backgroundColor: 'rgba(194, 236, 253, 0.4)',
-          border: '1px solid #47C4E6',
-          borderRadius: '12px',
-          padding: '16px'
-        }}>
-          <div style={{ fontWeight: '600', color: '#092849', marginBottom: '12px' }}>
-            5 Green Streak Metrics
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-            {Object.values(GREEN_STREAK_METRICS).filter(m => !m.isVendorQC).map(metric => (
-              <div key={metric.id} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                backgroundColor: '#fff',
-                padding: '8px 12px',
-                borderRadius: '20px',
-                fontSize: '13px'
-              }}>
-                <div style={{
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '50%',
-                  backgroundColor: metric.color
-                }} />
-                <span style={{ fontWeight: '500' }}>{metric.name}</span>
-              </div>
-            ))}
-          </div>
-          <div style={{ fontSize: '13px', color: '#666', marginTop: '12px' }}>
-            + Cleanliness spot-check (vendor QC)
           </div>
         </div>
 
@@ -206,6 +148,185 @@ export const GreenStreakSetup = ({ greenStreakWalk }) => {
               backgroundColor: '#fff'
             }}
           />
+        </div>
+
+        {/* Spaces to Check - All 4 upfront */}
+        <div style={{
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          padding: '20px',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginBottom: '16px'
+          }}>
+            <MapPin size={20} color="#10b981" />
+            <span style={{ fontSize: '17px', fontWeight: '600', color: '#333' }}>
+              Spaces You'll Check Today
+            </span>
+          </div>
+
+          <div style={{
+            backgroundColor: 'rgba(194, 236, 253, 0.4)',
+            borderRadius: '8px',
+            padding: '12px',
+            marginBottom: '16px',
+            fontSize: '13px',
+            color: '#0369a1'
+          }}>
+            <strong>Tip:</strong> Rotate which rooms you check daily so you see all spaces over the course of a week.
+          </div>
+
+          {/* Learning Spaces */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '15px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
+              Learning Spaces (2 rooms) *
+            </label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <input
+                type="text"
+                placeholder="Room 1 (e.g., Room 101, Pod A)"
+                value={learningRoom1}
+                onChange={(e) => setLearningRoom1(e.target.value)}
+                style={{
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  borderRadius: '10px',
+                  padding: '12px 14px',
+                  fontSize: '16px',
+                  boxSizing: 'border-box',
+                  backgroundColor: '#fff'
+                }}
+              />
+              <input
+                type="text"
+                placeholder="Room 2 (e.g., Room 102, Pod B)"
+                value={learningRoom2}
+                onChange={(e) => setLearningRoom2(e.target.value)}
+                style={{
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  borderRadius: '10px',
+                  padding: '12px 14px',
+                  fontSize: '16px',
+                  boxSizing: 'border-box',
+                  backgroundColor: '#fff'
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Restrooms */}
+          <div>
+            <label style={{ display: 'block', fontSize: '15px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
+              Restrooms (2 locations) *
+            </label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <input
+                type="text"
+                placeholder="Restroom 1 (e.g., Main hallway)"
+                value={restroom1}
+                onChange={(e) => setRestroom1(e.target.value)}
+                style={{
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  borderRadius: '10px',
+                  padding: '12px 14px',
+                  fontSize: '16px',
+                  boxSizing: 'border-box',
+                  backgroundColor: '#fff'
+                }}
+              />
+              <input
+                type="text"
+                placeholder="Restroom 2 (e.g., Near gym)"
+                value={restroom2}
+                onChange={(e) => setRestroom2(e.target.value)}
+                style={{
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  borderRadius: '10px',
+                  padding: '12px 14px',
+                  fontSize: '16px',
+                  boxSizing: 'border-box',
+                  backgroundColor: '#fff'
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Walk Route - Compact */}
+        <div style={{
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          padding: '16px',
+          border: '1px solid #e5e7eb'
+        }}>
+          <div style={{ fontWeight: '600', color: '#092849', marginBottom: '12px' }}>
+            Walk Route
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {GREEN_STREAK_STOPS.map((stop, idx) => (
+              <div key={stop.id} style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                backgroundColor: '#f3f4f6',
+                padding: '6px 12px',
+                borderRadius: '20px',
+                fontSize: '13px'
+              }}>
+                <span style={{
+                  fontWeight: '700',
+                  color: '#10b981',
+                  fontSize: '12px'
+                }}>
+                  {idx + 1}
+                </span>
+                <span style={{ color: '#333' }}>{stop.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* What You're Checking - Compact */}
+        <div style={{
+          backgroundColor: 'rgba(194, 236, 253, 0.4)',
+          border: '1px solid #47C4E6',
+          borderRadius: '12px',
+          padding: '16px'
+        }}>
+          <div style={{ fontWeight: '600', color: '#092849', marginBottom: '12px' }}>
+            5 Green Streak Metrics
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {Object.values(GREEN_STREAK_METRICS).filter(m => !m.isVendorQC).map(metric => (
+              <div key={metric.id} style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                backgroundColor: '#fff',
+                padding: '6px 12px',
+                borderRadius: '20px',
+                fontSize: '13px'
+              }}>
+                <div style={{
+                  width: '10px',
+                  height: '10px',
+                  borderRadius: '50%',
+                  backgroundColor: metric.color
+                }} />
+                <span style={{ fontWeight: '500' }}>{metric.name}</span>
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize: '13px', color: '#666', marginTop: '12px' }}>
+            + Cleanliness spot-check (vendor QC)
+          </div>
         </div>
 
         {/* How It Works */}
@@ -305,7 +426,7 @@ export const GreenStreakSetup = ({ greenStreakWalk }) => {
           }}
         >
           <Zap size={22} />
-          Begin Green Streak Walk
+          Continue
         </button>
       </div>
     </div>

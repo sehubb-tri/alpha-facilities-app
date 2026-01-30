@@ -81,15 +81,19 @@ export const useGreenStreakWalk = () => {
     localStorage.removeItem(STORAGE_KEY);
   }, []);
 
-  // Initialize walk
-  const initWalk = useCallback((campus, campusData, coordinator, coordinatorEmail) => {
+  // Initialize walk (roomSelections collected upfront on setup page)
+  const initWalk = useCallback((campus, campusData, coordinator, coordinatorEmail, roomSelections = {}) => {
     setState({
       ...getInitialState(),
       campus,
       campusData,
       coordinator,
       coordinatorEmail,
-      startTime: new Date().toISOString()
+      startTime: new Date().toISOString(),
+      roomSelections: {
+        learning: roomSelections.learning || [],
+        restroom: roomSelections.restroom || []
+      }
     });
   }, []);
 
