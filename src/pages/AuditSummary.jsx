@@ -15,12 +15,14 @@ export const AuditSummary = ({ audit }) => {
     auditorEmail,
     allZones,
     conditionAlerts,
+    zoneResults,
     calculateStatus,
     countDefects,
     getTotalDefects,
     getDuration,
     buildAuditData,
-    getZoneConfig
+    getZoneConfig,
+    getZonePhotos
   } = audit;
 
   const status = calculateStatus();
@@ -46,39 +48,74 @@ export const AuditSummary = ({ audit }) => {
       const auditData = buildAuditData();
       await saveAudit(auditData);
 
-      // Submit flagged condition alerts to Wrike if campus is configured
-      const flaggedConditionAlerts = conditionAlerts.filter(a => a.hasIssue);
       const campusName = campus?.name;
       const wrikeEnabled = isCampusWrikeEnabled(campusName);
 
-      // DEBUG: Show what's happening with Wrike
-      console.log('[Wrike Debug] Campus:', campusName, 'Enabled:', wrikeEnabled, 'Flagged alerts:', flaggedConditionAlerts.length);
+      // Collect ALL defects from zoneResults (every "no" answer)
+      const allDefects = [];
+      for (const zoneId of allZones) {
+        const zone = getZoneConfig(zoneId);
+        const results = zoneResults[zoneId] || {};
+        const zoneName = zone?.type === 'restroom' ? zone?.name : (zone?.name || zoneId);
+        const questions = zone?.cleanliness || [];
+        const photos = getZonePhotos ? getZonePhotos(zoneId) : [];
 
-      if (flaggedConditionAlerts.length > 0 && campusName && wrikeEnabled) {
+        // Find all "no" answers in this zone
+        Object.entries(results).forEach(([questionIndex, answer]) => {
+          if (answer === 'no') {
+            const questionText = questions[parseInt(questionIndex)] || `Question ${parseInt(questionIndex) + 1}`;
+            allDefects.push({
+              checkText: questionText,
+              section: zoneName,
+              explanation: '',
+              photos: photos,
+              instantRed: !zone?.amberEligible
+            });
+          }
+        });
+      }
+
+      // Also collect flagged B&G condition alerts
+      const flaggedConditionAlerts = conditionAlerts.filter(a => a.hasIssue);
+      const mappedAlerts = flaggedConditionAlerts.map(alert => {
+        const zone = getZoneConfig(alert.zoneId);
+        const zoneName = zone?.type === 'restroom' ? zone?.name : (zone?.name || alert.zoneId);
+        return {
+          checkText: 'B&G Condition Alert: ' + (alert.note || 'Issue reported'),
+          section: zoneName,
+          explanation: alert.note || '',
+          photos: alert.photos || [],
+          instantRed: false
+        };
+      });
+
+      // Combine all issues
+      const allIssues = [...allDefects, ...mappedAlerts];
+
+      // DEBUG: Show what's happening with Wrike
+      console.log('[Wrike Debug] Campus:', campusName, 'Enabled:', wrikeEnabled);
+      console.log('[Wrike Debug] Defects:', allDefects.length, 'B&G Alerts:', mappedAlerts.length, 'Total:', allIssues.length);
+
+      if (allIssues.length > 0 && campusName && wrikeEnabled) {
         try {
-          console.log('[AuditSummary] Submitting condition alerts to Wrike...');
-          // Map condition alerts to issue format
-          const mappedIssues = flaggedConditionAlerts.map(alert => ({
-            checkText: alert.label || alert.condition || 'Condition Alert',
-            section: alert.zoneName || 'Daily QC',
-            explanation: alert.explanation || '',
-            photos: alert.photos || [],
-            instantRed: false
-          }));
+          console.log('[AuditSummary] Submitting', allIssues.length, 'issues to Wrike...');
           await submitChecklistIssuesToWrike(
-            mappedIssues,
+            allIssues,
             campusName,
             { name: auditor, email: auditorEmail }
           );
           console.log('[AuditSummary] Wrike submission complete');
-          alert('Wrike: Submitted ' + mappedIssues.length + ' issues successfully!');
+          alert('Wrike: Submitted ' + allIssues.length + ' issues successfully!');
         } catch (wrikeError) {
           console.error('[AuditSummary] Wrike submission failed:', wrikeError);
           alert('Wrike Error: ' + wrikeError.message);
         }
-      } else if (flaggedConditionAlerts.length > 0 && !wrikeEnabled) {
+      } else if (allIssues.length > 0 && !wrikeEnabled) {
         // Debug alert to show why it's not submitting
+        console.log('[Wrike Debug] Wrike not enabled for campus:', campusName);
         alert('Wrike not enabled for: ' + campusName);
+      } else if (allIssues.length === 0) {
+        console.log('[Wrike Debug] No issues to submit (all passed)');
       }
 
       navigate('/audit/complete');
