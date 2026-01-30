@@ -313,10 +313,9 @@ export const GREEN_STREAK_STOPS = [
       },
       {
         id: 'systems_3',
-        question: 'Are there any unresolved issues from yesterday?',
+        question: 'Have all previous issues been resolved?',
         metric: 'HEALTH_SAFETY', // Defaults to H&S but could apply to any
-        lookingFor: 'Check for unresolved flags',
-        invertedLogic: true // "Yes" means there ARE issues (bad), "No" means no issues (good)
+        lookingFor: 'No open flags or carryover issues from yesterday'
       }
     ]
   }
@@ -349,12 +348,8 @@ export const calculateMetricStatus = (metricId, checkResults) => {
     // Skip optional checks that weren't answered
     if (check.optional && result === undefined) continue;
 
-    // Handle inverted logic (like "are there unresolved issues?")
-    if (check.invertedLogic) {
-      if (result === true) return 'ISSUE'; // "Yes there are issues" = bad
-    } else {
-      if (result === false) return 'ISSUE'; // "No" = bad
-    }
+    // "No" answer = issue found
+    if (result === false) return 'ISSUE';
   }
 
   return 'GREEN';
