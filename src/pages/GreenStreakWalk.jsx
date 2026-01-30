@@ -16,17 +16,29 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
   const currentCheck = greenStreakWalk.getCurrentCheck();
   const progress = greenStreakWalk.getProgress();
   const metric = currentCheck ? GREEN_STREAK_METRICS[currentCheck.metric] : null;
+  const currentRoomIndex = greenStreakWalk.currentRoomIndex || 0;
+  const roomCount = currentStop?.roomCount || 1;
 
-  // Check if we need room selection for this stop
+  // Generate unique check ID that includes room index for multi-room stops
+  const getCheckKey = (checkId) => {
+    if (currentStop?.roomCount > 1) {
+      return `${checkId}_room${currentRoomIndex}`;
+    }
+    return checkId;
+  };
+
+  // Check if we need room selection for this stop/room
   useEffect(() => {
-    if (currentStop?.requiresRoomSelection) {
-      const existingSelection = greenStreakWalk.roomSelections[currentStop.id];
-      if (!existingSelection && greenStreakWalk.currentCheckIndex === 0) {
+    if (currentStop?.requiresRoomSelection && greenStreakWalk.currentCheckIndex === 0) {
+      const existingSelections = greenStreakWalk.roomSelections[currentStop.id] || [];
+      const hasCurrentRoom = existingSelections[currentRoomIndex];
+
+      if (!hasCurrentRoom) {
         setShowRoomInput(true);
         setRoomInput('');
       }
     }
-  }, [currentStop, greenStreakWalk.currentCheckIndex]);
+  }, [currentStop, greenStreakWalk.currentCheckIndex, currentRoomIndex]);
 
   // Redirect if no walk in progress
   useEffect(() => {
@@ -39,10 +51,13 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
     return null;
   }
 
+  const checkKey = getCheckKey(currentCheck.id);
+  const currentRoomName = greenStreakWalk.roomSelections[currentStop.id]?.[currentRoomIndex] || '';
+
   const handleYes = () => {
     // If there was a previous "No" for this check, remove the issue
-    greenStreakWalk.removeIssue(currentCheck.id);
-    greenStreakWalk.recordCheckResult(currentCheck.id, true);
+    greenStreakWalk.removeIssue(checkKey);
+    greenStreakWalk.recordCheckResult(checkKey, true);
 
     // Check if walk is complete
     if (greenStreakWalk.isWalkComplete()) {
@@ -55,13 +70,15 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
   const handleNo = () => {
     // Open issue modal
     setCurrentIssue({
-      checkId: currentCheck.id,
+      checkId: checkKey,
       question: currentCheck.question,
       metric: currentCheck.metric,
       metricName: metric?.name,
       stopId: currentStop.id,
       stopName: currentStop.name,
-      lookingFor: currentCheck.lookingFor
+      lookingFor: currentCheck.lookingFor,
+      roomName: currentRoomName,
+      roomIndex: currentRoomIndex
     });
     setIssueDescription('');
     setIssuePhotos([]);
@@ -75,14 +92,14 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
     }
 
     // Record the No answer with issue data
-    greenStreakWalk.recordCheckResult(currentCheck.id, false);
+    greenStreakWalk.recordCheckResult(checkKey, false);
 
     // Add the issue
     greenStreakWalk.addIssue({
       ...currentIssue,
       description: issueDescription.trim(),
       photos: issuePhotos,
-      roomSelection: greenStreakWalk.roomSelections[currentStop.id] || null
+      roomSelection: currentRoomName
     });
 
     setShowIssueModal(false);
@@ -116,7 +133,7 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
       alert('Please enter the room/location you are checking');
       return;
     }
-    greenStreakWalk.setRoomSelection(currentStop.id, roomInput.trim());
+    greenStreakWalk.setRoomSelection(currentStop.id, roomInput.trim(), currentRoomIndex);
     setShowRoomInput(false);
   };
 
@@ -127,6 +144,9 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
 
   // Room selection modal
   if (showRoomInput) {
+    const roomLabel = currentStop.id === 'learning' ? 'room' : 'restroom';
+    const roomNumber = currentRoomIndex + 1;
+
     return (
       <div className="min-h-screen bg-gray-100">
         {/* Header */}
@@ -139,8 +159,20 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
             Stop {currentStop.order}: {currentStop.name}
           </div>
           <div style={{ fontSize: '20px', fontWeight: '700' }}>
-            Which {currentStop.id === 'learning' ? 'room' : 'restroom'} are you checking?
+            Which {roomLabel} are you checking?
           </div>
+          {roomCount > 1 && (
+            <div style={{
+              marginTop: '8px',
+              backgroundColor: 'rgba(255,255,255,0.2)',
+              padding: '6px 12px',
+              borderRadius: '12px',
+              display: 'inline-block',
+              fontSize: '14px'
+            }}>
+              {roomLabel.charAt(0).toUpperCase() + roomLabel.slice(1)} {roomNumber} of {roomCount}
+            </div>
+          )}
         </div>
 
         <div style={{ padding: '24px' }}>
@@ -160,7 +192,7 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
 
           <div style={{ marginBottom: '20px' }}>
             <label style={{ display: 'block', fontSize: '16px', fontWeight: '600', marginBottom: '8px' }}>
-              {currentStop.id === 'learning' ? 'Room Name/Number' : 'Restroom Location'}
+              {currentStop.id === 'learning' ? 'Room Name/Number' : 'Restroom Location'} #{roomNumber}
             </label>
             <input
               type="text"
@@ -240,8 +272,8 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
           </div>
         </div>
 
-        {/* Room selection display */}
-        {currentStop.requiresRoomSelection && greenStreakWalk.roomSelections[currentStop.id] && (
+        {/* Room selection display for multi-room stops */}
+        {currentStop.requiresRoomSelection && currentRoomName && (
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -251,7 +283,13 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
             color: 'rgba(255,255,255,0.9)'
           }}>
             <MapPin size={14} />
-            Checking: {greenStreakWalk.roomSelections[currentStop.id]}
+            {roomCount > 1 ? (
+              <span>
+                {currentStop.id === 'learning' ? 'Room' : 'Restroom'} {currentRoomIndex + 1}/{roomCount}: {currentRoomName}
+              </span>
+            ) : (
+              <span>Checking: {currentRoomName}</span>
+            )}
           </div>
         )}
       </div>
@@ -392,7 +430,7 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <button
             onClick={() => greenStreakWalk.prevCheck()}
-            disabled={progress.currentStop === 1 && progress.currentCheckInStop === 1}
+            disabled={progress.currentStop === 1 && progress.currentCheckInStop === 1 && currentRoomIndex === 0}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -400,8 +438,8 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
               padding: '12px 16px',
               backgroundColor: 'transparent',
               border: 'none',
-              color: progress.currentStop === 1 && progress.currentCheckInStop === 1 ? '#ccc' : '#666',
-              cursor: progress.currentStop === 1 && progress.currentCheckInStop === 1 ? 'not-allowed' : 'pointer',
+              color: progress.currentStop === 1 && progress.currentCheckInStop === 1 && currentRoomIndex === 0 ? '#ccc' : '#666',
+              cursor: progress.currentStop === 1 && progress.currentCheckInStop === 1 && currentRoomIndex === 0 ? 'not-allowed' : 'pointer',
               fontSize: '15px'
             }}
           >
@@ -456,6 +494,7 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
                 </div>
                 <div style={{ fontSize: '14px', color: '#666', marginTop: '4px' }}>
                   {currentIssue?.metricName} - {currentIssue?.stopName}
+                  {currentIssue?.roomName && ` - ${currentIssue.roomName}`}
                 </div>
               </div>
               <button

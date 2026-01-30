@@ -209,10 +209,11 @@ export const GREEN_STREAK_STOPS = [
     id: 'learning',
     name: 'Learning Space Sample',
     order: 4,
-    timeEstimate: '3 min',
-    description: 'Check 1-2 rooms. Rotate which ones daily.',
+    timeEstimate: '5 min',
+    description: 'Check 2 rooms. Rotate which ones daily.',
     passCriteria: 'Students could walk in and start learning right now.',
     requiresRoomSelection: true,
+    roomCount: 2,
     rotationNote: 'Don\'t check the same rooms every day. Rotate so you see all spaces over the course of a week.',
     checks: [
       {
@@ -258,10 +259,11 @@ export const GREEN_STREAK_STOPS = [
     id: 'restroom',
     name: 'Restroom Sample',
     order: 5,
-    timeEstimate: '2 min',
-    description: 'Check 1-2 restrooms. Rotate daily.',
+    timeEstimate: '4 min',
+    description: 'Check 2 restrooms. Rotate daily.',
     passCriteria: 'You\'d use this restroom yourself without hesitation.',
     requiresRoomSelection: true,
+    roomCount: 2,
     rotationNote: 'Hit different restrooms each day. Vendors can\'t game what they don\'t know you\'ll check.',
     checks: [
       {

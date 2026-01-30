@@ -20,11 +20,14 @@ const getInitialState = () => ({
   currentStopIndex: 0,
   currentCheckIndex: 0,
 
-  // Room selections for sampling stops
+  // Room selections for sampling stops (arrays for multiple rooms)
   roomSelections: {
-    learning: '', // Which classroom they're checking
-    restroom: ''  // Which restroom they're checking
+    learning: [], // Which classrooms they're checking (2 rooms)
+    restroom: []  // Which restrooms they're checking (2 restrooms)
   },
+
+  // Track which room instance we're on for multi-room stops (0 or 1)
+  currentRoomIndex: 0,
 
   // Check results: { checkId: true/false }
   checkResults: {},
@@ -108,14 +111,33 @@ export const useGreenStreakWalk = () => {
     return stop.checks[state.currentCheckIndex] || null;
   }, [getCurrentStop, state.currentCheckIndex]);
 
-  // Set room selection for sampling stops
-  const setRoomSelection = useCallback((stopId, roomName) => {
+  // Set room selection for sampling stops (supports multiple rooms)
+  const setRoomSelection = useCallback((stopId, roomName, roomIndex = 0) => {
+    setState(prev => {
+      const currentSelections = prev.roomSelections[stopId] || [];
+      const newSelections = [...currentSelections];
+      newSelections[roomIndex] = roomName;
+
+      return {
+        ...prev,
+        roomSelections: {
+          ...prev.roomSelections,
+          [stopId]: newSelections
+        }
+      };
+    });
+  }, []);
+
+  // Get current room index for multi-room stops
+  const getCurrentRoomIndex = useCallback(() => {
+    return state.currentRoomIndex || 0;
+  }, [state.currentRoomIndex]);
+
+  // Set current room index
+  const setCurrentRoomIndex = useCallback((index) => {
     setState(prev => ({
       ...prev,
-      roomSelections: {
-        ...prev.roomSelections,
-        [stopId]: roomName
-      }
+      currentRoomIndex: index
     }));
   }, []);
 
@@ -198,11 +220,23 @@ export const useGreenStreakWalk = () => {
       const currentStop = GREEN_STREAK_STOPS[prev.currentStopIndex];
       if (!currentStop) return prev;
 
-      // If there are more checks in this stop
+      const roomCount = currentStop.roomCount || 1;
+      const currentRoomIdx = prev.currentRoomIndex || 0;
+
+      // If there are more checks in this stop for current room
       if (prev.currentCheckIndex < currentStop.checks.length - 1) {
         return {
           ...prev,
           currentCheckIndex: prev.currentCheckIndex + 1
+        };
+      }
+
+      // If multi-room stop and more rooms to check
+      if (roomCount > 1 && currentRoomIdx < roomCount - 1) {
+        return {
+          ...prev,
+          currentCheckIndex: 0,
+          currentRoomIndex: currentRoomIdx + 1
         };
       }
 
@@ -211,7 +245,8 @@ export const useGreenStreakWalk = () => {
         return {
           ...prev,
           currentStopIndex: prev.currentStopIndex + 1,
-          currentCheckIndex: 0
+          currentCheckIndex: 0,
+          currentRoomIndex: 0
         };
       }
 
@@ -223,7 +258,10 @@ export const useGreenStreakWalk = () => {
   // Navigate to previous check
   const prevCheck = useCallback(() => {
     setState(prev => {
-      // If not at first check of current stop
+      const currentStop = GREEN_STREAK_STOPS[prev.currentStopIndex];
+      const currentRoomIdx = prev.currentRoomIndex || 0;
+
+      // If not at first check of current room
       if (prev.currentCheckIndex > 0) {
         return {
           ...prev,
@@ -231,13 +269,24 @@ export const useGreenStreakWalk = () => {
         };
       }
 
+      // If multi-room and not on first room, go back to previous room's last check
+      if (currentRoomIdx > 0) {
+        return {
+          ...prev,
+          currentCheckIndex: currentStop.checks.length - 1,
+          currentRoomIndex: currentRoomIdx - 1
+        };
+      }
+
       // Move to previous stop
       if (prev.currentStopIndex > 0) {
         const prevStop = GREEN_STREAK_STOPS[prev.currentStopIndex - 1];
+        const prevRoomCount = prevStop.roomCount || 1;
         return {
           ...prev,
           currentStopIndex: prev.currentStopIndex - 1,
-          currentCheckIndex: prevStop.checks.length - 1
+          currentCheckIndex: prevStop.checks.length - 1,
+          currentRoomIndex: prevRoomCount - 1
         };
       }
 
@@ -254,13 +303,21 @@ export const useGreenStreakWalk = () => {
     }));
   }, []);
 
-  // Check if walk is complete (all required checks answered)
+  // Check if walk is complete (all required checks answered, including multi-room)
   const isWalkComplete = useCallback(() => {
     for (const stop of GREEN_STREAK_STOPS) {
-      for (const check of stop.checks) {
-        if (check.optional) continue;
-        if (state.checkResults[check.id] === undefined) {
-          return false;
+      const roomCount = stop.roomCount || 1;
+
+      for (let roomIdx = 0; roomIdx < roomCount; roomIdx++) {
+        for (const check of stop.checks) {
+          if (check.optional) continue;
+
+          // Generate the same key format as the walk page
+          const checkKey = roomCount > 1 ? `${check.id}_room${roomIdx}` : check.id;
+
+          if (state.checkResults[checkKey] === undefined) {
+            return false;
+          }
         }
       }
     }
@@ -379,6 +436,7 @@ export const useGreenStreakWalk = () => {
     // Getters
     getCurrentStop,
     getCurrentCheck,
+    getCurrentRoomIndex,
     getProgress,
     getWalkData,
     isWalkComplete,
@@ -388,6 +446,7 @@ export const useGreenStreakWalk = () => {
     initWalk,
     resetWalk,
     setRoomSelection,
+    setCurrentRoomIndex,
     recordCheckResult,
     addIssue,
     updateIssue,
