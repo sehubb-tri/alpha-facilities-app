@@ -108,7 +108,7 @@ export const createWrikeTask = async (folderId, taskData) => {
   };
 
   if (priority) {
-    body.priority = priority; // 'High', 'Normal', 'Low'
+    body.importance = priority; // Wrike uses 'importance' not 'priority'. Values: 'High', 'Normal', 'Low'
   }
 
   if (dates) {
