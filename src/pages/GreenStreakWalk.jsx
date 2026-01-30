@@ -182,6 +182,30 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
 
       {/* Main Content */}
       <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column' }}>
+
+        {/* Prominent Room/Restroom indicator for multi-room stops */}
+        {currentStop?.roomCount > 1 && currentRoomName && (
+          <div style={{
+            backgroundColor: '#10b981',
+            borderRadius: '12px',
+            padding: '14px 16px',
+            marginBottom: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px'
+          }}>
+            <MapPin size={22} color="#fff" />
+            <div>
+              <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.85)' }}>
+                {currentStop.id === 'learning' ? 'Learning Space' : 'Restroom'} {currentRoomIndex + 1} of {roomCount}
+              </div>
+              <div style={{ fontSize: '18px', fontWeight: '700', color: '#fff' }}>
+                {currentRoomName}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Metric Badge */}
         <div style={{
           display: 'inline-flex',
