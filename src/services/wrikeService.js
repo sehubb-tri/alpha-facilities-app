@@ -390,3 +390,14 @@ export const listAllFolders = async () => {
     return null;
   }
 };
+
+// Expose debug functions on window for console access
+if (typeof window !== 'undefined') {
+  window.wrikeDebug = {
+    listAllFolders,
+    getFolderFromPermalink,
+    testWrikeConnection,
+    getWrikeFolderInfo
+  };
+  console.log('[Wrike] Debug functions available: window.wrikeDebug.listAllFolders(), window.wrikeDebug.getFolderFromPermalink("4360915958")');
+}

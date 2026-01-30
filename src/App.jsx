@@ -1,6 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useCamera } from './hooks/useCamera';
 import { useAudit } from './hooks/useAudit';
+
+// Initialize Wrike debug tools (available via window.wrikeDebug in console)
+import './services/wrikeService';
 import { useReport } from './hooks/useReport';
 import { useBGWalkthrough } from './hooks/useBGWalkthrough';
 import { useSecurityChecklist } from './hooks/useSecurityChecklist';
