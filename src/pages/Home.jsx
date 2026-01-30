@@ -4,7 +4,7 @@ import { getAudits, getReports, getBGWalkthroughs } from '../supabase/services';
 import { ISSUE_CATEGORIES } from '../data/issueCategories';
 import { useI18n } from '../i18n';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import { CheckSquare, Building2, Camera, Lock, Armchair, UtensilsCrossed, Hospital, Cog, Globe } from 'lucide-react';
+import { Zap, ClipboardList, Camera, ChevronRight } from 'lucide-react';
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -240,90 +240,138 @@ export const Home = () => {
         />
       </div>
 
-      {/* Main Action Buttons - Compact 3x3 Grid */}
-      <div style={{ padding: '0 20px 16px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
-          {[
-            { path: '/audit/setup', Icon: CheckSquare, label: 'Daily Clean', bg: '#10b981' },
-            { path: '/bg/setup', Icon: Building2, label: 'B&G Weekly', bg: '#6366f1' },
-            { path: '/report', Icon: Camera, label: 'Report It', bg: '#f97316' },
-            { path: '/security', Icon: Lock, label: 'Security', bg: '#eab308' },
-            { path: '/furniture', Icon: Armchair, label: 'Furniture', bg: '#8b5cf6' },
-            { path: '/food-safety', Icon: UtensilsCrossed, label: 'Food', bg: '#64748b' },
-            { path: '/health-safety', Icon: Hospital, label: 'Health', bg: '#ef4444' },
-            { path: '/mechanical', Icon: Cog, label: 'Mechanical', bg: '#71717a' },
-            { path: 'https://internet-audit-dashboard.vercel.app/', Icon: Globe, label: 'Internet', bg: '#0ea5e9', external: true }
-          ].map((item) => {
-            const IconComponent = item.Icon;
-            const buttonContent = (
-              <>
-                <div style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '10px',
-                  backgroundColor: item.bg,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: '8px'
-                }}>
-                  <IconComponent size={24} color="#fff" strokeWidth={2} />
-                </div>
-                <span style={{ textAlign: 'center', lineHeight: '1.2' }}>{item.label}</span>
-              </>
-            );
+      {/* Main 3 Buttons */}
+      <div style={{ padding: '0 20px 20px' }}>
+        {/* Green Streak Walk - Primary CTA */}
+        <button
+          onClick={() => navigate('/green-streak')}
+          style={{
+            width: '100%',
+            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+            borderRadius: '16px',
+            padding: '20px',
+            border: 'none',
+            cursor: 'pointer',
+            marginBottom: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)'
+          }}
+        >
+          <div style={{
+            width: '56px',
+            height: '56px',
+            borderRadius: '14px',
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Zap size={32} color="#fff" />
+          </div>
+          <div style={{ flex: 1, textAlign: 'left' }}>
+            <div style={{ fontSize: '20px', fontWeight: '700', color: '#fff' }}>
+              Green Streak Walk
+            </div>
+            <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.85)', marginTop: '2px' }}>
+              Daily CC oversight check - 15 min
+            </div>
+          </div>
+          <ChevronRight size={24} color="rgba(255,255,255,0.7)" />
+        </button>
 
-            return item.external ? (
-              <a
-                key={item.path}
-                href={item.path}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  backgroundColor: '#fff',
-                  color: '#092849',
-                  borderRadius: '12px',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  border: 'none',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '16px 6px',
-                  cursor: 'pointer',
-                  textDecoration: 'none',
-                  minHeight: '95px'
-                }}
-              >
-                {buttonContent}
-              </a>
-            ) : (
-              <button
-                key={item.path}
-                onClick={() => navigate(item.path)}
-                style={{
-                  backgroundColor: '#fff',
-                  color: '#092849',
-                  borderRadius: '12px',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  border: 'none',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '16px 6px',
-                  cursor: 'pointer',
-                  minHeight: '95px'
-                }}
-              >
-                {buttonContent}
-              </button>
-            );
-          })}
+        {/* Two-column row for Ops Audits and Report It */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          {/* Ops Audits */}
+          <button
+            onClick={() => navigate('/ops-audits')}
+            style={{
+              backgroundColor: '#fff',
+              borderRadius: '14px',
+              padding: '16px',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '10px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            }}
+          >
+            <div style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '12px',
+              backgroundColor: '#6366f1',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <ClipboardList size={26} color="#fff" />
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '16px', fontWeight: '600', color: '#092849' }}>
+                Ops Audits
+              </div>
+              <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>
+                Detailed checklists
+              </div>
+            </div>
+          </button>
+
+          {/* See It Report It */}
+          <button
+            onClick={() => navigate('/report')}
+            style={{
+              backgroundColor: '#fff',
+              borderRadius: '14px',
+              padding: '16px',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '10px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              position: 'relative'
+            }}
+          >
+            <div style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '12px',
+              backgroundColor: '#f97316',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Camera size={26} color="#fff" />
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '16px', fontWeight: '600', color: '#092849' }}>
+                See It Report It
+              </div>
+              <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>
+                Log an issue
+              </div>
+            </div>
+            {openReports > 0 && (
+              <div style={{
+                position: 'absolute',
+                top: '8px',
+                right: '8px',
+                backgroundColor: '#ef4444',
+                color: '#fff',
+                fontSize: '12px',
+                fontWeight: '600',
+                padding: '2px 8px',
+                borderRadius: '10px'
+              }}>
+                {openReports}
+              </div>
+            )}
+          </button>
         </div>
       </div>
 

@@ -7,6 +7,7 @@ import './services/wrikeService';
 import { useReport } from './hooks/useReport';
 import { useBGWalkthrough } from './hooks/useBGWalkthrough';
 import { useSecurityChecklist } from './hooks/useSecurityChecklist';
+import { useGreenStreakWalk } from './hooks/useGreenStreakWalk';
 import { CameraModal } from './components/CameraModal';
 
 // Pages
@@ -71,6 +72,15 @@ import { MechanicalSummary } from './pages/MechanicalSummary';
 import { MechanicalComplete } from './pages/MechanicalComplete';
 import { useMechanicalChecklist } from './hooks/useMechanicalChecklist';
 
+// Green Streak Walk Pages (CC Daily Oversight)
+import { GreenStreakSetup } from './pages/GreenStreakSetup';
+import { GreenStreakWalk } from './pages/GreenStreakWalk';
+import { GreenStreakSummary } from './pages/GreenStreakSummary';
+import { GreenStreakComplete } from './pages/GreenStreakComplete';
+
+// Ops Audits Landing Page
+import { OpsAudits } from './pages/OpsAudits';
+
 function App() {
   const camera = useCamera();
   const audit = useAudit();
@@ -81,6 +91,7 @@ function App() {
   const foodSafetyChecklist = useFoodSafetyChecklist();
   const healthSafetyChecklist = useHealthSafetyChecklist();
   const mechanicalChecklist = useMechanicalChecklist();
+  const greenStreakWalk = useGreenStreakWalk();
 
   return (
     <BrowserRouter>
@@ -183,6 +194,15 @@ function App() {
         <Route path="/mechanical/checklist" element={<MechanicalChecklist mechanicalChecklist={mechanicalChecklist} camera={camera} />} />
         <Route path="/mechanical/summary" element={<MechanicalSummary mechanicalChecklist={mechanicalChecklist} />} />
         <Route path="/mechanical/complete" element={<MechanicalComplete mechanicalChecklist={mechanicalChecklist} />} />
+
+        {/* Green Streak Walk Flow (CC Daily Oversight) */}
+        <Route path="/green-streak" element={<GreenStreakSetup greenStreakWalk={greenStreakWalk} />} />
+        <Route path="/green-streak/walk" element={<GreenStreakWalk greenStreakWalk={greenStreakWalk} camera={camera} />} />
+        <Route path="/green-streak/summary" element={<GreenStreakSummary greenStreakWalk={greenStreakWalk} />} />
+        <Route path="/green-streak/complete" element={<GreenStreakComplete greenStreakWalk={greenStreakWalk} />} />
+
+        {/* Ops Audits Landing Page */}
+        <Route path="/ops-audits" element={<OpsAudits />} />
       </Routes>
     </BrowserRouter>
   );
