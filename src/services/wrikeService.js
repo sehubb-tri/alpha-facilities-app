@@ -14,7 +14,7 @@ import { supabase } from '../supabase/config';
 const CAMPUS_FOLDER_MAP = {
   // Test campus - use for development/testing
   // NOTE: Wrike API v4 requires alphanumeric IDs, not numeric IDs from URLs
-  "TESTING - Copy of Ops P2 Template": "MQAAAED0AI0",
+  "TESTING - Copy of Ops P2 Template": "MQAAAED7kv2",
 
   // Production campuses - add folder IDs as you configure them
   // To find a folder ID: Open the folder in Wrike, look at the URL
