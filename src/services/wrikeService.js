@@ -99,12 +99,14 @@ export const createWrikeTask = async (folderId, taskData) => {
   console.log('[Wrike] Creating task in folder:', folderId);
   console.log('[Wrike] Task data:', taskData);
 
-  const { title, description, status = 'Active', priority, dates } = taskData;
+  const { title, description, priority, dates } = taskData;
 
+  // Minimal body - only include fields that Wrike API definitely accepts
+  // NOTE: Removed 'status' - it requires exact match to workspace workflow status names
+  // Wrike will use the default status for new tasks
   const body = {
     title,
     description,
-    status,
   };
 
   if (priority) {
