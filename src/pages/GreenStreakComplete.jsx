@@ -16,6 +16,7 @@ export const GreenStreakComplete = ({ greenStreakWalk }) => {
   const [saved, setSaved] = useState(false);
   const [wrikeStatus, setWrikeStatus] = useState(null); // null, 'sending', 'sent', 'error', 'skipped'
   const [error, setError] = useState(null);
+  const [wrikeError, setWrikeError] = useState(null);
 
   const walkData = greenStreakWalk.getWalkData();
   const isGreen = walkData.overallStatus === 'GREEN';
@@ -33,22 +34,30 @@ export const GreenStreakComplete = ({ greenStreakWalk }) => {
       setSaving(true);
       setError(null);
 
+      // 1. Try to save to Supabase (don't block Wrike if this fails)
       try {
-        // 1. Save to Supabase
         await saveGreenStreakWalk(walkData);
         console.log('[GreenStreak] Walk saved to Supabase');
         setSaved(true);
+      } catch (err) {
+        console.error('[GreenStreak] Supabase save failed (continuing to Wrike):', err);
+        setError(err.message);
+        setSaved(false);
+      }
 
-        // 2. Send to Wrike
-        const folderId = getWrikeFolderForCampus(walkData.campus);
+      // 2. Send to Wrike (run regardless of Supabase result)
+      const folderId = getWrikeFolderForCampus(walkData.campus);
+      console.log('[GreenStreak] Got folder ID:', folderId, 'for campus:', walkData.campus);
 
-        if (!folderId) {
-          console.log('[GreenStreak] Campus not configured for Wrike:', walkData.campus);
-          setWrikeStatus('skipped');
-        } else {
-          setWrikeStatus('sending');
+      if (!folderId) {
+        console.log('[GreenStreak] Campus not configured for Wrike:', walkData.campus);
+        setWrikeStatus('skipped');
+      } else {
+        setWrikeStatus('sending');
 
+        try {
           // Create summary task for the walk
+          console.log('[GreenStreak] Creating summary task...');
           const summaryTask = await createWalkSummaryTask(walkData, folderId);
           console.log('[GreenStreak] Summary task created:', summaryTask?.id);
 
@@ -64,15 +73,14 @@ export const GreenStreakComplete = ({ greenStreakWalk }) => {
           }
 
           setWrikeStatus('sent');
+        } catch (wrikeErr) {
+          console.error('[GreenStreak] Wrike error:', wrikeErr);
+          setWrikeStatus('error');
+          setWrikeError(wrikeErr.message || 'Unknown Wrike error');
         }
-
-      } catch (err) {
-        console.error('Error saving walk:', err);
-        setError(err.message);
-        setSaved(false);
-      } finally {
-        setSaving(false);
       }
+
+      setSaving(false);
     };
 
     saveAndNotify();
@@ -223,7 +231,7 @@ export const GreenStreakComplete = ({ greenStreakWalk }) => {
             {wrikeStatus === 'sending' ? 'Sending to Wrike...' :
              wrikeStatus === 'sent' ? 'Sent to Wrike' :
              wrikeStatus === 'skipped' ? 'Wrike not configured for campus' :
-             wrikeStatus === 'error' ? 'Wrike error' : ''}
+             wrikeStatus === 'error' ? `Wrike error: ${wrikeError}` : ''}
           </span>
         </div>
       </div>

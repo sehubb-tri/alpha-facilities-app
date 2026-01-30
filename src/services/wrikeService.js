@@ -11,15 +11,19 @@ import { supabase } from '../supabase/config';
 // Each campus has a "01. Request Intake" folder in Wrike
 // Add folder IDs here as you set up each campus
 
+// Default test folder - used for ALL campuses during testing
+// From URL: wrike.com/workspace.htm?acc=6748446#/folder/4360915958/...
+// Numeric ID 4360915958 needs to be converted to alphanumeric v4 ID
+const TEST_FOLDER_ID = null; // Will be set after we look it up
+
 const CAMPUS_FOLDER_MAP = {
   // Test campus - use for development/testing
   // NOTE: Wrike API v4 requires alphanumeric IDs, not numeric IDs from URLs
-  "TESTING - Copy of Ops P2 Template": "MQAAAED7kv2",
+  "TESTING - Copy of Ops P2 Template": "MQAAAAED7kv2",
 
   // Production campuses - add folder IDs as you configure them
-  // To find a folder ID: Open the folder in Wrike, look at the URL
-  // Example: wrike.com/workspace.htm#/folder/IEAXXXXXXX/...
-  // The IEAXXXXXXX part is the folder ID
+  // To find a folder ID: Use wrikeDebug.getFolderFromPermalink("4360915958") in console
+  // The returned id field is the alphanumeric ID to use here
 
   // "Alpha School Austin": "FOLDER_ID_HERE",
   // "Alpha High School": "FOLDER_ID_HERE",
@@ -27,12 +31,21 @@ const CAMPUS_FOLDER_MAP = {
   // ... add more as needed
 };
 
+// TESTING MODE: Set to true to send ALL campuses to the test folder
+const TESTING_MODE = true;
+const DEFAULT_TEST_FOLDER = "MQAAAAED7kv2"; // Test folder ID
+
 /**
  * Get the Wrike folder ID for a campus
  * @param {string} campusName - The campus name from the app
  * @returns {string|null} - The Wrike folder ID or null if not mapped
  */
 export const getWrikeFolderForCampus = (campusName) => {
+  // In testing mode, use test folder for all campuses
+  if (TESTING_MODE) {
+    console.log('[Wrike] TESTING MODE: Using test folder for campus:', campusName);
+    return DEFAULT_TEST_FOLDER;
+  }
   return CAMPUS_FOLDER_MAP[campusName] || null;
 };
 
@@ -86,7 +99,35 @@ const wrikeRequest = async (endpoint, options = {}) => {
 };
 
 // ============================================
-// TASK CREATION
+// REQUEST FORM SUBMISSION
+// ============================================
+
+// Request form ID for Green Streak Walk submissions
+// To find this: In Wrike, go to your request form, click "Share", copy the form URL
+// The URL will be like: wrike.com/form/eyJhY2NvdW50...  - the part after /form/ is the ID
+const GREEN_STREAK_REQUEST_FORM_ID = null; // SET THIS TO YOUR REQUEST FORM ID
+
+/**
+ * Submit a request via Wrike Request Form
+ * @param {string} requestFormId - The Wrike request form ID
+ * @param {object} formData - The form field values
+ * @returns {object} - The created request
+ */
+export const submitWrikeRequest = async (requestFormId, formData) => {
+  console.log('[Wrike] Submitting request to form:', requestFormId);
+  console.log('[Wrike] Form data:', formData);
+
+  const result = await wrikeRequest(`/request_forms/${requestFormId}/requests`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  console.log('[Wrike] Request submitted:', result.data?.[0]?.id);
+  return result.data?.[0];
+};
+
+// ============================================
+// TASK CREATION (Fallback)
 // ============================================
 
 /**
@@ -403,4 +444,18 @@ if (typeof window !== 'undefined') {
     getWrikeFolderInfo
   };
   console.log('[Wrike] Debug functions available: window.wrikeDebug.listAllFolders(), window.wrikeDebug.getFolderFromPermalink("4360915958")');
+
+  // Auto-lookup the test folder ID on load
+  setTimeout(async () => {
+    try {
+      console.log('[Wrike] Looking up folder ID for 4360915958...');
+      const folder = await getFolderFromPermalink("4360915958");
+      if (folder) {
+        console.log('[Wrike] ✅ FOUND! Use this folder ID in code:', folder.id);
+        console.log('[Wrike] Folder title:', folder.title);
+      }
+    } catch (e) {
+      console.log('[Wrike] Could not auto-lookup folder:', e.message);
+    }
+  }, 2000);
 }
