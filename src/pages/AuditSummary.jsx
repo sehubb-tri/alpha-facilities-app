@@ -99,13 +99,22 @@ export const AuditSummary = ({ audit }) => {
       if (allIssues.length > 0 && campusName && wrikeEnabled) {
         try {
           console.log('[AuditSummary] Submitting', allIssues.length, 'issues to Wrike...');
-          await submitChecklistIssuesToWrike(
+          const wrikeResults = await submitChecklistIssuesToWrike(
             allIssues,
             campusName,
             { name: auditor, email: auditorEmail }
           );
-          console.log('[AuditSummary] Wrike submission complete');
-          alert('Wrike: Submitted ' + allIssues.length + ' issues successfully!');
+          const successCount = wrikeResults.filter(r => r !== null).length;
+          const failCount = wrikeResults.filter(r => r === null).length;
+          console.log('[AuditSummary] Wrike submission complete:', successCount, 'success,', failCount, 'failed');
+
+          if (successCount === allIssues.length) {
+            alert('Wrike: Submitted ' + successCount + ' issues successfully!');
+          } else if (successCount > 0) {
+            alert('Wrike: ' + successCount + '/' + allIssues.length + ' issues submitted. ' + failCount + ' failed.');
+          } else {
+            alert('Wrike: All ' + allIssues.length + ' issues failed to submit. Check console for errors.');
+          }
         } catch (wrikeError) {
           console.error('[AuditSummary] Wrike submission failed:', wrikeError);
           alert('Wrike Error: ' + wrikeError.message);

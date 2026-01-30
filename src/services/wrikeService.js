@@ -56,6 +56,9 @@ const wrikeRequest = async (endpoint, options = {}) => {
   const { method = 'GET', body } = options;
 
   console.log(`[Wrike] Calling Edge Function: ${method} ${endpoint}`);
+  if (body) {
+    console.log('[Wrike] Request body:', JSON.stringify(body).substring(0, 500));
+  }
 
   const { data, error } = await supabase.functions.invoke('wrike-proxy', {
     body: {
@@ -64,6 +67,9 @@ const wrikeRequest = async (endpoint, options = {}) => {
       body
     }
   });
+
+  console.log('[Wrike] Edge Function response - data:', data ? JSON.stringify(data).substring(0, 500) : 'null');
+  console.log('[Wrike] Edge Function response - error:', error);
 
   if (error) {
     console.error('[Wrike] Edge Function error:', error);
