@@ -65,14 +65,16 @@ serve(async (req) => {
     const responseData = await wrikeResponse.json()
 
     if (!wrikeResponse.ok) {
-      console.error('[Wrike Proxy] API error:', wrikeResponse.status, responseData)
+      console.error('[Wrike Proxy] API error:', wrikeResponse.status, JSON.stringify(responseData))
+      // Return 200 with error details so frontend can see the actual Wrike error
       return new Response(
         JSON.stringify({
-          error: responseData.error || `Wrike API error: ${wrikeResponse.status}`,
-          details: responseData
+          error: responseData.errorDescription || responseData.error || `Wrike API error: ${wrikeResponse.status}`,
+          wrikeStatus: wrikeResponse.status,
+          wrikeError: responseData
         }),
         {
-          status: wrikeResponse.status,
+          status: 200, // Return 200 so supabase client gives us the body
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         }
       )
