@@ -181,18 +181,22 @@ export const addWrikeComment = async (taskId, text) => {
 };
 
 /**
- * Attach a file URL to a Wrike task
- * Note: Wrike requires uploading files, but we can add URLs as comments
+ * Attach a file from URL to a Wrike task
  * @param {string} taskId - The Wrike task ID
- * @param {string} url - The photo URL
- * @param {string} description - Optional description
+ * @param {string} url - The photo URL to attach
+ * @param {string} filename - Optional filename for the attachment
  */
-export const attachPhotoUrlToTask = async (taskId, url, description = '') => {
-  const text = description
-    ? `Photo: ${description}\n${url}`
-    : `Photo attached:\n${url}`;
+export const attachUrlToTask = async (taskId, url, filename = 'photo.jpg') => {
+  console.log(`[Wrike] Attaching URL to task ${taskId}:`, url);
 
-  return addWrikeComment(taskId, text);
+  const result = await wrikeRequest(`/tasks/${taskId}/attachments`, {
+    method: 'POST',
+    body: { url, filename },
+    isAttachment: true  // Flag for edge function to handle differently
+  });
+
+  console.log('[Wrike] Attachment result:', result);
+  return result.data?.[0];
 };
 
 // ============================================

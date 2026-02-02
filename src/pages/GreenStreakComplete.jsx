@@ -5,8 +5,7 @@ import { saveGreenStreakWalk } from '../supabase/greenStreakService';
 import {
   createWrikeTask,
   getWrikeFolderForCampus,
-  submitIssueToWrike,
-  addWrikeComment
+  attachUrlToTask
 } from '../services/wrikeService';
 import { GREEN_STREAK_METRICS } from '../data/greenStreakZones';
 
@@ -321,16 +320,9 @@ async function createConsolidatedWrikeTask(walkData, folderId) {
       if (metric?.escalation) {
         description += `<b>Escalate to:</b> ${metric.escalation}<br>`;
       }
-      // Add inline photo previews
+      // Note if photos are attached
       if (issue.photos && issue.photos.length > 0) {
-        description += `<br><b>Photos:</b><br>`;
-        issue.photos.forEach((photo) => {
-          const photoUrl = photo.url || photo;
-          if (photoUrl && !photoUrl.startsWith('data:')) {
-            description += `<a href="${photoUrl}"><img src="${photoUrl}" width="200" style="margin:5px; border-radius:4px;"></a> `;
-          }
-        });
-        description += `<br>`;
+        description += `<b>Photos:</b> ${issue.photos.length} attached<br>`;
       }
       description += `</li>`;
     });
@@ -359,6 +351,28 @@ async function createConsolidatedWrikeTask(walkData, folderId) {
     priority
   });
 
-  // Photos are now embedded directly in the description as inline images
+  // Attach photos to the task
+  if (task && hasIssues) {
+    let photoIndex = 0;
+    for (const issue of walkData.issues) {
+      if (issue.photos && issue.photos.length > 0) {
+        const metric = GREEN_STREAK_METRICS[issue.metric];
+        for (const photo of issue.photos) {
+          const photoUrl = photo.url || photo;
+          if (photoUrl && !photoUrl.startsWith('data:')) {
+            photoIndex++;
+            try {
+              const filename = `${metric?.name || issue.metric}_${issue.stopName}_${photoIndex}.jpg`.replace(/[^a-zA-Z0-9._-]/g, '_');
+              await attachUrlToTask(task.id, photoUrl, filename);
+              console.log(`[GreenStreak] Attached photo ${photoIndex}: ${filename}`);
+            } catch (attachError) {
+              console.error(`[GreenStreak] Failed to attach photo:`, attachError);
+            }
+          }
+        }
+      }
+    }
+  }
+
   return task;
 }
