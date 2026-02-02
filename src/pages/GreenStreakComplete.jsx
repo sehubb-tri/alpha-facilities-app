@@ -56,21 +56,10 @@ export const GreenStreakComplete = ({ greenStreakWalk }) => {
         setWrikeStatus('sending');
 
         try {
-          // Create summary task for the walk
-          console.log('[GreenStreak] Creating summary task...');
-          const summaryTask = await createWalkSummaryTask(walkData, folderId);
-          console.log('[GreenStreak] Summary task created:', summaryTask?.id);
-
-          // Create individual tasks for each issue
-          if (walkData.issues && walkData.issues.length > 0) {
-            for (const issue of walkData.issues) {
-              try {
-                await submitGreenStreakIssue(issue, walkData, folderId);
-              } catch (issueError) {
-                console.error('[GreenStreak] Error submitting issue:', issueError);
-              }
-            }
-          }
+          // Create single consolidated task with all issues
+          console.log('[GreenStreak] Creating consolidated Wrike task...');
+          const task = await createConsolidatedWrikeTask(walkData, folderId);
+          console.log('[GreenStreak] Task created:', task?.id);
 
           setWrikeStatus('sent');
         } catch (wrikeErr) {
@@ -296,101 +285,80 @@ export const GreenStreakComplete = ({ greenStreakWalk }) => {
 // ============================================
 
 /**
- * Create a summary task for the completed Green Streak Walk
+ * Create a single consolidated Wrike task for the Green Streak Walk
+ * Includes all issues as bullet points in one task
  */
-async function createWalkSummaryTask(walkData, folderId) {
-  const statusEmoji = walkData.overallStatus === 'GREEN' ? '✅' : '🔴';
+async function createConsolidatedWrikeTask(walkData, folderId) {
   const date = new Date(walkData.date || Date.now()).toLocaleDateString();
+  const hasIssues = walkData.issues && walkData.issues.length > 0;
 
-  const title = `${statusEmoji} [${walkData.campus}] Green Streak Walk - ${date}`;
+  // Title format: [Campus] Green Streak Walk - Date (X issues) or (All Clear)
+  const issueCount = hasIssues ? `${walkData.issues.length} issue${walkData.issues.length !== 1 ? 's' : ''}` : 'All Clear';
+  const title = `[${walkData.campus}] Green Streak Walk - ${date} (${issueCount})`;
 
-  // Build description
-  let description = `**Green Streak Daily Walk Summary**\n\n`;
-  description += `**Campus:** ${walkData.campus}\n`;
-  description += `**Coordinator:** ${walkData.coordinator}\n`;
-  description += `**Date:** ${date}\n`;
-  description += `**Duration:** ${walkData.startTime && walkData.endTime
-    ? Math.round((new Date(walkData.endTime) - new Date(walkData.startTime)) / 60000) + ' minutes'
-    : 'N/A'}\n\n`;
+  // Build clean description
+  let description = '';
 
-  description += `**Overall Status:** ${walkData.overallStatus}\n\n`;
+  // Header info
+  description += `Campus: ${walkData.campus}\n`;
+  description += `Coordinator: ${walkData.coordinator}\n`;
+  description += `Date: ${date}\n`;
+  description += `Status: ${walkData.overallStatus === 'GREEN' ? 'GREEN - All Clear' : 'ISSUES FOUND'}\n`;
+  description += `\n`;
 
-  // Add metric statuses
-  description += `**Metric Results:**\n`;
+  // Issues section with bullets
+  if (hasIssues) {
+    description += `ISSUES REQUIRING ACTION:\n`;
+    description += `${'─'.repeat(30)}\n\n`;
+
+    walkData.issues.forEach((issue, index) => {
+      const metric = GREEN_STREAK_METRICS[issue.metric];
+
+      description += `${index + 1}. ${metric?.name || issue.metric} - ${issue.stopName}\n`;
+      description += `   Check: ${issue.question}\n`;
+      description += `   Issue: ${issue.description}\n`;
+      if (metric?.escalation) {
+        description += `   Escalate to: ${metric.escalation}\n`;
+      }
+      description += `\n`;
+    });
+  } else {
+    description += `No issues found. Green Streak intact!\n`;
+  }
+
+  // Metric summary
+  description += `\nMETRIC SUMMARY:\n`;
+  description += `${'─'.repeat(30)}\n`;
   Object.entries(walkData.metricStatuses || {}).forEach(([metricId, status]) => {
     const metric = GREEN_STREAK_METRICS[metricId];
     const icon = status === 'GREEN' ? '✓' : '✗';
     description += `${icon} ${metric?.name || metricId}: ${status}\n`;
   });
 
-  // Add rooms checked
-  if (walkData.roomSelections) {
-    description += `\n**Spaces Checked:**\n`;
-    if (walkData.roomSelections.learning?.length > 0) {
-      description += `Learning Spaces: ${walkData.roomSelections.learning.join(', ')}\n`;
-    }
-    if (walkData.roomSelections.restroom?.length > 0) {
-      description += `Restrooms: ${walkData.roomSelections.restroom.join(', ')}\n`;
-    }
-  }
-
-  // Add issues summary
-  if (walkData.totalIssues > 0) {
-    description += `\n**Issues Found:** ${walkData.totalIssues}\n`;
-    description += `(See separate tasks for each issue)\n`;
-  }
-
   const priority = walkData.overallStatus === 'GREEN' ? 'Normal' : 'High';
-
-  return createWrikeTask(folderId, {
-    title,
-    description,
-    priority
-  });
-}
-
-/**
- * Submit a Green Streak issue to Wrike
- */
-async function submitGreenStreakIssue(issue, walkData, folderId) {
-  const metric = GREEN_STREAK_METRICS[issue.metric];
-  const date = new Date(walkData.date || Date.now()).toLocaleDateString();
-
-  const title = `[${walkData.campus}] Green Streak Issue: ${metric?.name || issue.metric} - ${issue.stopName}`;
-
-  let description = `**Green Streak Walk Issue**\n\n`;
-  description += `**Campus:** ${walkData.campus}\n`;
-  description += `**Coordinator:** ${walkData.coordinator}\n`;
-  description += `**Date:** ${date}\n\n`;
-
-  description += `**Metric:** ${metric?.name || issue.metric}\n`;
-  description += `**Location:** ${issue.stopName}`;
-  if (issue.roomName) {
-    description += ` - ${issue.roomName}`;
-  }
-  description += `\n\n`;
-
-  description += `**Check:** ${issue.question}\n\n`;
-  description += `**Issue Description:**\n${issue.description}\n`;
-
-  if (metric?.escalation) {
-    description += `\n**Escalate to:** ${metric.escalation}\n`;
-  }
 
   const task = await createWrikeTask(folderId, {
     title,
     description,
-    priority: 'High'
+    priority
   });
 
-  // Add photos as comments if present
-  if (task && issue.photos && issue.photos.length > 0) {
-    for (let i = 0; i < issue.photos.length; i++) {
-      const photo = issue.photos[i];
-      const photoUrl = photo.url || photo;
-      if (photoUrl && !photoUrl.startsWith('data:')) {
-        await addWrikeComment(task.id, `Photo ${i + 1}:\n${photoUrl}`);
+  // Add photo links as a single comment if any issues have photos
+  if (task && hasIssues) {
+    const photosToAdd = [];
+    walkData.issues.forEach((issue, idx) => {
+      if (issue.photos && issue.photos.length > 0) {
+        issue.photos.forEach((photo, photoIdx) => {
+          const photoUrl = photo.url || photo;
+          if (photoUrl && !photoUrl.startsWith('data:')) {
+            photosToAdd.push(`Issue ${idx + 1}, Photo ${photoIdx + 1}: ${photoUrl}`);
+          }
+        });
       }
+    });
+
+    if (photosToAdd.length > 0) {
+      await addWrikeComment(task.id, `Photos:\n${photosToAdd.join('\n')}`);
     }
   }
 
