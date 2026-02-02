@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FURNITURE_ZONES, FURNITURE_RAG_RULES } from '../data/furnitureZones';
 import { saveFurnitureAudit } from '../supabase/furnitureService';
-import { submitChecklistIssuesToWrike, isCampusWrikeEnabled } from '../services/wrikeService';
+import { createConsolidatedChecklistTask, isCampusWrikeEnabled } from '../services/wrikeService';
 
 export const FurnitureSummary = ({ furnitureChecklist }) => {
   const navigate = useNavigate();
@@ -58,18 +58,28 @@ export const FurnitureSummary = ({ furnitureChecklist }) => {
       const auditData = furnitureChecklist.getChecklistData();
       await saveFurnitureAudit(auditData);
 
-      // Submit issues to Wrike if campus is configured
-      if (issues.length > 0 && isCampusWrikeEnabled(campus)) {
+      // Submit to Wrike as consolidated task
+      if (isCampusWrikeEnabled(campus)) {
         try {
-          console.log('[FurnitureSummary] Submitting issues to Wrike...');
-          await submitChecklistIssuesToWrike(
-            issues,
-            campus,
-            { name: auditor, email: auditorEmail }
-          );
-          console.log('[FurnitureSummary] Wrike submission complete');
+          console.log('[Furniture Checklist] Creating consolidated Wrike task...');
+          const formattedIssues = issues.map(issue => ({
+            category: issue.instantRed ? '🔴 Instant Red' : 'Issue',
+            section: issue.section,
+            check: issue.checkText,
+            description: issue.explanation || 'Issue found',
+            photos: issue.photos || []
+          }));
+          await createConsolidatedChecklistTask({
+            checklistType: 'FURNITURE',
+            campusName: campus,
+            auditorName: auditor,
+            auditorEmail: auditorEmail,
+            issues: formattedIssues,
+            date: new Date().toLocaleDateString()
+          });
+          console.log('[Furniture Checklist] Wrike task created');
         } catch (wrikeError) {
-          console.error('[FurnitureSummary] Wrike submission failed:', wrikeError);
+          console.error('[Furniture Checklist] Wrike error:', wrikeError);
         }
       }
 

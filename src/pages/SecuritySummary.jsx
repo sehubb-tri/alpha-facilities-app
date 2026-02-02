@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SECURITY_ZONES, SECURITY_RAG_RULES } from '../data/securityZones';
 import { saveSecurityAudit } from '../supabase/securityService';
-import { submitChecklistIssuesToWrike, isCampusWrikeEnabled } from '../services/wrikeService';
+import { createConsolidatedChecklistTask, isCampusWrikeEnabled } from '../services/wrikeService';
 
 export const SecuritySummary = ({ securityChecklist }) => {
   const navigate = useNavigate();
@@ -58,18 +58,28 @@ export const SecuritySummary = ({ securityChecklist }) => {
       const auditData = securityChecklist.getChecklistData();
       await saveSecurityAudit(auditData);
 
-      // Submit issues to Wrike if campus is configured
-      if (issues.length > 0 && isCampusWrikeEnabled(campus)) {
+      // Submit to Wrike as consolidated task
+      if (isCampusWrikeEnabled(campus)) {
         try {
-          console.log('[SecuritySummary] Submitting issues to Wrike...');
-          await submitChecklistIssuesToWrike(
-            issues,
-            campus,
-            { name: auditor, email: auditorEmail }
-          );
-          console.log('[SecuritySummary] Wrike submission complete');
+          console.log('[SecuritySummary] Creating consolidated Wrike task...');
+          const formattedIssues = issues.map(issue => ({
+            category: issue.instantRed ? '🔴 Instant Red' : 'Issue',
+            section: issue.section,
+            check: issue.checkText,
+            description: issue.explanation || 'Issue found',
+            photos: issue.photos || []
+          }));
+          await createConsolidatedChecklistTask({
+            checklistType: 'Security Checklist',
+            campusName: campus,
+            auditorName: auditor,
+            auditorEmail: auditorEmail,
+            issues: formattedIssues,
+            date: new Date().toLocaleDateString()
+          });
+          console.log('[SecuritySummary] Wrike task created');
         } catch (wrikeError) {
-          console.error('[SecuritySummary] Wrike submission failed:', wrikeError);
+          console.error('[SecuritySummary] Wrike error:', wrikeError);
         }
       }
 

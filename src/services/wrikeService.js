@@ -55,6 +55,10 @@ export const getWrikeFolderForCampus = (campusName) => {
  * @returns {boolean}
  */
 export const isCampusWrikeEnabled = (campusName) => {
+  // In testing mode, all campuses are enabled
+  if (TESTING_MODE) {
+    return true;
+  }
   return !!CAMPUS_FOLDER_MAP[campusName];
 };
 
@@ -200,7 +204,181 @@ export const attachUrlToTask = async (taskId, url, filename = 'photo.jpg') => {
 };
 
 // ============================================
-// HIGH-LEVEL INTEGRATION FUNCTIONS
+// CONSOLIDATED TASK FUNCTIONS (NEW FORMAT)
+// ============================================
+
+/**
+ * Create a consolidated Wrike task for any checklist type
+ * @param {object} options - Task options
+ * @param {string} options.checklistType - Type of checklist (e.g., "Ops Audit", "Security", "Food Safety")
+ * @param {string} options.campusName - Campus name
+ * @param {string} options.auditorName - Auditor name
+ * @param {string} options.auditorEmail - Auditor email
+ * @param {array} options.issues - Array of issues with { category, section, check, description, photos }
+ * @param {string} options.date - Date string
+ * @returns {object|null} - Created task or null
+ */
+export const createConsolidatedChecklistTask = async (options) => {
+  const { checklistType, campusName, auditorName, auditorEmail, issues, date } = options;
+
+  const folderId = getWrikeFolderForCampus(campusName);
+  if (!folderId) {
+    console.log('[Wrike] Campus not configured:', campusName);
+    return null;
+  }
+
+  const dateStr = date || new Date().toLocaleDateString();
+  const hasIssues = issues && issues.length > 0;
+  const issueCount = hasIssues ? `${issues.length} issue${issues.length !== 1 ? 's' : ''}` : 'All Clear';
+
+  const title = `[${campusName}] ${checklistType} - ${dateStr} (${issueCount})`;
+
+  // Build HTML description
+  let description = '';
+  description += `<b>Checklist:</b> ${checklistType}<br>`;
+  description += `<b>Campus:</b> ${campusName}<br>`;
+  description += `<b>Auditor:</b> ${auditorName}${auditorEmail ? ` (${auditorEmail})` : ''}<br>`;
+  description += `<b>Date:</b> ${dateStr}<br>`;
+  description += `<b>Status:</b> ${hasIssues ? '🔴 ISSUES FOUND' : '🟢 ALL CLEAR'}<br>`;
+  description += `<br><hr><br>`;
+
+  if (hasIssues) {
+    description += `<h3>Issues Requiring Action</h3>`;
+    description += `<ol>`;
+
+    issues.forEach((issue) => {
+      description += `<li>`;
+      if (issue.category) {
+        description += `<b>${issue.category}</b>`;
+        if (issue.section) description += ` - ${issue.section}`;
+        description += `<br>`;
+      }
+      if (issue.check) {
+        description += `<b>Check:</b> ${issue.check}<br>`;
+      }
+      if (issue.description) {
+        description += `<b>Issue:</b> ${issue.description}<br>`;
+      }
+      if (issue.location) {
+        description += `<b>Location:</b> ${issue.location}<br>`;
+      }
+      if (issue.escalateTo) {
+        description += `<b>Escalate to:</b> ${issue.escalateTo}<br>`;
+      }
+      if (issue.photos && issue.photos.length > 0) {
+        description += `<b>Photos:</b> ${issue.photos.length} attached<br>`;
+      }
+      description += `</li>`;
+    });
+
+    description += `</ol>`;
+  } else {
+    description += `<h3>✅ All checks passed!</h3>`;
+  }
+
+  const priority = hasIssues ? 'High' : 'Normal';
+
+  try {
+    const task = await createWrikeTask(folderId, { title, description, priority });
+
+    // Attach photos
+    if (task && hasIssues) {
+      let photoIndex = 0;
+      for (const issue of issues) {
+        if (issue.photos && issue.photos.length > 0) {
+          for (const photo of issue.photos) {
+            const photoUrl = photo.url || photo;
+            if (photoUrl && !photoUrl.startsWith('data:')) {
+              photoIndex++;
+              try {
+                const filename = `${checklistType}_${issue.category || 'issue'}_${photoIndex}.jpg`.replace(/[^a-zA-Z0-9._-]/g, '_');
+                await attachUrlToTask(task.id, photoUrl, filename);
+              } catch (e) {
+                console.error('[Wrike] Failed to attach photo:', e);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return task;
+  } catch (error) {
+    console.error('[Wrike] Error creating consolidated task:', error);
+    throw error;
+  }
+};
+
+/**
+ * Create a Wrike task for a "See It, Report It" submission
+ * @param {object} report - Report data
+ * @param {string} campusName - Campus name
+ * @returns {object|null} - Created task or null
+ */
+export const createReportTask = async (report, campusName) => {
+  const folderId = getWrikeFolderForCampus(campusName);
+  if (!folderId) {
+    console.log('[Wrike] Campus not configured:', campusName);
+    return null;
+  }
+
+  const dateStr = new Date().toLocaleDateString();
+  const urgentTag = report.urgent ? '🚨 URGENT - ' : '';
+
+  const title = `[${campusName}] ${urgentTag}Report: ${report.category} - ${report.location || 'No location'}`;
+
+  let description = '';
+  description += `<b>Report Type:</b> See It, Report It<br>`;
+  description += `<b>Campus:</b> ${campusName}<br>`;
+  description += `<b>Category:</b> ${report.category}<br>`;
+  description += `<b>Location:</b> ${report.location || 'Not specified'}<br>`;
+  description += `<b>Urgent:</b> ${report.urgent ? '🚨 YES' : 'No'}<br>`;
+  description += `<b>Date:</b> ${dateStr}<br>`;
+
+  if (report.reporterName) {
+    description += `<b>Reporter:</b> ${report.reporterName}`;
+    if (report.reporterEmail) description += ` (${report.reporterEmail})`;
+    description += `<br>`;
+  }
+
+  description += `<br><hr><br>`;
+
+  description += `<h3>Description</h3>`;
+  description += `<p>${report.description || report.note || 'No description provided'}</p>`;
+
+  if (report.photo || (report.photos && report.photos.length > 0)) {
+    description += `<br><b>Photos:</b> Attached<br>`;
+  }
+
+  const priority = report.urgent ? 'High' : 'Normal';
+
+  try {
+    const task = await createWrikeTask(folderId, { title, description, priority });
+
+    // Attach photos
+    if (task) {
+      const photos = report.photos || (report.photo ? [report.photo] : []);
+      for (let i = 0; i < photos.length; i++) {
+        const photoUrl = photos[i]?.url || photos[i];
+        if (photoUrl && !photoUrl.startsWith('data:')) {
+          try {
+            await attachUrlToTask(task.id, photoUrl, `report_photo_${i + 1}.jpg`);
+          } catch (e) {
+            console.error('[Wrike] Failed to attach photo:', e);
+          }
+        }
+      }
+    }
+
+    return task;
+  } catch (error) {
+    console.error('[Wrike] Error creating report task:', error);
+    throw error;
+  }
+};
+
+// ============================================
+// HIGH-LEVEL INTEGRATION FUNCTIONS (LEGACY)
 // ============================================
 
 /**

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BG_ZONES, BG_ZONE_ORDER, SLA_TIERS } from '../data/bgZones';
-import { submitChecklistIssuesToWrike, isCampusWrikeEnabled } from '../services/wrikeService';
+import { createConsolidatedChecklistTask, isCampusWrikeEnabled } from '../services/wrikeService';
 
 export const BGSummary = ({ bgWalkthrough }) => {
   const navigate = useNavigate();
@@ -72,25 +72,28 @@ export const BGSummary = ({ bgWalkthrough }) => {
   const handleComplete = async () => {
     setIsSubmitting(true);
     try {
-      // Submit issues to Wrike if campus is configured
-      if (issues.length > 0 && isCampusWrikeEnabled(campus)) {
+      // Submit to Wrike as consolidated task
+      if (isCampusWrikeEnabled(campus)) {
         try {
-          console.log('[BGSummary] Submitting issues to Wrike...');
-          // Map BG issues to include instantRed based on tier (Tier 1 = critical)
-          const mappedIssues = issues.map(issue => ({
-            ...issue,
-            instantRed: issue.tier === 1,
-            checkText: issue.description || issue.category,
-            section: `Tier ${issue.tier} - ${issue.zone || 'General'}`
+          console.log('[B&G Walkthrough] Creating consolidated Wrike task...');
+          const formattedIssues = issues.map(issue => ({
+            category: issue.tier === 1 ? '🔴 Instant Red' : 'Issue',
+            section: `Tier ${issue.tier} - ${issue.zone || 'General'}`,
+            check: issue.description || issue.category,
+            description: issue.observation || 'Issue found',
+            photos: issue.photos || []
           }));
-          await submitChecklistIssuesToWrike(
-            mappedIssues,
-            campus,
-            { name: auditor, email: auditorEmail }
-          );
-          console.log('[BGSummary] Wrike submission complete');
+          await createConsolidatedChecklistTask({
+            checklistType: 'BG_WALKTHROUGH',
+            campusName: campus,
+            auditorName: auditor,
+            auditorEmail: auditorEmail,
+            issues: formattedIssues,
+            date: new Date().toLocaleDateString()
+          });
+          console.log('[B&G Walkthrough] Wrike task created');
         } catch (wrikeError) {
-          console.error('[BGSummary] Wrike submission failed:', wrikeError);
+          console.error('[B&G Walkthrough] Wrike error:', wrikeError);
         }
       }
       navigate('/bg/complete');

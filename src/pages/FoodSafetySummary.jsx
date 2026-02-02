@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FOOD_SAFETY_ZONES, FOOD_SAFETY_RAG_RULES } from '../data/foodSafetyZones';
 import { saveFoodSafetyAudit } from '../supabase/foodSafetyService';
-import { submitChecklistIssuesToWrike, isCampusWrikeEnabled } from '../services/wrikeService';
+import { createConsolidatedChecklistTask, isCampusWrikeEnabled } from '../services/wrikeService';
 
 export const FoodSafetySummary = ({ foodSafetyChecklist }) => {
   const navigate = useNavigate();
@@ -61,18 +61,28 @@ export const FoodSafetySummary = ({ foodSafetyChecklist }) => {
       const auditData = foodSafetyChecklist.getChecklistData();
       await saveFoodSafetyAudit(auditData);
 
-      // Submit issues to Wrike if campus is configured
-      if (issues.length > 0 && isCampusWrikeEnabled(campus)) {
+      // Submit to Wrike as consolidated task
+      if (isCampusWrikeEnabled(campus)) {
         try {
-          console.log('[FoodSafetySummary] Submitting issues to Wrike...');
-          await submitChecklistIssuesToWrike(
-            issues,
-            campus,
-            { name: auditor, email: auditorEmail }
-          );
-          console.log('[FoodSafetySummary] Wrike submission complete');
+          console.log('[Food Safety Checklist] Creating consolidated Wrike task...');
+          const formattedIssues = issues.map(issue => ({
+            category: issue.instantRed ? '🔴 Instant Red' : 'Issue',
+            section: issue.section,
+            check: issue.checkText,
+            description: issue.explanation || 'Issue found',
+            photos: issue.photos || []
+          }));
+          await createConsolidatedChecklistTask({
+            checklistType: 'FOOD_SAFETY',
+            campusName: campus,
+            auditorName: auditor,
+            auditorEmail: auditorEmail,
+            issues: formattedIssues,
+            date: new Date().toLocaleDateString()
+          });
+          console.log('[Food Safety Checklist] Wrike task created');
         } catch (wrikeError) {
-          console.error('[FoodSafetySummary] Wrike submission failed:', wrikeError);
+          console.error('[Food Safety Checklist] Wrike error:', wrikeError);
         }
       }
 

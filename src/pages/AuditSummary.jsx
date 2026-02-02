@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { saveAudit } from '../supabase/services';
 import { useI18n } from '../i18n';
-import { submitChecklistIssuesToWrike, isCampusWrikeEnabled } from '../services/wrikeService';
+import { createConsolidatedChecklistTask, isCampusWrikeEnabled } from '../services/wrikeService';
 
 export const AuditSummary = ({ audit }) => {
   const navigate = useNavigate();
@@ -96,35 +96,35 @@ export const AuditSummary = ({ audit }) => {
       console.log('[Wrike Debug] Campus:', campusName, 'Enabled:', wrikeEnabled);
       console.log('[Wrike Debug] Defects:', allDefects.length, 'B&G Alerts:', mappedAlerts.length, 'Total:', allIssues.length);
 
-      if (allIssues.length > 0 && campusName && wrikeEnabled) {
+      // Submit to Wrike as a single consolidated task
+      if (campusName && wrikeEnabled) {
         try {
-          console.log('[AuditSummary] Submitting', allIssues.length, 'issues to Wrike...');
-          const wrikeResults = await submitChecklistIssuesToWrike(
-            allIssues,
-            campusName,
-            { name: auditor, email: auditorEmail }
-          );
-          const successCount = wrikeResults.filter(r => r !== null).length;
-          const failCount = wrikeResults.filter(r => r === null).length;
-          console.log('[AuditSummary] Wrike submission complete:', successCount, 'success,', failCount, 'failed');
+          console.log('[AuditSummary] Creating consolidated Wrike task with', allIssues.length, 'issues...');
 
-          if (successCount === allIssues.length) {
-            alert('Wrike: Submitted ' + successCount + ' issues successfully!');
-          } else if (successCount > 0) {
-            alert('Wrike: ' + successCount + '/' + allIssues.length + ' issues submitted. ' + failCount + ' failed.');
-          } else {
-            alert('Wrike: All ' + allIssues.length + ' issues failed to submit. Check console for errors.');
+          // Map issues to the new format
+          const formattedIssues = allIssues.map(issue => ({
+            category: issue.instantRed ? '🔴 Critical' : 'Issue',
+            section: issue.section,
+            check: issue.checkText,
+            description: issue.explanation || 'Issue found',
+            photos: issue.photos || []
+          }));
+
+          const task = await createConsolidatedChecklistTask({
+            checklistType: 'Ops Audit',
+            campusName,
+            auditorName: auditor,
+            auditorEmail: auditorEmail,
+            issues: formattedIssues,
+            date: new Date().toLocaleDateString()
+          });
+
+          if (task) {
+            console.log('[AuditSummary] Wrike task created:', task.id);
           }
         } catch (wrikeError) {
           console.error('[AuditSummary] Wrike submission failed:', wrikeError);
-          alert('Wrike Error: ' + wrikeError.message);
         }
-      } else if (allIssues.length > 0 && !wrikeEnabled) {
-        // Debug alert to show why it's not submitting
-        console.log('[Wrike Debug] Wrike not enabled for campus:', campusName);
-        alert('Wrike not enabled for: ' + campusName);
-      } else if (allIssues.length === 0) {
-        console.log('[Wrike Debug] No issues to submit (all passed)');
       }
 
       navigate('/audit/complete');

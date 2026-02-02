@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../components/Header';
 import { MECHANICAL_ZONES, MECHANICAL_SECTIONS_SUMMARY, calculateZoneRating } from '../data/mechanicalZones';
-import { submitChecklistIssuesToWrike, isCampusWrikeEnabled } from '../services/wrikeService';
+import { createConsolidatedChecklistTask, isCampusWrikeEnabled } from '../services/wrikeService';
 
 export const MechanicalSummary = ({ mechanicalChecklist }) => {
   const navigate = useNavigate();
@@ -61,18 +61,28 @@ export const MechanicalSummary = ({ mechanicalChecklist }) => {
       // Complete the checklist and get the rating
       const { rating } = completeChecklist();
 
-      // Submit issues to Wrike if campus is configured
-      if (issues.length > 0 && isCampusWrikeEnabled(campus)) {
+      // Submit to Wrike as consolidated task
+      if (isCampusWrikeEnabled(campus)) {
         try {
-          console.log('[MechanicalSummary] Submitting issues to Wrike...');
-          await submitChecklistIssuesToWrike(
-            issues,
-            campus,
-            { name: auditor, email: auditorEmail }
-          );
-          console.log('[MechanicalSummary] Wrike submission complete');
+          console.log('[Mechanical Checklist] Creating consolidated Wrike task...');
+          const formattedIssues = issues.map(issue => ({
+            category: issue.instantRed ? '🔴 Instant Red' : 'Issue',
+            section: issue.section,
+            check: issue.checkText,
+            description: issue.explanation || 'Issue found',
+            photos: issue.photos || []
+          }));
+          await createConsolidatedChecklistTask({
+            checklistType: 'MECHANICAL',
+            campusName: campus,
+            auditorName: auditor,
+            auditorEmail: auditorEmail,
+            issues: formattedIssues,
+            date: new Date().toLocaleDateString()
+          });
+          console.log('[Mechanical Checklist] Wrike task created');
         } catch (wrikeError) {
-          console.error('[MechanicalSummary] Wrike submission failed:', wrikeError);
+          console.error('[Mechanical Checklist] Wrike error:', wrikeError);
         }
       }
 

@@ -1,8 +1,49 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { createReportTask, isCampusWrikeEnabled } from '../services/wrikeService';
 
 export const ReportComplete = ({ report }) => {
   const navigate = useNavigate();
-  const { campus, location, description, isEmergency, resetReport } = report;
+  const [wrikeStatus, setWrikeStatus] = useState(null); // 'sending', 'sent', 'error', 'skipped'
+  const { campus, location, description, isEmergency, category, photo, resetReport } = report;
+
+  // Submit to Wrike on mount
+  useEffect(() => {
+    const submitToWrike = async () => {
+      const campusName = campus?.name;
+      if (!campusName || !isCampusWrikeEnabled(campusName)) {
+        console.log('[Report] Wrike not enabled for campus:', campusName);
+        setWrikeStatus('skipped');
+        return;
+      }
+
+      setWrikeStatus('sending');
+      try {
+        console.log('[Report] Creating Wrike task...');
+        const task = await createReportTask({
+          category: category || 'General Issue',
+          location: location,
+          description: description,
+          urgent: isEmergency,
+          photo: photo,
+          reporterName: '', // Could add if available
+          reporterEmail: ''
+        }, campusName);
+
+        if (task) {
+          console.log('[Report] Wrike task created:', task.id);
+          setWrikeStatus('sent');
+        } else {
+          setWrikeStatus('error');
+        }
+      } catch (error) {
+        console.error('[Report] Wrike error:', error);
+        setWrikeStatus('error');
+      }
+    };
+
+    submitToWrike();
+  }, []);
 
   const handleDone = () => {
     resetReport();
@@ -35,9 +76,17 @@ export const ReportComplete = ({ report }) => {
       <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '8px' }}>
         {isEmergency ? 'Facilities Manager has been alerted' : 'Your report has been received'}
       </p>
-      <p style={{ fontSize: '16px', opacity: 0.8, marginBottom: '24px' }}>
+      <p style={{ fontSize: '16px', opacity: 0.8, marginBottom: '8px' }}>
         Added to recent history
       </p>
+      {wrikeStatus && (
+        <p style={{ fontSize: '14px', opacity: 0.7, marginBottom: '24px' }}>
+          {wrikeStatus === 'sending' && '⏳ Sending to Wrike...'}
+          {wrikeStatus === 'sent' && '✅ Sent to Wrike'}
+          {wrikeStatus === 'error' && '⚠️ Wrike sync failed'}
+          {wrikeStatus === 'skipped' && ''}
+        </p>
+      )}
 
       <div style={{
         backgroundColor: 'rgba(255, 255, 255, 0.2)',
