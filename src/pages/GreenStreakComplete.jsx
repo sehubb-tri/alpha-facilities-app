@@ -296,43 +296,41 @@ async function createConsolidatedWrikeTask(walkData, folderId) {
   const issueCount = hasIssues ? `${walkData.issues.length} issue${walkData.issues.length !== 1 ? 's' : ''}` : 'All Clear';
   const title = `[${walkData.campus}] Green Streak Walk - ${date} (${issueCount})`;
 
-  // Build clean description
+  // Build description with markdown formatting (Wrike supports markdown)
   let description = '';
 
   // Header info
-  description += `Campus: ${walkData.campus}\n`;
-  description += `Coordinator: ${walkData.coordinator}\n`;
-  description += `Date: ${date}\n`;
-  description += `Status: ${walkData.overallStatus === 'GREEN' ? 'GREEN - All Clear' : 'ISSUES FOUND'}\n`;
-  description += `\n`;
+  description += `**Campus:** ${walkData.campus}  \n`;
+  description += `**Coordinator:** ${walkData.coordinator}  \n`;
+  description += `**Date:** ${date}  \n`;
+  description += `**Status:** ${walkData.overallStatus === 'GREEN' ? '🟢 GREEN - All Clear' : '🔴 ISSUES FOUND'}  \n`;
+  description += `\n---\n\n`;
 
-  // Issues section with bullets
+  // Issues section
   if (hasIssues) {
-    description += `ISSUES REQUIRING ACTION:\n`;
-    description += `${'─'.repeat(30)}\n\n`;
+    description += `## Issues Requiring Action\n\n`;
 
     walkData.issues.forEach((issue, index) => {
       const metric = GREEN_STREAK_METRICS[issue.metric];
 
-      description += `${index + 1}. ${metric?.name || issue.metric} - ${issue.stopName}\n`;
-      description += `   Check: ${issue.question}\n`;
-      description += `   Issue: ${issue.description}\n`;
+      description += `### ${index + 1}. ${metric?.name || issue.metric} - ${issue.stopName}\n`;
+      description += `- **Check:** ${issue.question}  \n`;
+      description += `- **Issue:** ${issue.description}  \n`;
       if (metric?.escalation) {
-        description += `   Escalate to: ${metric.escalation}\n`;
+        description += `- **Escalate to:** ${metric.escalation}  \n`;
       }
       description += `\n`;
     });
   } else {
-    description += `No issues found. Green Streak intact!\n`;
+    description += `## ✅ No issues found. Green Streak intact!\n\n`;
   }
 
   // Metric summary
-  description += `\nMETRIC SUMMARY:\n`;
-  description += `${'─'.repeat(30)}\n`;
+  description += `---\n\n## Metric Summary\n\n`;
   Object.entries(walkData.metricStatuses || {}).forEach(([metricId, status]) => {
     const metric = GREEN_STREAK_METRICS[metricId];
-    const icon = status === 'GREEN' ? '✓' : '✗';
-    description += `${icon} ${metric?.name || metricId}: ${status}\n`;
+    const icon = status === 'GREEN' ? '✅' : '❌';
+    description += `- ${icon} **${metric?.name || metricId}:** ${status}  \n`;
   });
 
   const priority = walkData.overallStatus === 'GREEN' ? 'Normal' : 'High';

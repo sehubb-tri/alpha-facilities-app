@@ -98,15 +98,21 @@ export const GreenStreakWalk = ({ greenStreakWalk, camera }) => {
     }
   };
 
-  const handleAddPhoto = async () => {
-    try {
-      const photoData = await camera.openCamera(`Issue photo`);
-      if (photoData) {
-        setIssuePhotos(prev => [...prev, photoData]);
-      }
-    } catch (error) {
-      console.error('Error taking photo:', error);
-    }
+  const handleAddPhoto = () => {
+    // openCamera takes: (callback, labelText, folder)
+    // callback receives the Supabase URL after upload
+    camera.openCamera(
+      (photoUrl) => {
+        if (photoUrl) {
+          console.log('[GreenStreakWalk] Photo captured:', photoUrl);
+          setIssuePhotos(prev => [...prev, photoUrl]);
+        } else {
+          console.log('[GreenStreakWalk] Photo capture cancelled or failed');
+        }
+      },
+      'Issue photo',
+      'green-streak-issues'
+    );
   };
 
   const handleRemovePhoto = (index) => {
