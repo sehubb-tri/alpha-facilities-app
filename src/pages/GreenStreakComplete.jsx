@@ -321,6 +321,17 @@ async function createConsolidatedWrikeTask(walkData, folderId) {
       if (metric?.escalation) {
         description += `<b>Escalate to:</b> ${metric.escalation}<br>`;
       }
+      // Add inline photo previews
+      if (issue.photos && issue.photos.length > 0) {
+        description += `<br><b>Photos:</b><br>`;
+        issue.photos.forEach((photo) => {
+          const photoUrl = photo.url || photo;
+          if (photoUrl && !photoUrl.startsWith('data:')) {
+            description += `<a href="${photoUrl}"><img src="${photoUrl}" width="200" style="margin:5px; border-radius:4px;"></a> `;
+          }
+        });
+        description += `<br>`;
+      }
       description += `</li>`;
     });
 
@@ -348,24 +359,6 @@ async function createConsolidatedWrikeTask(walkData, folderId) {
     priority
   });
 
-  // Add photo links as a single comment if any issues have photos
-  if (task && hasIssues) {
-    const photosToAdd = [];
-    walkData.issues.forEach((issue, idx) => {
-      if (issue.photos && issue.photos.length > 0) {
-        issue.photos.forEach((photo, photoIdx) => {
-          const photoUrl = photo.url || photo;
-          if (photoUrl && !photoUrl.startsWith('data:')) {
-            photosToAdd.push(`Issue ${idx + 1}, Photo ${photoIdx + 1}: ${photoUrl}`);
-          }
-        });
-      }
-    });
-
-    if (photosToAdd.length > 0) {
-      await addWrikeComment(task.id, `Photos:\n${photosToAdd.join('\n')}`);
-    }
-  }
-
+  // Photos are now embedded directly in the description as inline images
   return task;
 }
