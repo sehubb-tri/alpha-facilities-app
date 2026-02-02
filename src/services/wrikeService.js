@@ -441,7 +441,24 @@ if (typeof window !== 'undefined') {
     listAllFolders,
     getFolderFromPermalink,
     testWrikeConnection,
-    getWrikeFolderInfo
+    getWrikeFolderInfo,
+    createWrikeTask,
+    // Quick test function to create a test task
+    createTestTask: async () => {
+      console.log('[Wrike] Creating test task...');
+      try {
+        const task = await createWrikeTask('MQAAAAED7kv2', {
+          title: '[TEST] Manual task creation test - ' + new Date().toLocaleTimeString(),
+          description: 'Testing if task creation works directly from console',
+          priority: 'Normal'
+        });
+        console.log('[Wrike] ✅ Test task created successfully!', task);
+        return task;
+      } catch (error) {
+        console.error('[Wrike] ❌ Test task creation failed:', error);
+        throw error;
+      }
+    }
   };
   console.log('[Wrike] Debug functions available: window.wrikeDebug.listAllFolders(), window.wrikeDebug.getFolderFromPermalink("4360915958")');
 

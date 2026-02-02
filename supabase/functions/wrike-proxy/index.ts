@@ -1,98 +1,93 @@
 // Supabase Edge Function: wrike-proxy
-// Securely proxies Wrike API requests from the frontend
-// The Wrike API token is stored as a Supabase secret, never exposed to clients
+// Proxies requests to Wrike API to avoid CORS issues and keep API token secure
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+
+const WRIKE_API_BASE = "https://www.wrike.com/api/v4";
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
-
-const WRIKE_API_BASE = 'https://www.wrike.com/api/v4'
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
 
 serve(async (req) => {
   // Handle CORS preflight
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    // Get Wrike API token from environment (Supabase secret)
-    const WRIKE_API_TOKEN = Deno.env.get('WRIKE_API_TOKEN')
+    // Get Wrike API token from environment
+    const WRIKE_API_TOKEN = Deno.env.get("WRIKE_API_TOKEN");
 
     if (!WRIKE_API_TOKEN) {
-      console.error('WRIKE_API_TOKEN not configured in Supabase secrets')
+      console.error("WRIKE_API_TOKEN not configured");
       return new Response(
-        JSON.stringify({ error: 'Wrike integration not configured. Please contact your administrator.' }),
-        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+        JSON.stringify({ error: "Wrike API token not configured" }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
     // Parse request body
-    const { endpoint, method = 'GET', body } = await req.json()
+    const { endpoint, method = "GET", body } = await req.json();
 
     if (!endpoint) {
       return new Response(
-        JSON.stringify({ error: 'No endpoint provided' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
+        JSON.stringify({ error: "Missing endpoint parameter" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
-    // Validate endpoint (basic security check)
-    if (!endpoint.startsWith('/')) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid endpoint format' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      )
-    }
+    console.log(`[wrike-proxy] ${method} ${endpoint}`);
 
-    // Build the Wrike API URL
-    const url = `${WRIKE_API_BASE}${endpoint}`
-    console.log(`[Wrike Proxy] ${method} ${url}`)
-
-    // Make the request to Wrike
-    const wrikeResponse = await fetch(url, {
+    // Build Wrike API request
+    const wrikeUrl = `${WRIKE_API_BASE}${endpoint}`;
+    const wrikeOptions: RequestInit = {
       method,
       headers: {
-        'Authorization': `Bearer ${WRIKE_API_TOKEN}`,
-        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${WRIKE_API_TOKEN}`,
+        "Content-Type": "application/json",
       },
-      ...(body && method !== 'GET' ? { body: JSON.stringify(body) } : {}),
-    })
+    };
 
-    // Get response data
-    const responseData = await wrikeResponse.json()
-
-    if (!wrikeResponse.ok) {
-      console.error('[Wrike Proxy] API error:', wrikeResponse.status, JSON.stringify(responseData))
-      // Return 200 with error details so frontend can see the actual Wrike error
-      return new Response(
-        JSON.stringify({
-          error: responseData.errorDescription || responseData.error || `Wrike API error: ${wrikeResponse.status}`,
-          wrikeStatus: wrikeResponse.status,
-          wrikeError: responseData
-        }),
-        {
-          status: 200, // Return 200 so supabase client gives us the body
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      )
+    // Add body for POST/PUT requests
+    if (body && (method === "POST" || method === "PUT" || method === "PATCH")) {
+      wrikeOptions.body = JSON.stringify(body);
     }
 
-    console.log('[Wrike Proxy] Success:', endpoint)
+    // Make request to Wrike API
+    const wrikeResponse = await fetch(wrikeUrl, wrikeOptions);
+    const wrikeData = await wrikeResponse.json();
 
-    // Return the Wrike response
+    console.log(`[wrike-proxy] Response status: ${wrikeResponse.status}`);
+
+    // Check for Wrike API errors
+    if (!wrikeResponse.ok) {
+      console.error("[wrike-proxy] Wrike API error:", wrikeData);
+      return new Response(
+        JSON.stringify({
+          error: wrikeData.errorDescription || wrikeData.error || "Wrike API request failed",
+          details: wrikeData
+        }),
+        {
+          status: wrikeResponse.status,
+          headers: { ...corsHeaders, "Content-Type": "application/json" }
+        }
+      );
+    }
+
+    // Return successful response
     return new Response(
-      JSON.stringify(responseData),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    )
+      JSON.stringify(wrikeData),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
 
   } catch (error) {
-    console.error('[Wrike Proxy] Function error:', error)
+    console.error("[wrike-proxy] Error:", error);
     return new Response(
-      JSON.stringify({ error: error.message || 'An unexpected error occurred' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    )
+      JSON.stringify({ error: error.message || "Internal server error" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   }
-})
+});

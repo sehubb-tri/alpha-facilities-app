@@ -1,130 +1,92 @@
 # Wrike Integration Setup Guide
 
-This guide will help you set up automatic Wrike ticket creation when audits are completed.
+## Step 1: Deploy the Edge Function
 
-## Prerequisites
+From your project root, run:
 
-1. Wrike account with API access
-2. Supabase project with Edge Functions enabled
-3. (Optional) Resend account for email notifications
-
-## Step 1: Get Your Wrike API Token
-
-1. Log into Wrike
-2. Go to **Account Settings** > **Apps & Integrations** > **API**
-3. Click **"+ Create new"** under Permanent Access Tokens
-4. Give it a name like "Alpha Facilities App"
-5. Copy the token immediately (you won't see it again!)
-
-## Step 2: Get Your Wrike Folder ID
-
-1. Navigate to the folder/project in Wrike where you want intake tickets created
-2. Look at the URL in your browser
-3. The folder ID is the string after `id=` in the URL
-   - Example: `https://www.wrike.com/open.htm?id=IEAAAAAQAAAAAA` → ID is `IEAAAAAQAAAAAA`
-
-## Step 3: Set Up Supabase Edge Function
-
-### Install Supabase CLI (if not already installed)
 ```bash
+# If you haven't already, install Supabase CLI
 npm install -g supabase
-```
 
-### Login to Supabase
-```bash
+# Login to Supabase
 supabase login
+
+# Link to your project (get project ref from Supabase dashboard URL)
+supabase link --project-ref YOUR_PROJECT_REF
+
+# Deploy the wrike-proxy function
+supabase functions deploy wrike-proxy
 ```
 
-### Link to your project
+## Step 2: Set the Wrike API Token
+
+In the Supabase Dashboard:
+
+1. Go to your project
+2. Click **Edge Functions** in the left sidebar
+3. Click on **wrike-proxy**
+4. Go to **Settings** tab
+5. Under **Environment Variables**, add:
+   - Name: `WRIKE_API_TOKEN`
+   - Value: `YOUR_WRIKE_PERMANENT_ACCESS_TOKEN`
+
+Or via CLI:
 ```bash
-cd alpha-facilities-app
-supabase link --project-ref wybxbrutuoohiujjyfry
+supabase secrets set WRIKE_API_TOKEN=YOUR_WRIKE_PERMANENT_ACCESS_TOKEN
 ```
 
-### Set secrets
-```bash
-# Wrike credentials (required for ticket creation)
-supabase secrets set WRIKE_API_TOKEN=your_wrike_token_here
-supabase secrets set WRIKE_FOLDER_ID=your_folder_id_here
+## Step 3: Test the Connection
 
-# Email credentials (optional, for email notifications)
-supabase secrets set RESEND_API_KEY=your_resend_api_key
-supabase secrets set FROM_EMAIL=noreply@yourdomain.com
+In your app's browser console, run:
+```javascript
+window.wrikeDebug.testWrikeConnection()
 ```
 
-### Deploy the Edge Function
-```bash
-supabase functions deploy on-audit-complete
+You should see: `[Wrike] Connection test successful. User: YourFirstName`
+
+## Step 4: Configure Campus Folders
+
+Edit `src/services/wrikeService.js` and update `CAMPUS_FOLDER_MAP`:
+
+```javascript
+const CAMPUS_FOLDER_MAP = {
+  "Campus Name Here": "WRIKE_FOLDER_ID",
+  // Add more campuses...
+};
 ```
 
-## Step 4: Create Database Trigger
+### Finding Folder IDs
 
-Run this SQL in your Supabase SQL Editor to automatically call the function when audits are saved:
+1. In Wrike, open the target folder
+2. Copy the numeric ID from the URL (e.g., `4360915958`)
+3. In your app's browser console, run:
+   ```javascript
+   window.wrikeDebug.getFolderFromPermalink("4360915958")
+   ```
+4. Use the returned alphanumeric ID (e.g., `MQAAAAED7kv2`)
 
-```sql
--- Create the trigger function
-CREATE OR REPLACE FUNCTION notify_audit_complete()
-RETURNS TRIGGER AS $$
-BEGIN
-  -- Call the Edge Function
-  PERFORM net.http_post(
-    url := 'https://wybxbrutuoohiujjyfry.supabase.co/functions/v1/on-audit-complete',
-    headers := jsonb_build_object(
-      'Content-Type', 'application/json',
-      'Authorization', 'Bearer ' || current_setting('app.settings.service_role_key', true)
-    ),
-    body := jsonb_build_object('record', row_to_json(NEW))
-  );
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+## Step 5: Go Live
 
--- Create the trigger
-DROP TRIGGER IF EXISTS on_audit_insert ON audits;
-CREATE TRIGGER on_audit_insert
-  AFTER INSERT ON audits
-  FOR EACH ROW
-  EXECUTE FUNCTION notify_audit_complete();
+Once testing is complete, update `wrikeService.js`:
+
+```javascript
+// Change from:
+const TESTING_MODE = true;
+
+// To:
+const TESTING_MODE = false;
 ```
-
-## Step 5: Test the Integration
-
-1. Complete a test audit in the app
-2. Check your Wrike folder for the new task
-3. Check the auditor's email (if Resend is configured)
 
 ## Troubleshooting
 
-### Check Edge Function Logs
-```bash
-supabase functions logs on-audit-complete
-```
+**"Wrike API token not configured"**
+- The WRIKE_API_TOKEN secret isn't set. Check Supabase Edge Function settings.
 
-### Verify Secrets Are Set
-```bash
-supabase secrets list
-```
+**"CORS error"**
+- Make sure you deployed the edge function (not calling Wrike directly).
 
-### Test Function Manually
-You can test the function by calling it directly:
-```bash
-curl -X POST 'https://wybxbrutuoohiujjyfry.supabase.co/functions/v1/on-audit-complete' \
-  -H 'Authorization: Bearer YOUR_ANON_KEY' \
-  -H 'Content-Type: application/json' \
-  -d '{"record": {"id": "test", "campus": "Test Campus", "status": "RED", ...}}'
-```
+**"Folder not found"**
+- The folder ID might be wrong. Use `getFolderFromPermalink()` to get the correct v4 ID.
 
-## What Gets Created in Wrike
-
-When an audit is completed, a Wrike task is created with:
-- **Title**: `[STATUS] Campus Name - Daily QC Audit - Date`
-- **Description**: Full audit details including defects, condition alerts, and photo links
-- **Priority**: High for RED, Normal for AMBER, Low for GREEN
-
-## Email Notifications (Optional)
-
-If you set up Resend, the auditor will receive an email with:
-- Status summary
-- Audit details
-- Defect count
-- Photo count
+**"Unauthorized"**
+- Your Wrike API token may be invalid or expired. Generate a new one in Wrike settings.
