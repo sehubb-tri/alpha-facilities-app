@@ -6,12 +6,13 @@ import { CheckCircle, AlertTriangle, ArrowRight, Camera } from 'lucide-react';
 export const GreenStreakSummary = ({ greenStreakWalk }) => {
   const navigate = useNavigate();
 
-  // Redirect if no walk in progress
+  // Redirect if no walk in progress (but not if we just completed it)
   useEffect(() => {
-    if (!greenStreakWalk.isInProgress) {
+    // Don't redirect if the walk was just completed - let the navigation to /complete happen
+    if (!greenStreakWalk.isInProgress && !greenStreakWalk.isComplete) {
       navigate('/green-streak');
     }
-  }, [greenStreakWalk.isInProgress, navigate]);
+  }, [greenStreakWalk.isInProgress, greenStreakWalk.isComplete, navigate]);
 
   const status = calculateOverallStatus(greenStreakWalk.checkResults);
   const issues = greenStreakWalk.issues || [];
