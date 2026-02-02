@@ -45,23 +45,74 @@ serve(async (req) => {
     const wrikeUrl = `${WRIKE_API_BASE}${endpoint}`;
     let wrikeOptions: RequestInit;
 
-    // Handle attachment requests differently - they need form-data
+    // Handle attachment requests - download photo and upload as file bytes
     if (isAttachment && body?.url) {
-      console.log(`[wrike-proxy] Attaching from URL: ${body.url}`);
-      const formData = new FormData();
-      formData.append('url', body.url);
-      if (body.filename) {
-        formData.append('filename', body.filename);
-      }
+      console.log(`[wrike-proxy] Downloading photo from: ${body.url}`);
 
-      wrikeOptions = {
-        method,
-        headers: {
-          "Authorization": `Bearer ${WRIKE_API_TOKEN}`,
-          // Don't set Content-Type for FormData - browser sets it with boundary
-        },
-        body: formData,
-      };
+      try {
+        // Download the image first
+        const imageResponse = await fetch(body.url);
+        if (!imageResponse.ok) {
+          console.error(`[wrike-proxy] Failed to download image: ${imageResponse.status}`);
+          return new Response(
+            JSON.stringify({ error: `Failed to download image: ${imageResponse.status}` }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+
+        // Get the image as ArrayBuffer
+        const imageBuffer = await imageResponse.arrayBuffer();
+        const imageBlob = new Blob([imageBuffer], { type: imageResponse.headers.get('content-type') || 'image/jpeg' });
+
+        console.log(`[wrike-proxy] Downloaded image: ${imageBuffer.byteLength} bytes`);
+
+        // Create FormData with actual file content
+        const formData = new FormData();
+        const filename = body.filename || 'photo.jpg';
+        formData.append('file', imageBlob, filename);
+
+        wrikeOptions = {
+          method: 'POST',
+          headers: {
+            "Authorization": `Bearer ${WRIKE_API_TOKEN}`,
+            // Don't set Content-Type - let fetch set it with multipart boundary
+          },
+          body: formData,
+        };
+
+        // Make request to Wrike API
+        const wrikeResponse = await fetch(wrikeUrl, wrikeOptions);
+        const wrikeData = await wrikeResponse.json();
+
+        console.log(`[wrike-proxy] Attachment response status: ${wrikeResponse.status}`);
+
+        if (!wrikeResponse.ok) {
+          console.error("[wrike-proxy] Wrike attachment error:", wrikeData);
+          return new Response(
+            JSON.stringify({
+              error: wrikeData.errorDescription || wrikeData.error || "Wrike attachment failed",
+              details: wrikeData
+            }),
+            {
+              status: wrikeResponse.status,
+              headers: { ...corsHeaders, "Content-Type": "application/json" }
+            }
+          );
+        }
+
+        console.log(`[wrike-proxy] Attachment uploaded successfully`);
+        return new Response(
+          JSON.stringify(wrikeData),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+
+      } catch (fetchError) {
+        console.error("[wrike-proxy] Error fetching/uploading image:", fetchError);
+        return new Response(
+          JSON.stringify({ error: `Failed to process image: ${fetchError.message}` }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
     } else {
       // Regular JSON request
       wrikeOptions = {
