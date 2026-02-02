@@ -320,9 +320,15 @@ async function createConsolidatedWrikeTask(walkData, folderId) {
       if (metric?.escalation) {
         description += `<b>Escalate to:</b> ${metric.escalation}<br>`;
       }
-      // Note if photos are attached
+      // Include clickable photo links
       if (issue.photos && issue.photos.length > 0) {
-        description += `<b>Photos:</b> ${issue.photos.length} attached<br>`;
+        description += `<b>Photos:</b><br>`;
+        issue.photos.forEach((photo, idx) => {
+          const photoUrl = photo.url || photo;
+          if (photoUrl && !photoUrl.startsWith('data:')) {
+            description += `&nbsp;&nbsp;📷 <a href="${photoUrl}">Photo ${idx + 1}</a><br>`;
+          }
+        });
       }
       description += `</li>`;
     });

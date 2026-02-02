@@ -266,7 +266,13 @@ export const createConsolidatedChecklistTask = async (options) => {
         description += `<b>Escalate to:</b> ${issue.escalateTo}<br>`;
       }
       if (issue.photos && issue.photos.length > 0) {
-        description += `<b>Photos:</b> ${issue.photos.length} attached<br>`;
+        description += `<b>Photos:</b><br>`;
+        issue.photos.forEach((photo, idx) => {
+          const photoUrl = photo.url || photo;
+          if (photoUrl && !photoUrl.startsWith('data:')) {
+            description += `&nbsp;&nbsp;📷 <a href="${photoUrl}">Photo ${idx + 1}</a><br>`;
+          }
+        });
       }
       description += `</li>`;
     });
@@ -346,8 +352,16 @@ export const createReportTask = async (report, campusName) => {
   description += `<h3>Description</h3>`;
   description += `<p>${report.description || report.note || 'No description provided'}</p>`;
 
-  if (report.photo || (report.photos && report.photos.length > 0)) {
-    description += `<br><b>Photos:</b> Attached<br>`;
+  // Add photo links
+  const photos = report.photos || (report.photo ? [report.photo] : []);
+  if (photos.length > 0) {
+    description += `<br><b>Photos:</b><br>`;
+    photos.forEach((photo, idx) => {
+      const photoUrl = photo.url || photo;
+      if (photoUrl && !photoUrl.startsWith('data:')) {
+        description += `&nbsp;&nbsp;📷 <a href="${photoUrl}">Photo ${idx + 1}</a><br>`;
+      }
+    });
   }
 
   const priority = report.urgent ? 'High' : 'Normal';
