@@ -296,42 +296,49 @@ async function createConsolidatedWrikeTask(walkData, folderId) {
   const issueCount = hasIssues ? `${walkData.issues.length} issue${walkData.issues.length !== 1 ? 's' : ''}` : 'All Clear';
   const title = `[${walkData.campus}] Green Streak Walk - ${date} (${issueCount})`;
 
-  // Build description with markdown formatting (Wrike supports markdown)
+  // Build description with HTML formatting (Wrike supports HTML)
   let description = '';
 
   // Header info
-  description += `**Campus:** ${walkData.campus}  \n`;
-  description += `**Coordinator:** ${walkData.coordinator}  \n`;
-  description += `**Date:** ${date}  \n`;
-  description += `**Status:** ${walkData.overallStatus === 'GREEN' ? '🟢 GREEN - All Clear' : '🔴 ISSUES FOUND'}  \n`;
-  description += `\n---\n\n`;
+  description += `<b>Campus:</b> ${walkData.campus}<br>`;
+  description += `<b>Coordinator:</b> ${walkData.coordinator}<br>`;
+  description += `<b>Date:</b> ${date}<br>`;
+  description += `<b>Status:</b> ${walkData.overallStatus === 'GREEN' ? '🟢 GREEN - All Clear' : '🔴 ISSUES FOUND'}<br>`;
+  description += `<br><hr><br>`;
 
   // Issues section
   if (hasIssues) {
-    description += `## Issues Requiring Action\n\n`;
+    description += `<h3>Issues Requiring Action</h3>`;
+    description += `<ol>`;
 
-    walkData.issues.forEach((issue, index) => {
+    walkData.issues.forEach((issue) => {
       const metric = GREEN_STREAK_METRICS[issue.metric];
 
-      description += `### ${index + 1}. ${metric?.name || issue.metric} - ${issue.stopName}\n`;
-      description += `- **Check:** ${issue.question}  \n`;
-      description += `- **Issue:** ${issue.description}  \n`;
+      description += `<li>`;
+      description += `<b>${metric?.name || issue.metric} - ${issue.stopName}</b><br>`;
+      description += `<b>Check:</b> ${issue.question}<br>`;
+      description += `<b>Issue:</b> ${issue.description}<br>`;
       if (metric?.escalation) {
-        description += `- **Escalate to:** ${metric.escalation}  \n`;
+        description += `<b>Escalate to:</b> ${metric.escalation}<br>`;
       }
-      description += `\n`;
+      description += `</li>`;
     });
+
+    description += `</ol>`;
   } else {
-    description += `## ✅ No issues found. Green Streak intact!\n\n`;
+    description += `<h3>✅ No issues found. Green Streak intact!</h3>`;
   }
 
   // Metric summary
-  description += `---\n\n## Metric Summary\n\n`;
+  description += `<br><hr><br>`;
+  description += `<h3>Metric Summary</h3>`;
+  description += `<ul>`;
   Object.entries(walkData.metricStatuses || {}).forEach(([metricId, status]) => {
     const metric = GREEN_STREAK_METRICS[metricId];
     const icon = status === 'GREEN' ? '✅' : '❌';
-    description += `- ${icon} **${metric?.name || metricId}:** ${status}  \n`;
+    description += `<li>${icon} <b>${metric?.name || metricId}:</b> ${status}</li>`;
   });
+  description += `</ul>`;
 
   const priority = walkData.overallStatus === 'GREEN' ? 'Normal' : 'High';
 
