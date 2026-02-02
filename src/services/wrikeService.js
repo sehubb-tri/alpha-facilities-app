@@ -287,27 +287,7 @@ export const createConsolidatedChecklistTask = async (options) => {
   try {
     const task = await createWrikeTask(folderId, { title, description, priority });
 
-    // Attach photos
-    if (task && hasIssues) {
-      let photoIndex = 0;
-      for (const issue of issues) {
-        if (issue.photos && issue.photos.length > 0) {
-          for (const photo of issue.photos) {
-            const photoUrl = photo.url || photo;
-            if (photoUrl && !photoUrl.startsWith('data:')) {
-              photoIndex++;
-              try {
-                const filename = `${checklistType}_${issue.category || 'issue'}_${photoIndex}.jpg`.replace(/[^a-zA-Z0-9._-]/g, '_');
-                await attachUrlToTask(task.id, photoUrl, filename);
-              } catch (e) {
-                console.error('[Wrike] Failed to attach photo:', e);
-              }
-            }
-          }
-        }
-      }
-    }
-
+    // Photos are included as clickable links in the description
     return task;
   } catch (error) {
     console.error('[Wrike] Error creating consolidated task:', error);
@@ -368,22 +348,7 @@ export const createReportTask = async (report, campusName) => {
 
   try {
     const task = await createWrikeTask(folderId, { title, description, priority });
-
-    // Attach photos
-    if (task) {
-      const photos = report.photos || (report.photo ? [report.photo] : []);
-      for (let i = 0; i < photos.length; i++) {
-        const photoUrl = photos[i]?.url || photos[i];
-        if (photoUrl && !photoUrl.startsWith('data:')) {
-          try {
-            await attachUrlToTask(task.id, photoUrl, `report_photo_${i + 1}.jpg`);
-          } catch (e) {
-            console.error('[Wrike] Failed to attach photo:', e);
-          }
-        }
-      }
-    }
-
+    // Photos are included as clickable links in the description
     return task;
   } catch (error) {
     console.error('[Wrike] Error creating report task:', error);
