@@ -4,7 +4,7 @@ import { getAudits, getReports, getBGWalkthroughs } from '../supabase/services';
 import { ISSUE_CATEGORIES } from '../data/issueCategories';
 import { useI18n } from '../i18n';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import { Zap, ClipboardList, Camera, ChevronRight } from 'lucide-react';
+import { Zap, ClipboardList, Camera, ChevronRight, BookOpen, Send } from 'lucide-react';
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -372,6 +372,89 @@ export const Home = () => {
               </div>
             )}
           </button>
+        </div>
+
+        {/* External Links Row - Knowledge Hub & Wrike Requests */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '12px' }}>
+          {/* Ops Knowledge Hub */}
+          <a
+            href="https://ops-handbook-ai.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.12)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '14px',
+              padding: '16px',
+              border: '1px solid rgba(255,255,255,0.15)',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '10px',
+              textDecoration: 'none'
+            }}
+          >
+            <div style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '12px',
+              backgroundColor: '#2B57D0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <BookOpen size={26} color="#fff" />
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '15px', fontWeight: '600', color: '#fff' }}>
+                Knowledge Hub
+              </div>
+              <div style={{ fontSize: '12px', color: '#C2ECFD', marginTop: '2px' }}>
+                How do we do X?
+              </div>
+            </div>
+          </a>
+
+          {/* Wrike Request Form */}
+          <a
+            href="https://www.wrike.com/frontend/requestforms/index.html?token=eyJhY2NvdW50SWQiOjY3NDg0NDYsInRhc2tGb3JtSWQiOjI1Nzk5MTJ9CTQ5MjM5MzE4NDU3NTIJNTNlZmY5OGU2MzA2OWIyYWI5OWQ5NWJjNmIxMzg0OWVkZjNmNGNlZGJkNmViMTc5YzQ0YWEzZWNlNmZiZmRmNg=="
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.12)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '14px',
+              padding: '16px',
+              border: '1px solid rgba(255,255,255,0.15)',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '10px',
+              textDecoration: 'none'
+            }}
+          >
+            <div style={{
+              width: '48px',
+              height: '48px',
+              borderRadius: '12px',
+              backgroundColor: '#14b8a6',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Send size={26} color="#fff" />
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '15px', fontWeight: '600', color: '#fff' }}>
+                Submit Request
+              </div>
+              <div style={{ fontSize: '12px', color: '#C2ECFD', marginTop: '2px' }}>
+                Campus requests
+              </div>
+            </div>
+          </a>
         </div>
       </div>
 
