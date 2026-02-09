@@ -10,19 +10,26 @@ const wrikeRequest = async (endpoint, options = {}) => {
   const { method = 'GET', body } = options;
   console.log(`[IssueTracker] Wrike: ${method} ${endpoint}`);
 
-  const { data, error } = await supabase.functions.invoke('wrike-proxy', {
-    body: { endpoint, method, body }
-  });
+  try {
+    const { data, error } = await supabase.functions.invoke('wrike-proxy', {
+      body: { endpoint, method, body }
+    });
 
-  if (error) {
-    console.error('[IssueTracker] Edge Function error:', error);
-    throw new Error(error.message || 'Wrike API request failed');
+    console.log('[IssueTracker] Response:', data ? JSON.stringify(data).substring(0, 500) : 'null');
+
+    if (error) {
+      console.error('[IssueTracker] Edge Function error details:', JSON.stringify(error));
+      throw new Error(error.message || 'Wrike API request failed');
+    }
+    if (data?.error) {
+      console.error('[IssueTracker] Wrike API error:', data.error, data.details || '');
+      throw new Error(`${data.error}${data.details ? ': ' + JSON.stringify(data.details) : ''}`);
+    }
+    return data;
+  } catch (err) {
+    console.error('[IssueTracker] Full error:', err);
+    throw err;
   }
-  if (data?.error) {
-    console.error('[IssueTracker] API error:', data.error);
-    throw new Error(data.error);
-  }
-  return data;
 };
 
 // Fetch all tasks from a Wrike folder
