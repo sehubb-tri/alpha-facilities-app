@@ -27,23 +27,23 @@ const wrikeRequest = async (endpoint, options = {}) => {
 
 // Fetch all tasks from a Wrike folder
 export const fetchFolderTasks = async (folderId = TEST_CAMPUS_FOLDER_ID) => {
-  const fields = JSON.stringify([
+  const fields = encodeURIComponent(JSON.stringify([
     'description', 'briefDescription', 'responsibleIds',
     'status', 'importance', 'createdDate', 'updatedDate',
     'dates', 'customFields', 'parentIds', 'permalink'
-  ]);
+  ]));
   const data = await wrikeRequest(`/folders/${folderId}/tasks?fields=${fields}&sortField=CreatedDate&sortOrder=Desc&limit=100`);
   return data?.data || [];
 };
 
 // Fetch a single task by ID with full detail
 export const fetchTaskDetail = async (taskId) => {
-  const fields = JSON.stringify([
+  const fields = encodeURIComponent(JSON.stringify([
     'description', 'briefDescription', 'responsibleIds',
     'status', 'importance', 'createdDate', 'updatedDate',
     'dates', 'customFields', 'parentIds', 'permalink',
     'authorIds', 'hasAttachments'
-  ]);
+  ]));
   const data = await wrikeRequest(`/tasks/${taskId}?fields=${fields}`);
   return data?.data?.[0] || null;
 };
