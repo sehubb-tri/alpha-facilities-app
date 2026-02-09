@@ -4,7 +4,7 @@ import { getAudits, getReports, getBGWalkthroughs } from '../supabase/services';
 import { ISSUE_CATEGORIES } from '../data/issueCategories';
 import { useI18n } from '../i18n';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import { Zap, ClipboardList, Camera, ChevronRight, BookOpen, Send } from 'lucide-react';
+import { Zap, ClipboardList, Camera, ChevronRight, BookOpen, Send, BarChart3 } from 'lucide-react';
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -373,6 +373,45 @@ export const Home = () => {
             )}
           </button>
         </div>
+
+        {/* Issue Tracker CTA */}
+        <button
+          onClick={() => navigate('/issues')}
+          style={{
+            width: '100%',
+            background: 'linear-gradient(135deg, #2B57D0 0%, #141685 100%)',
+            borderRadius: '16px',
+            padding: '16px 20px',
+            border: 'none',
+            cursor: 'pointer',
+            marginTop: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '14px',
+            boxShadow: '0 4px 12px rgba(43, 87, 208, 0.3)'
+          }}
+        >
+          <div style={{
+            width: '44px',
+            height: '44px',
+            borderRadius: '12px',
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <BarChart3 size={24} color="#fff" />
+          </div>
+          <div style={{ flex: 1, textAlign: 'left' }}>
+            <div style={{ fontSize: '17px', fontWeight: '700', color: '#fff' }}>
+              Issue Tracker
+            </div>
+            <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.75)', marginTop: '1px' }}>
+              Status dashboard & issue tracking
+            </div>
+          </div>
+          <ChevronRight size={20} color="rgba(255,255,255,0.6)" />
+        </button>
 
         {/* External Links Row - Knowledge Hub & Wrike Requests */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '12px' }}>

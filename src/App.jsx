@@ -81,6 +81,12 @@ import { GreenStreakComplete } from './pages/GreenStreakComplete';
 // Ops Audits Landing Page
 import { OpsAudits } from './pages/OpsAudits';
 
+// Issue Tracker Pages (Pillar 4: Reporting & Status Visibility)
+import { IssuesDashboard } from './pages/IssuesDashboard';
+import { MySubmissions } from './pages/MySubmissions';
+import { CampusIssues } from './pages/CampusIssues';
+import { IssueDetail } from './pages/IssueDetail';
+
 function App() {
   const camera = useCamera();
   const audit = useAudit();
@@ -203,6 +209,12 @@ function App() {
 
         {/* Ops Audits Landing Page */}
         <Route path="/ops-audits" element={<OpsAudits />} />
+
+        {/* Issue Tracker (Pillar 4: Reporting & Status Visibility) */}
+        <Route path="/issues" element={<IssuesDashboard />} />
+        <Route path="/issues/mine" element={<MySubmissions />} />
+        <Route path="/issues/campus" element={<CampusIssues />} />
+        <Route path="/issues/:taskId" element={<IssueDetail />} />
       </Routes>
     </BrowserRouter>
   );
