@@ -25,7 +25,7 @@ serve(async (req) => {
       console.error("WRIKE_API_TOKEN not configured");
       return new Response(
         JSON.stringify({ error: "Wrike API token not configured" }),
-        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -35,7 +35,7 @@ serve(async (req) => {
     if (!endpoint) {
       return new Response(
         JSON.stringify({ error: "Missing endpoint parameter" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -62,16 +62,18 @@ serve(async (req) => {
 
     console.log(`[wrike-proxy] Response status: ${wrikeResponse.status}`);
 
-    // Check for Wrike API errors
+    // Always return 200 from edge function so supabase client can read the body.
+    // Include Wrike's actual status so the client can handle errors properly.
     if (!wrikeResponse.ok) {
-      console.error("[wrike-proxy] Wrike API error:", wrikeData);
+      console.error("[wrike-proxy] Wrike API error:", JSON.stringify(wrikeData));
       return new Response(
         JSON.stringify({
           error: wrikeData.errorDescription || wrikeData.error || "Wrike API request failed",
+          wrikeStatus: wrikeResponse.status,
           details: wrikeData
         }),
         {
-          status: wrikeResponse.status,
+          status: 200, // Always 200 so supabase.functions.invoke returns data, not error
           headers: { ...corsHeaders, "Content-Type": "application/json" }
         }
       );
@@ -87,7 +89,7 @@ serve(async (req) => {
     console.error("[wrike-proxy] Error:", error);
     return new Response(
       JSON.stringify({ error: error.message || "Internal server error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 });

@@ -34,13 +34,33 @@ const wrikeRequest = async (endpoint, options = {}) => {
 
 // Fetch all tasks from a Wrike folder
 export const fetchFolderTasks = async (folderId = TEST_CAMPUS_FOLDER_ID) => {
-  const fields = encodeURIComponent(JSON.stringify([
+  console.log('[IssueTracker] Fetching tasks for folder:', folderId);
+
+  // Wrike v4 fields param: JSON array in query string, URL-encoded
+  const optionalFields = [
     'description', 'briefDescription', 'responsibleIds',
     'status', 'importance', 'createdDate', 'updatedDate',
     'dates', 'customFields', 'parentIds', 'permalink'
-  ]));
-  const data = await wrikeRequest(`/folders/${folderId}/tasks?fields=${fields}&sortField=CreatedDate&sortOrder=Desc&limit=100`);
-  return data?.data || [];
+  ];
+  const fieldsParam = encodeURIComponent(JSON.stringify(optionalFields));
+
+  try {
+    // Try with all params
+    const endpoint = `/folders/${folderId}/tasks?fields=${fieldsParam}&sortField=CreatedDate&sortOrder=Desc&pageSize=100`;
+    console.log('[IssueTracker] Trying full endpoint:', endpoint);
+    const data = await wrikeRequest(endpoint);
+    return data?.data || [];
+  } catch (firstErr) {
+    console.warn('[IssueTracker] Full request failed, trying minimal:', firstErr.message);
+    try {
+      // Fallback: bare request with no query params
+      const data = await wrikeRequest(`/folders/${folderId}/tasks`);
+      return data?.data || [];
+    } catch (secondErr) {
+      console.error('[IssueTracker] Minimal request also failed:', secondErr.message);
+      throw secondErr;
+    }
+  }
 };
 
 // Fetch a single task by ID with full detail
@@ -51,8 +71,14 @@ export const fetchTaskDetail = async (taskId) => {
     'dates', 'customFields', 'parentIds', 'permalink',
     'authorIds', 'hasAttachments'
   ]));
-  const data = await wrikeRequest(`/tasks/${taskId}?fields=${fields}`);
-  return data?.data?.[0] || null;
+  try {
+    const data = await wrikeRequest(`/tasks/${taskId}?fields=${fields}`);
+    return data?.data?.[0] || null;
+  } catch (err) {
+    console.warn('[IssueTracker] Detail with fields failed, trying minimal:', err.message);
+    const data = await wrikeRequest(`/tasks/${taskId}`);
+    return data?.data?.[0] || null;
+  }
 };
 
 // Fetch task comments (used for timeline)
