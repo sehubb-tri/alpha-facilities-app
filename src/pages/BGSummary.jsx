@@ -78,7 +78,7 @@ export const BGSummary = ({ bgWalkthrough }) => {
           console.log('[B&G Walkthrough] Creating consolidated Wrike task...');
           const formattedIssues = issues.map(issue => ({
             category: issue.tier === 1 ? '🔴 Instant Red' : 'Issue',
-            section: `Tier ${issue.tier} - ${issue.zoneName || 'General'}${issue.section ? ` - ${issue.section}` : ''}`,
+       section: `Tier ${issue.tier} - ${issue.zoneName || 'General'}${issue.section ? ` - ${issue.section}` : ''}`,
             check: issue.checkText || 'Check not specified',
             description: issue.notes || 'Issue found',
             photos: issue.photos || []
