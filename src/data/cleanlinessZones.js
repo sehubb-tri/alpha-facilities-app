@@ -229,8 +229,8 @@ export const CLEANLINESS_ZONES = {
           },
           {
             id: 'entry_safe',
-            text: 'Area is safe and free of EHS hazards (no wet floors, blocked exits, pests, mold, exposed wiring, or chemical access)?',
-            helpText: 'Catch-all safety/EHS check for this zone. No standing water, blocked exits, exposed wiring, loose cords in walkways, unsecured chemicals, pest evidence (droppings, trails), mold/mildew, or active moisture.',
+            text: 'Area is safe and free of environmental health and safety hazards (no wet floors, blocked exits, pests, mold, exposed wiring, or chemicals within reach)?',
+            helpText: 'Look for anything unsafe in this zone: standing water or leaks, blocked exits, exposed wiring or loose cords in walkways, cleaning chemicals that students could reach, signs of pests (droppings, trails, live bugs), or any mold or mildew.',
             tier: 'red',
             instantRed: true,
             photoRequired: true,
@@ -304,8 +304,8 @@ export const CLEANLINESS_ZONES = {
           },
           {
             id: 'hall_safe',
-            text: 'Area is safe and free of EHS hazards (no wet floors, blocked exits, pests, mold, exposed wiring, or chemical access)?',
-            helpText: 'Catch-all safety/EHS check for this zone. No standing water, blocked exits, exposed wiring, loose cords in walkways, unsecured chemicals, pest evidence (droppings, trails), mold/mildew, or active moisture.',
+            text: 'Area is safe and free of environmental health and safety hazards (no wet floors, blocked exits, pests, mold, exposed wiring, or chemicals within reach)?',
+            helpText: 'Look for anything unsafe in this zone: standing water or leaks, blocked exits, exposed wiring or loose cords in walkways, cleaning chemicals that students could reach, signs of pests (droppings, trails, live bugs), or any mold or mildew.',
             tier: 'red',
             instantRed: true,
             photoRequired: true,
@@ -371,8 +371,8 @@ export const CLEANLINESS_ZONES = {
           },
           {
             id: 'commons_safe',
-            text: 'Area is safe and free of EHS hazards (no wet floors, blocked exits, pests, mold, exposed wiring, or chemical access)?',
-            helpText: 'Catch-all safety/EHS check for this zone. No standing water, blocked exits, exposed wiring, loose cords in walkways, unsecured chemicals, pest evidence (droppings, trails), mold/mildew, or active moisture.',
+            text: 'Area is safe and free of environmental health and safety hazards (no wet floors, blocked exits, pests, mold, exposed wiring, or chemicals within reach)?',
+            helpText: 'Look for anything unsafe in this zone: standing water or leaks, blocked exits, exposed wiring or loose cords in walkways, cleaning chemicals that students could reach, signs of pests (droppings, trails, live bugs), or any mold or mildew.',
             tier: 'red',
             instantRed: true,
             photoRequired: true,
@@ -543,8 +543,8 @@ export const CLEANLINESS_ZONES = {
           },
           {
             id: 'supply_closet_safe',
-            text: 'Area is safe and free of EHS hazards (chemicals secured, no pests, mold, or moisture)?',
-            helpText: 'All chemicals stored securely out of student reach. No pest evidence, mold/mildew, standing water, or active leaks.',
+            text: 'Area is safe and free of environmental health and safety hazards (chemicals secured, no pests, mold, or moisture)?',
+            helpText: 'Look for anything unsafe: cleaning chemicals must be locked or out of student reach, no signs of pests (droppings, trails, live bugs), no mold or mildew, and no standing water or active leaks.',
             tier: 'red',
             instantRed: true,
             photoRequired: true,
