@@ -21,12 +21,12 @@ const AUDIT_CATEGORIES = [
     description: 'Quick checks to verify vendor and system performance',
     audits: [
       {
-        path: '/audit/setup',
-        Icon: CheckSquare,
+        path: '/cleanliness',
+        Icon: Sparkles,
         label: 'Cleanliness Audit',
-        description: 'Verify overnight cleaning vendor work',
+        description: 'Daily, weekly & monthly inspections',
         color: '#10b981',
-        time: '15-20 min'
+        time: 'Varies by type'
       }
     ]
   },
@@ -34,14 +34,6 @@ const AUDIT_CATEGORIES = [
     title: 'Weekly Audits',
     description: 'Detailed inspections of building systems and grounds',
     audits: [
-      {
-        path: '/cleanliness?type=weekly',
-        Icon: Sparkles,
-        label: 'Cleanliness Audit',
-        description: 'Tour route + rotating room inspections',
-        color: '#2563eb',
-        time: '30-45 min'
-      },
       {
         path: '/bg/setup',
         Icon: Building2,
@@ -64,14 +56,6 @@ const AUDIT_CATEGORIES = [
     title: 'Periodic Audits',
     description: 'Comprehensive compliance and quality reviews',
     audits: [
-      {
-        path: '/cleanliness?type=monthly',
-        Icon: Search,
-        label: 'Cleanliness Deep Dive',
-        description: 'Monthly deep inspection + 30-day review',
-        color: '#7c3aed',
-        time: '45-60 min'
-      },
       {
         path: '/security',
         Icon: Lock,
