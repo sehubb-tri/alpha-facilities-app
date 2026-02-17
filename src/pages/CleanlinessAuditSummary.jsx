@@ -122,7 +122,7 @@ export const CleanlinessAuditSummary = ({ cleanlinessAudit }) => {
         </h1>
         <p style={{ fontSize: '16px', opacity: 0.9, margin: 0 }}>
           {currentZone?.name || checklistType}
-          {checklistType === 'weekly' && weekNumber ? ` - Week ${weekNumber}` : ''}
+          {checklistType === 'weekly' && weekNumber ? ` - Audit ${weekNumber} of 4` : ''}
         </p>
         <p style={{ fontSize: '14px', opacity: 0.8, margin: '4px 0 0 0' }}>
           {campus} - Completed by {auditor}
@@ -239,7 +239,7 @@ export const CleanlinessAuditSummary = ({ cleanlinessAudit }) => {
             border: '1px solid #e5e7eb'
           }}>
             <div style={{ fontSize: '14px', fontWeight: '600', color: '#092849', marginBottom: '8px' }}>
-              Rooms Audited (Week {weekNumber})
+              Rooms Audited (Audit {weekNumber} of 4)
             </div>
             {assignedRooms.map((room, idx) => (
               <div key={idx} style={{

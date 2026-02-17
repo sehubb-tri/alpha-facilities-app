@@ -3,8 +3,9 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CampusSelector } from '../components/CampusSelector';
 import { Header } from '../components/Header';
 import { CAMPUSES } from '../data/campuses';
-import { CLEANLINESS_ZONES, CLEANLINESS_RAG_RULES, ROOM_AUDIT_TEMPLATES, getRoomsForWeek, getWeekOfMonth } from '../data/cleanlinessZones';
+import { CLEANLINESS_ZONES, CLEANLINESS_RAG_RULES, ROOM_AUDIT_TEMPLATES, getRoomsForWeek } from '../data/cleanlinessZones';
 import { getCampusRooms, hasCampusRooms } from '../data/campusRooms';
+import { getWeeklyAuditCountThisMonth } from '../supabase/cleanlinessAuditService';
 
 const CHECKLIST_TYPES = [
   { id: 'daily', name: 'Daily Cleanliness Check', icon: '✅', color: '#10b981', subtitle: 'Quick vendor verification', redirect: '/audit/setup' },
@@ -20,14 +21,35 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
   const [campusName, setCampusName] = useState('');
   const [auditorName, setAuditorName] = useState('');
   const [auditorEmail, setAuditorEmail] = useState('');
+  const [auditNumber, setAuditNumber] = useState(null);
+  const [auditsCompletedThisMonth, setAuditsCompletedThisMonth] = useState(0);
+  const [loadingAuditCount, setLoadingAuditCount] = useState(false);
 
   const selectedZone = selectedType ? CLEANLINESS_ZONES[selectedType] : null;
 
+  // Fetch audit count when campus changes (for weekly rotation)
+  useEffect(() => {
+    if (campusName && selectedType === 'weekly') {
+      setLoadingAuditCount(true);
+      getWeeklyAuditCountThisMonth(campusName)
+        .then(count => {
+          setAuditsCompletedThisMonth(count);
+          // Next audit number is count + 1, capped at 4 (cycles back to 1 after 4)
+          const nextAudit = (count % 4) + 1;
+          setAuditNumber(nextAudit);
+        })
+        .catch(err => {
+          console.error('Error fetching audit count:', err);
+          setAuditNumber(1);
+        })
+        .finally(() => setLoadingAuditCount(false));
+    }
+  }, [campusName, selectedType]);
+
   // Get room preview for weekly
-  const weekNumber = getWeekOfMonth();
   const campusRooms = campusName ? getCampusRooms(campusName) : [];
   const hasRooms = campusName ? hasCampusRooms(campusName) : false;
-  const assignedRooms = hasRooms ? getRoomsForWeek(campusRooms, weekNumber) : [];
+  const assignedRooms = (hasRooms && auditNumber) ? getRoomsForWeek(campusRooms, auditNumber) : [];
 
   const handleBegin = () => {
     if (!selectedType) {
@@ -48,7 +70,7 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
     }
 
     const campus = CAMPUSES.find(c => c.name === campusName);
-    cleanlinessAudit.initChecklist(campusName, campus, auditorName.trim(), auditorEmail.trim(), selectedType);
+    cleanlinessAudit.initChecklist(campusName, campus, auditorName.trim(), auditorEmail.trim(), selectedType, auditNumber);
 
     window.scrollTo(0, 0);
     navigate('/cleanliness/checklist');
@@ -187,14 +209,20 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
             borderRadius: '12px',
             padding: '16px'
           }}>
-            <div style={{ fontWeight: '600', color: '#092849', marginBottom: '8px' }}>
-              Week {weekNumber} Room Assignments
+            <div style={{ fontWeight: '600', color: '#092849', marginBottom: '4px' }}>
+              Audit {auditNumber} of 4 - Room Assignments
             </div>
-            {hasRooms ? (
+            <div style={{ fontSize: '12px', color: '#2563eb', marginBottom: '8px' }}>
+              {auditsCompletedThisMonth} of 4 completed this month
+              {auditsCompletedThisMonth >= 4 && ' (all done! rooms will cycle)'}
+            </div>
+            {loadingAuditCount ? (
+              <div style={{ fontSize: '13px', color: '#999', fontStyle: 'italic' }}>Loading room assignments...</div>
+            ) : hasRooms ? (
               <>
                 <div style={{ fontSize: '13px', color: '#666', marginBottom: '12px' }}>
-                  {assignedRooms.length} room{assignedRooms.length !== 1 ? 's' : ''} assigned this week
-                  ({campusRooms.length} total rooms, rotating across 4 weeks)
+                  {assignedRooms.length} room{assignedRooms.length !== 1 ? 's' : ''} assigned for this audit
+                  ({campusRooms.length} total rooms, rotating across 4 audits)
                 </div>
                 {assignedRooms.map((room, idx) => (
                   <div key={idx} style={{

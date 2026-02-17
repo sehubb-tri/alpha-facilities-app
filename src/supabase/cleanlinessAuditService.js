@@ -177,6 +177,28 @@ export const getWeeklyCompletionRate = async (campusName, daysToCheck = 30) => {
   return Math.min(completionRate, 1.0);
 };
 
+// Get count of completed weekly audits for a campus in the current month
+// Used to determine which audit number (1-4) this is, and which rooms to assign
+export const getWeeklyAuditCountThisMonth = async (campusName) => {
+  // First day of current month at midnight UTC
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+  const { data, error, count } = await supabase
+    .from('cleanliness_audits')
+    .select('id', { count: 'exact', head: true })
+    .eq('campus', campusName)
+    .eq('checklist_type', 'weekly')
+    .gte('created_at', monthStart);
+
+  if (error) {
+    console.error('Error fetching weekly audit count:', error);
+    return 0;
+  }
+
+  return count || 0;
+};
+
 // Check for repeat defects (same check failed in same zone within 30 days)
 export const checkRepeatDefects = async (campusName, checkId, zoneName) => {
   const thirtyDaysAgo = new Date();

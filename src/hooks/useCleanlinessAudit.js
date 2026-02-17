@@ -80,14 +80,16 @@ export const useCleanlinessAudit = () => {
   }, []);
 
   // Initialize checklist
-  const initChecklist = useCallback((campus, campusData, auditor, auditorEmail, checklistType) => {
-    // For weekly, calculate room assignments from campus map
+  // auditNumber: for weekly, which audit this is (1-4) based on how many have been done this month
+  const initChecklist = useCallback((campus, campusData, auditor, auditorEmail, checklistType, auditNumber) => {
+    // For weekly, use audit number to determine room assignments
     let assignedRooms = [];
     let weekNumber = null;
 
     if (checklistType === 'weekly') {
       const allRooms = getCampusRooms(campus);
-      weekNumber = getWeekOfMonth();
+      // Use the passed audit number (count-based), fall back to calendar week
+      weekNumber = auditNumber || getWeekOfMonth();
       assignedRooms = getRoomsForWeek(allRooms, weekNumber);
     }
 
