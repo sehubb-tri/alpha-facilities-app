@@ -8,8 +8,8 @@ import { getCampusRooms, hasCampusRooms } from '../data/campusRooms';
 
 const CHECKLIST_TYPES = [
   { id: 'daily', name: 'Daily Cleanliness Check', icon: '✅', color: '#10b981', subtitle: 'Quick vendor verification', redirect: '/audit/setup' },
-  { id: 'weekly', name: 'Weekly Cleanliness Audit', icon: '🧹', color: '#2563eb', subtitle: 'Tour route + assigned rooms' },
-  { id: 'monthly', name: 'Monthly Deep Dive', icon: '🔍', color: '#7c3aed', subtitle: 'Deep inspection + 30-day review' }
+  { id: 'weekly', name: 'Weekly Cleanliness Audit', icon: '🧹', color: '#2563eb', subtitle: 'Tour route + rooms (4x/month required)' },
+  { id: 'monthly', name: 'Monthly Deep Dive', icon: '🔍', color: '#7c3aed', subtitle: 'Deep inspection + 4 weekly completions reviewed' }
 ];
 
 export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
@@ -284,7 +284,7 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
             }} />
             <div>
               <div style={{ fontWeight: '600', color: '#d97706' }}>{CLEANLINESS_RAG_RULES.amber.description}</div>
-              <div style={{ fontSize: '13px', color: '#666' }}>Exactly 1 non-critical defect, still tour ready</div>
+              <div style={{ fontSize: '13px', color: '#666' }}>1-5 non-critical defects, still tour ready, 7 days to fix</div>
             </div>
           </div>
 
@@ -295,7 +295,7 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
             }} />
             <div>
               <div style={{ fontWeight: '600', color: '#dc2626' }}>{CLEANLINESS_RAG_RULES.red.description}</div>
-              <div style={{ fontSize: '13px', color: '#666' }}>Any restroom/safety/tour-ready failure, or 2+ defects</div>
+              <div style={{ fontSize: '13px', color: '#666' }}>Any restroom/safety/tour-ready failure, or 6+ defects</div>
             </div>
           </div>
         </div>

@@ -20,34 +20,30 @@ export const CLEANLINESS_RAG_RULES = {
       'All checks answered YES in all inspected zones',
       '"Tour Ready" = Yes',
       'No open issues from previous checks',
-      'No repeat defects (same zone within 30 days)',
-      'Weekly checks completed on 100% of scheduled weeks this month'
+      'No repeat defects (same zone within 30 days)'
     ]
   },
   amber: {
-    description: 'At Risk - Narrow Temporary Exception',
+    description: 'Needs Attention',
     criteria: [
-      'Exactly ONE defect exists',
-      'Defect is in a non-critical zone (NOT restroom)',
-      'Defect is NOT safety-related',
-      'Defect is NOT a repeat failure (same zone within 30 days)',
-      'Defect is NOT visible from entrance/lobby/tour routes',
+      'Up to 5 non-critical defects exist',
+      'No defects are instant-red items (restrooms, safety, tour ready)',
+      'No repeat failures (same zone within 30 days)',
       'Campus is still confirmed "Tour Ready"',
-      'Defect documented with work order within 4 hours',
-      'Maximum 24 hours in Amber status for Tier 2-3 items'
+      'All defects documented with work orders'
     ],
-    maxOpenIssues: 1,
-    maxDaysToFix: 5, // Tier 3 SLA
-    maxHoursInAmber: 24
+    maxOpenIssues: 5,
+    maxDaysToFix: 7, // 1 week to remediate per SLA discussion
+    maxHoursInAmber: 168 // 7 days
   },
   red: {
     description: 'Not Meeting Standard',
     criteria: [
       'Any INSTANT RED item failed (restroom, safety, tour ready)',
-      'More than 1 defect of any severity',
+      'More than 5 non-critical defects',
       'Repeat defect in same zone within 30 days',
       '"Tour Ready" = No',
-      'Any issue has no owner or no fix date assigned',
+      'Defects not remediated within 7 days',
       'Vendor missed same task two consecutive nights',
       'Any missed task not corrected within SLA'
     ]
@@ -184,7 +180,7 @@ export const CLEANLINESS_ZONES = {
     name: 'Weekly Audit',
     frequency: 'weekly',
     order: 1,
-    description: 'Tour route + assigned rooms from campus map. All rooms covered at least 1x/month, tour route 4x/month.',
+    description: 'Tour route + assigned rooms from campus map. Must be completed 4x/month. All rooms covered at least 1x/month.',
     timeNeeded: '20-30 minutes',
     sections: [
       // ----------------------------------------
@@ -722,7 +718,7 @@ export const CLEANLINESS_ZONES = {
     name: 'Monthly Deep Dive',
     frequency: 'monthly',
     order: 2,
-    description: 'Deep inspection of all areas + 30-day review. CC + Site Owner, 30-45 minutes.',
+    description: 'Deep inspection + 30-day review. Verifies 4 weekly audits completed. CC + Site Owner, 30-45 minutes. Failed items get 7 days to remediate.',
     timeNeeded: '30-45 minutes',
     sections: [
       // ----------------------------------------
@@ -1718,21 +1714,12 @@ export const calculateCleanlinessZoneRating = (zoneId, results, issues = []) => 
     return 'RED';
   }
 
-  // More than 1 defect = RED (per quality bar: 2+ defects = Red)
+  // More than 5 non-critical defects = RED
   if (failedChecks.length > CLEANLINESS_RAG_RULES.amber.maxOpenIssues) {
     return 'RED';
   }
 
-  // Check for repeat defects (would need historical data)
-  // This would be checked at the app level against previous audit data
-
-  // Exactly 1 non-critical defect, with proper documentation
-  const openIssues = issues.filter(i => i.status === 'open');
-  const missingInfo = openIssues.some(i => !i.owner || !i.fixDate);
-  if (missingInfo) {
-    return 'RED';
-  }
-
+  // 1-5 non-critical defects = AMBER (needs attention, 7 days to remediate)
   return 'AMBER';
 };
 
