@@ -37,9 +37,11 @@ export const fetchFolderTasks = async (folderId = TEST_CAMPUS_FOLDER_ID) => {
   console.log('[IssueTracker] Fetching tasks for folder:', folderId);
 
   // Wrike v4 fields param: JSON array in query string, URL-encoded
+  // Note: 'status' and 'importance' are returned by default - do NOT include them
+  // in fields or Wrike returns 400 "Fields parameter value 'status' not allowed"
   const optionalFields = [
     'description', 'briefDescription', 'responsibleIds',
-    'status', 'importance', 'createdDate', 'updatedDate',
+    'createdDate', 'updatedDate',
     'dates', 'customFields', 'parentIds', 'permalink'
   ];
   const fieldsParam = encodeURIComponent(JSON.stringify(optionalFields));
@@ -65,9 +67,10 @@ export const fetchFolderTasks = async (folderId = TEST_CAMPUS_FOLDER_ID) => {
 
 // Fetch a single task by ID with full detail
 export const fetchTaskDetail = async (taskId) => {
+  // Note: status/importance are default fields - don't request them or Wrike returns 400
   const fields = encodeURIComponent(JSON.stringify([
     'description', 'briefDescription', 'responsibleIds',
-    'status', 'importance', 'createdDate', 'updatedDate',
+    'createdDate', 'updatedDate',
     'dates', 'customFields', 'parentIds', 'permalink',
     'authorIds', 'hasAttachments'
   ]));

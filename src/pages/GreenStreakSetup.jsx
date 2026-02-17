@@ -1,16 +1,27 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CampusSelector } from '../components/CampusSelector';
+import { RoomSelector } from '../components/RoomSelector';
 import { Header } from '../components/Header';
 import { CAMPUSES } from '../data/campuses';
 import { GREEN_STREAK_STOPS, GREEN_STREAK_METRICS } from '../data/greenStreakZones';
+import { hasCampusRooms } from '../data/campusRooms';
 import { Zap, Clock, CheckCircle, AlertTriangle, MapPin } from 'lucide-react';
 
 export const GreenStreakSetup = ({ greenStreakWalk }) => {
   const navigate = useNavigate();
-  const [campusName, setCampusName] = useState('');
+  const [campusName, setCampusNameRaw] = useState('');
   const [coordinatorName, setCoordinatorName] = useState('');
   const [coordinatorEmail, setCoordinatorEmail] = useState('');
+
+  // When campus changes, clear room selections so stale values don't persist
+  const setCampusName = (name) => {
+    setCampusNameRaw(name);
+    setLearningRoom1('');
+    setLearningRoom2('');
+    setRestroom1('');
+    setRestroom2('');
+  };
 
   // Room selections - collected upfront
   const [learningRoom1, setLearningRoom1] = useState('');
@@ -185,35 +196,45 @@ export const GreenStreakSetup = ({ greenStreakWalk }) => {
             <label style={{ display: 'block', fontSize: '15px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
               Learning Spaces (2 rooms) *
             </label>
+            {hasCampusRooms(campusName) && (
+              <div style={{
+                backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                borderRadius: '6px',
+                padding: '8px 12px',
+                marginBottom: '10px',
+                fontSize: '13px',
+                color: '#059669'
+              }}>
+                Room list loaded for {campusName}
+              </div>
+            )}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <input
-                type="text"
-                placeholder="Room 1 (e.g., Room 101, Pod A)"
+              <RoomSelector
+                campusName={campusName}
                 value={learningRoom1}
-                onChange={(e) => setLearningRoom1(e.target.value)}
+                onChange={setLearningRoom1}
+                placeholder="Room 1 (e.g., Room 101, Pod A)"
+                roomTypes="learning"
+                excludeValues={[learningRoom2]}
                 style={{
-                  width: '100%',
                   border: '1px solid #ccc',
                   borderRadius: '10px',
                   padding: '12px 14px',
-                  fontSize: '16px',
-                  boxSizing: 'border-box',
-                  backgroundColor: '#fff'
+                  fontSize: '16px'
                 }}
               />
-              <input
-                type="text"
-                placeholder="Room 2 (e.g., Room 102, Pod B)"
+              <RoomSelector
+                campusName={campusName}
                 value={learningRoom2}
-                onChange={(e) => setLearningRoom2(e.target.value)}
+                onChange={setLearningRoom2}
+                placeholder="Room 2 (e.g., Room 102, Pod B)"
+                roomTypes="learning"
+                excludeValues={[learningRoom1]}
                 style={{
-                  width: '100%',
                   border: '1px solid #ccc',
                   borderRadius: '10px',
                   padding: '12px 14px',
-                  fontSize: '16px',
-                  boxSizing: 'border-box',
-                  backgroundColor: '#fff'
+                  fontSize: '16px'
                 }}
               />
             </div>
@@ -225,34 +246,32 @@ export const GreenStreakSetup = ({ greenStreakWalk }) => {
               Restrooms (2 locations) *
             </label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <input
-                type="text"
-                placeholder="Restroom 1 (e.g., Main hallway)"
+              <RoomSelector
+                campusName={campusName}
                 value={restroom1}
-                onChange={(e) => setRestroom1(e.target.value)}
+                onChange={setRestroom1}
+                placeholder="Restroom 1 (e.g., Main hallway)"
+                roomTypes="restroom"
+                excludeValues={[restroom2]}
                 style={{
-                  width: '100%',
                   border: '1px solid #ccc',
                   borderRadius: '10px',
                   padding: '12px 14px',
-                  fontSize: '16px',
-                  boxSizing: 'border-box',
-                  backgroundColor: '#fff'
+                  fontSize: '16px'
                 }}
               />
-              <input
-                type="text"
-                placeholder="Restroom 2 (e.g., Near gym)"
+              <RoomSelector
+                campusName={campusName}
                 value={restroom2}
-                onChange={(e) => setRestroom2(e.target.value)}
+                onChange={setRestroom2}
+                placeholder="Restroom 2 (e.g., Near gym)"
+                roomTypes="restroom"
+                excludeValues={[restroom1]}
                 style={{
-                  width: '100%',
                   border: '1px solid #ccc',
                   borderRadius: '10px',
                   padding: '12px 14px',
-                  fontSize: '16px',
-                  boxSizing: 'border-box',
-                  backgroundColor: '#fff'
+                  fontSize: '16px'
                 }}
               />
             </div>

@@ -1,19 +1,28 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CampusSelector } from '../components/CampusSelector';
+import { RoomSelector } from '../components/RoomSelector';
 import { Header } from '../components/Header';
 import { CAMPUSES } from '../data/campuses';
 import { BG_ZONES, BG_ZONE_ORDER } from '../data/bgZones';
+import { hasCampusRooms } from '../data/campusRooms';
 
 export const BGSetup = ({ bgWalkthrough }) => {
   const navigate = useNavigate();
-  const [campusName, setCampusName] = useState('');
+  const [campusName, setCampusNameRaw] = useState('');
   const [auditorName, setAuditorName] = useState('');
   const [auditorEmail, setAuditorEmail] = useState('');
 
   // Interior rooms - user will select these
   const [classrooms, setClassrooms] = useState(['', '', '']);
   const [bathrooms, setBathrooms] = useState(['', '']);
+
+  // When campus changes, clear room selections so stale values don't persist
+  const setCampusName = (name) => {
+    setCampusNameRaw(name);
+    setClassrooms(['', '', '']);
+    setBathrooms(['', '']);
+  };
 
   const handleClassroomChange = (index, value) => {
     const newClassrooms = [...classrooms];
@@ -182,6 +191,20 @@ export const BGSetup = ({ bgWalkthrough }) => {
             Select 3 classrooms and at least 2 bathrooms to walk during the Interior Building Condition zone.
           </div>
 
+          {hasCampusRooms(campusName) && (
+            <div style={{
+              backgroundColor: 'rgba(16, 185, 129, 0.08)',
+              borderRadius: '8px',
+              padding: '10px 14px',
+              marginBottom: '12px',
+              fontSize: '13px',
+              color: '#059669',
+              border: '1px solid rgba(16, 185, 129, 0.2)'
+            }}>
+              Room list loaded for {campusName}. Select rooms from the dropdown.
+            </div>
+          )}
+
           {/* Classrooms */}
           <div style={{
             backgroundColor: '#fff',
@@ -195,19 +218,13 @@ export const BGSetup = ({ bgWalkthrough }) => {
             </div>
             {classrooms.map((classroom, index) => (
               <div key={index} style={{ marginBottom: '8px' }}>
-                <input
-                  type="text"
-                  placeholder={`Classroom ${index + 1} (e.g., Room 101, K-1, etc.)`}
+                <RoomSelector
+                  campusName={campusName}
                   value={classroom}
-                  onChange={(e) => handleClassroomChange(index, e.target.value)}
-                  style={{
-                    width: '100%',
-                    border: '1px solid #ddd',
-                    borderRadius: '8px',
-                    padding: '12px',
-                    fontSize: '15px',
-                    boxSizing: 'border-box'
-                  }}
+                  onChange={(val) => handleClassroomChange(index, val)}
+                  placeholder={`Classroom ${index + 1} (e.g., Room 101, K-1, etc.)`}
+                  roomTypes="learning"
+                  excludeValues={classrooms.filter((_, i) => i !== index).filter(Boolean)}
                 />
               </div>
             ))}
@@ -240,20 +257,16 @@ export const BGSetup = ({ bgWalkthrough }) => {
             </div>
             {bathrooms.map((bathroom, index) => (
               <div key={index} style={{ marginBottom: '8px', display: 'flex', gap: '8px' }}>
-                <input
-                  type="text"
-                  placeholder={`Bathroom ${index + 1} (e.g., Main Hall, Boys K-2, etc.)`}
-                  value={bathroom}
-                  onChange={(e) => handleBathroomChange(index, e.target.value)}
-                  style={{
-                    flex: 1,
-                    border: '1px solid #ddd',
-                    borderRadius: '8px',
-                    padding: '12px',
-                    fontSize: '15px',
-                    boxSizing: 'border-box'
-                  }}
-                />
+                <div style={{ flex: 1 }}>
+                  <RoomSelector
+                    campusName={campusName}
+                    value={bathroom}
+                    onChange={(val) => handleBathroomChange(index, val)}
+                    placeholder={`Bathroom ${index + 1} (e.g., Main Hall, Boys K-2, etc.)`}
+                    roomTypes="restroom"
+                    excludeValues={bathrooms.filter((_, i) => i !== index).filter(Boolean)}
+                  />
+                </div>
                 {bathrooms.length > 2 && (
                   <button
                     onClick={() => removeBathroom(index)}
