@@ -4,7 +4,7 @@ import { CampusSelector } from '../components/CampusSelector';
 import { Header } from '../components/Header';
 import { CAMPUSES } from '../data/campuses';
 import { ZONES, TOUR_ROUTE_ZONE_IDS, OPTIONAL_ZONE_IDS } from '../data/zones';
-import { hasCampusRooms, getCampusRoomsByType } from '../data/campusRooms';
+import { hasCampusRooms, getCampusRooms, getCampusRoomsByType } from '../data/campusRooms';
 import { useI18n } from '../i18n';
 
 export const AuditSetup = ({ audit }) => {
@@ -21,8 +21,9 @@ export const AuditSetup = ({ audit }) => {
   // Campus room data
   const campusRestrooms = hasCampusRooms(campusName) ? getCampusRoomsByType(campusName, 'restroom') : [];
   const hasNamedRestrooms = campusRestrooms.length > 0;
-  const campusClassrooms = hasCampusRooms(campusName) ? getCampusRoomsByType(campusName, 'learning') : [];
-  const hasNamedClassrooms = campusClassrooms.length > 0;
+  // All inspectable rooms (everything except restrooms)
+  const allCampusRooms = hasCampusRooms(campusName) ? getCampusRooms(campusName).filter(r => r.type !== 'restroom') : [];
+  const hasNamedRooms = allCampusRooms.length > 0;
 
   // When campus changes, clear room selections
   const setCampusName = (name) => {
@@ -32,12 +33,14 @@ export const AuditSetup = ({ audit }) => {
     setRestroomCount(1);
   };
 
-  const handleClassroomToggle = (roomName) => {
-    setSelectedClassrooms(prev =>
-      prev.includes(roomName)
-        ? prev.filter(n => n !== roomName)
-        : [...prev, roomName]
-    );
+  const handleAddRoom = (roomName) => {
+    if (roomName && !selectedClassrooms.includes(roomName)) {
+      setSelectedClassrooms(prev => [...prev, roomName]);
+    }
+  };
+
+  const handleRemoveRoom = (roomName) => {
+    setSelectedClassrooms(prev => prev.filter(n => n !== roomName));
   };
 
   const handleRestroomToggle = (roomName) => {
@@ -333,11 +336,11 @@ export const AuditSetup = ({ audit }) => {
           </div>
         )}
 
-        {/* Named Learning Spaces (when campus has room list) */}
-        {hasNamedClassrooms && (
+        {/* Named Room Selection (when campus has room list) */}
+        {hasNamedRooms && (
           <div>
             <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
-              Select Learning Spaces to Inspect
+              Select Rooms to Inspect
             </label>
             <div style={{
               backgroundColor: 'rgba(43, 87, 208, 0.08)',
@@ -348,72 +351,70 @@ export const AuditSetup = ({ audit }) => {
               color: '#2B57D0',
               border: '1px solid rgba(43, 87, 208, 0.2)'
             }}>
-              {campusName} learning spaces loaded. Select which rooms to walk.
+              {campusName} room list loaded. Select rooms from the dropdown.
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              {campusClassrooms.map(room => (
-                <label
-                  key={room.name}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '14px 16px',
-                    backgroundColor: selectedClassrooms.includes(room.name) ? '#eff6ff' : '#fff',
-                    borderRadius: '10px',
-                    border: selectedClassrooms.includes(room.name) ? '2px solid #2B57D0' : '1px solid #ddd',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedClassrooms.includes(room.name)}
-                    onChange={() => handleClassroomToggle(room.name)}
-                    style={{
-                      width: '22px',
-                      height: '22px',
-                      marginRight: '12px',
-                      accentColor: '#2B57D0'
-                    }}
-                  />
-                  <span style={{ fontSize: '16px', flex: 1 }}>{room.name}</span>
-                </label>
-              ))}
-            </div>
+            <select
+              value=""
+              onChange={(e) => {
+                handleAddRoom(e.target.value);
+                e.target.value = '';
+              }}
+              style={{
+                width: '100%',
+                padding: '16px',
+                fontSize: '17px',
+                borderRadius: '12px',
+                border: '1px solid #ddd',
+                backgroundColor: '#fff',
+                color: '#333',
+                appearance: 'auto',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="">-- Add a room --</option>
+              {allCampusRooms
+                .filter(room => !selectedClassrooms.includes(room.name))
+                .map(room => (
+                  <option key={room.name} value={room.name}>{room.name}</option>
+                ))
+              }
+            </select>
             {selectedClassrooms.length > 0 && (
-              <div style={{ fontSize: '14px', color: '#2B57D0', marginTop: '8px', fontWeight: '500' }}>
-                {selectedClassrooms.length} learning space{selectedClassrooms.length > 1 ? 's' : ''} selected
+              <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                {selectedClassrooms.map((name) => (
+                  <div
+                    key={name}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '12px 16px',
+                      backgroundColor: '#eff6ff',
+                      borderRadius: '10px',
+                      border: '1px solid #2B57D0'
+                    }}
+                  >
+                    <span style={{ fontSize: '16px', flex: 1, color: '#1e3a5f' }}>{name}</span>
+                    <button
+                      onClick={() => handleRemoveRoom(name)}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#dc2626',
+                        fontSize: '20px',
+                        cursor: 'pointer',
+                        padding: '0 4px',
+                        lineHeight: 1
+                      }}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+                <div style={{ fontSize: '14px', color: '#2B57D0', marginTop: '4px', fontWeight: '500' }}>
+                  {selectedClassrooms.length} room{selectedClassrooms.length > 1 ? 's' : ''} selected
+                </div>
               </div>
             )}
-          </div>
-        )}
-
-        {/* Selected Learning Spaces Preview */}
-        {hasNamedClassrooms && selectedClassrooms.length > 0 && (
-          <div>
-            <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
-              Learning Spaces ({selectedClassrooms.length})
-            </label>
-            <div style={{
-              backgroundColor: 'rgba(43, 87, 208, 0.08)',
-              border: '1px solid #2B57D0',
-              borderRadius: '12px',
-              padding: '16px'
-            }}>
-              {selectedClassrooms.map((name, i) => (
-                <div
-                  key={name}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '12px 0',
-                    borderBottom: i !== selectedClassrooms.length - 1 ? '1px solid rgba(43, 87, 208, 0.2)' : 'none'
-                  }}
-                >
-                  <span style={{ color: '#2B57D0', marginRight: '12px', fontSize: '20px' }}>✓</span>
-                  <span style={{ fontSize: '17px', flex: 1 }}>{name}</span>
-                </div>
-              ))}
-            </div>
           </div>
         )}
 
@@ -424,7 +425,7 @@ export const AuditSetup = ({ audit }) => {
           </label>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {OPTIONAL_ZONE_IDS
-              .filter(id => !(hasNamedClassrooms && id === 'classroom'))
+              .filter(id => !(hasNamedRooms && id === 'classroom'))
               .map(id => (
               <label
                 key={id}

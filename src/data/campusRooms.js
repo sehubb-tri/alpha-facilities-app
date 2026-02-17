@@ -32,6 +32,8 @@ export const CAMPUS_ROOMS = {
     { name: "Boron Room", type: "learning" },
     // Front lobby
     { name: "Vestibule", type: "vestibule" },
+    // Hallways
+    { name: "Main Hallway", type: "hallway" },
     // Restrooms - main hallway + in-classroom bathrooms
     { name: "Main Hallway Bathroom", type: "restroom" },
     { name: "Carbon Room Bathroom", type: "restroom" },
