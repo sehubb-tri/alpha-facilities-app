@@ -380,39 +380,6 @@ export const CleanlinessAuditChecklist = ({ cleanlinessAudit, camera }) => {
                         padding: '16px',
                         borderBottom: checkIndex < section.checks.length - 1 ? '1px solid #e5e7eb' : 'none'
                       }}>
-                        {/* Instant Red Badge */}
-                        {instantRedItem && (
-                          <div style={{
-                            display: 'inline-block',
-                            backgroundColor: '#fee2e2',
-                            color: '#dc2626',
-                            fontSize: '11px',
-                            fontWeight: '700',
-                            padding: '2px 8px',
-                            borderRadius: '4px',
-                            marginBottom: '8px'
-                          }}>
-                            INSTANT RED IF NO
-                          </div>
-                        )}
-
-                        {/* SLA Tier Badge */}
-                        {check.slaTier && (
-                          <div style={{
-                            display: 'inline-block',
-                            backgroundColor: check.slaTier === 1 ? '#fee2e2' : check.slaTier === 2 ? '#fef3c7' : '#f3f4f6',
-                            color: check.slaTier === 1 ? '#dc2626' : check.slaTier === 2 ? '#d97706' : '#666',
-                            fontSize: '11px',
-                            fontWeight: '600',
-                            padding: '2px 8px',
-                            borderRadius: '4px',
-                            marginBottom: '8px',
-                            marginLeft: instantRedItem ? '6px' : '0'
-                          }}>
-                            T{check.slaTier}
-                          </div>
-                        )}
-
                         {/* Check Text */}
                         <div style={{ fontSize: '15px', marginBottom: '8px', color: '#333', lineHeight: '1.4' }}>
                           {check.text}

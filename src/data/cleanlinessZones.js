@@ -84,18 +84,11 @@ export const SLA_TIERS = {
 // NO answer = automatic RED, cannot be Amber
 // ============================================
 export const CLEANLINESS_INSTANT_RED_CHECKS = [
-  // Safety/EHS failures (zero tolerance)
+  // Safety/EHS catch-all per zone (zero tolerance)
   'entry_safe',
   'hall_safe',
   'commons_safe',
-  'ehs_no_standing_water',
-  'ehs_no_blocked_exits',
-  'ehs_no_exposed_wiring',
-  'ehs_no_loose_cords',
-  'ehs_no_unsecured_chemicals',
-  'ehs_no_pest_evidence',
-  'ehs_no_mold_mildew',
-  'ehs_no_active_moisture',
+  'supply_closet_safe',
   // Restroom failures (ANY restroom defect = instant red)
   'restroom_toilets_clean',
   'restroom_sinks_clean',
@@ -125,14 +118,11 @@ export const CLEANLINESS_PHOTO_REQUIRED_CHECKS = [
   'restroom_trash_empty',
   'restroom_odor_free',
   'restroom_safe',
-  // Safety/EHS checks
-  'ehs_no_standing_water',
-  'ehs_no_blocked_exits',
-  'ehs_no_exposed_wiring',
-  'ehs_no_unsecured_chemicals',
-  'ehs_no_pest_evidence',
-  'ehs_no_mold_mildew',
-  'ehs_no_active_moisture',
+  // Safety/EHS catch-all per zone
+  'entry_safe',
+  'hall_safe',
+  'commons_safe',
+  'supply_closet_safe',
   // Deep clean verification (monthly)
   'deep_grout_condition',
   'deep_carpet_condition',
@@ -239,11 +229,11 @@ export const CLEANLINESS_ZONES = {
           },
           {
             id: 'entry_safe',
-            text: 'Area is safe (no wet floors, loose items, or hazards)?',
-            helpText: 'No standing water, no loose items in walkways.',
+            text: 'Area is safe and free of EHS hazards (no wet floors, blocked exits, pests, mold, exposed wiring, or chemical access)?',
+            helpText: 'Catch-all safety/EHS check for this zone. No standing water, blocked exits, exposed wiring, loose cords in walkways, unsecured chemicals, pest evidence (droppings, trails), mold/mildew, or active moisture.',
             tier: 'red',
             instantRed: true,
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 1
           }
         ]
@@ -314,11 +304,11 @@ export const CLEANLINESS_ZONES = {
           },
           {
             id: 'hall_safe',
-            text: 'Area is safe (no wet floors, obstacles, or hazards)?',
-            helpText: 'No standing water, loose cords, or trip hazards in walkway.',
+            text: 'Area is safe and free of EHS hazards (no wet floors, blocked exits, pests, mold, exposed wiring, or chemical access)?',
+            helpText: 'Catch-all safety/EHS check for this zone. No standing water, blocked exits, exposed wiring, loose cords in walkways, unsecured chemicals, pest evidence (droppings, trails), mold/mildew, or active moisture.',
             tier: 'red',
             instantRed: true,
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 1
           }
         ]
@@ -381,11 +371,11 @@ export const CLEANLINESS_ZONES = {
           },
           {
             id: 'commons_safe',
-            text: 'Area is safe (no wet floors, broken furniture, or hazards)?',
-            helpText: 'No safety concerns in commons area.',
+            text: 'Area is safe and free of EHS hazards (no wet floors, blocked exits, pests, mold, exposed wiring, or chemical access)?',
+            helpText: 'Catch-all safety/EHS check for this zone. No standing water, blocked exits, exposed wiring, loose cords in walkways, unsecured chemicals, pest evidence (droppings, trails), mold/mildew, or active moisture.',
             tier: 'red',
             instantRed: true,
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 1
           }
         ]
@@ -552,102 +542,13 @@ export const CLEANLINESS_ZONES = {
             slaTier: 3
           },
           {
-            id: 'supply_stockout_check',
-            text: 'All dispensers across campus stocked and functional?',
-            helpText: 'TP present, soap dispenses, paper towels dispensing, sanitizer dispensing.',
-            tier: 'amber',
-            photoRequired: false,
-            slaTier: 2
-          }
-        ]
-      },
-      // ----------------------------------------
-      // ZONE 6: ENVIRONMENTAL HEALTH & SAFETY
-      // Cross-cutting check based on everything you saw on the walk.
-      // ----------------------------------------
-      {
-        name: 'Environmental Health & Safety',
-        description: 'Based on your full walkthrough, check for hazards, pests, moisture, and odor across all zones.',
-        checks: [
-          {
-            id: 'ehs_no_standing_water',
-            text: 'No standing water in any zone you walked?',
-            helpText: 'Any pooling, dripping, or standing water = immediate safety concern.',
+            id: 'supply_closet_safe',
+            text: 'Area is safe and free of EHS hazards (chemicals secured, no pests, mold, or moisture)?',
+            helpText: 'All chemicals stored securely out of student reach. No pest evidence, mold/mildew, standing water, or active leaks.',
             tier: 'red',
             instantRed: true,
             photoRequired: true,
             slaTier: 1
-          },
-          {
-            id: 'ehs_no_blocked_exits',
-            text: 'No blocked emergency exits?',
-            helpText: 'All exit paths must be clear and accessible.',
-            tier: 'red',
-            instantRed: true,
-            photoRequired: true,
-            slaTier: 1
-          },
-          {
-            id: 'ehs_no_exposed_wiring',
-            text: 'No exposed wiring or electrical hazards?',
-            helpText: 'No exposed wires, damaged outlets, or electrical risks.',
-            tier: 'red',
-            instantRed: true,
-            photoRequired: true,
-            slaTier: 1
-          },
-          {
-            id: 'ehs_no_loose_cords',
-            text: 'No loose cords in walk paths?',
-            helpText: 'All cords and cables must be secured out of walkways.',
-            tier: 'red',
-            instantRed: true,
-            photoRequired: false,
-            slaTier: 1
-          },
-          {
-            id: 'ehs_no_unsecured_chemicals',
-            text: 'No chemicals accessible to students?',
-            helpText: 'All cleaning chemicals stored securely and out of student reach.',
-            tier: 'red',
-            instantRed: true,
-            photoRequired: true,
-            slaTier: 1
-          },
-          {
-            id: 'ehs_no_pest_evidence',
-            text: 'No pest evidence (live pests, droppings, trails, gnawing)?',
-            helpText: 'No visible live pests, droppings, insect trails/clusters, or gnawing/chewing evidence.',
-            tier: 'red',
-            instantRed: true,
-            photoRequired: true,
-            slaTier: 1
-          },
-          {
-            id: 'ehs_no_mold_mildew',
-            text: 'No visible mold or mildew?',
-            helpText: 'No visible mold/mildew, brown staining, water staining, or condensation streaks.',
-            tier: 'red',
-            instantRed: true,
-            photoRequired: true,
-            slaTier: 1
-          },
-          {
-            id: 'ehs_no_active_moisture',
-            text: 'No active moisture events (dripping, pooling, condensation)?',
-            helpText: 'No active leaks, dripping pipes, or moisture accumulation.',
-            tier: 'red',
-            instantRed: true,
-            photoRequired: true,
-            slaTier: 1
-          },
-          {
-            id: 'ehs_odor_free',
-            text: 'No detectable odors in any zone you walked?',
-            helpText: 'No sour, mildew, waste, or lingering odors. Detectable = can smell without leaning in.',
-            tier: 'amber',
-            photoRequired: false,
-            slaTier: 2
           }
         ]
       },
