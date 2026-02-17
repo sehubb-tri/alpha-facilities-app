@@ -8,16 +8,20 @@ export const useAudit = () => {
   const [startTime, setStartTime] = useState(null);
   const [selectedOptionalZones, setSelectedOptionalZones] = useState([]);
   const [restroomCount, setRestroomCount] = useState(1);
+  const [restroomNames, setRestroomNames] = useState([]); // Named restrooms (e.g., ["Main Hallway Bathroom", "Carbon Room Bathroom"])
   const [currentZoneIndex, setCurrentZoneIndex] = useState(0);
   const [zoneResults, setZoneResults] = useState({});
   const [conditionAlerts, setConditionAlerts] = useState([]);
   const [tourReady, setTourReady] = useState(null);
   const [zonePhotos, setZonePhotos] = useState({}); // { zoneId: [photo1, photo2, ...] }
 
-  // Generate restroom zone IDs based on count
+  // Generate restroom zone IDs based on count or named restrooms
   const restroomZoneIds = useMemo(() => {
+    if (restroomNames.length > 0) {
+      return restroomNames.map((_, i) => `restroom_${i + 1}`);
+    }
     return Array.from({ length: restroomCount }, (_, i) => `restroom_${i + 1}`);
-  }, [restroomCount]);
+  }, [restroomCount, restroomNames]);
 
   // All zones: tour route + optional + restrooms + final (Alpha Standard)
   const allZones = useMemo(() =>
@@ -36,10 +40,12 @@ export const useAudit = () => {
     // Check if it's a dynamic restroom zone
     if (zoneId.startsWith('restroom_')) {
       const num = parseInt(zoneId.split('_')[1]);
-      return createRestroomZone(num);
+      // Use named restroom if available, otherwise generic "Restroom N"
+      const customName = restroomNames.length > 0 ? restroomNames[num - 1] : null;
+      return createRestroomZone(num, customName);
     }
     return ZONES[zoneId];
-  }, []);
+  }, [restroomNames]);
 
   const currentZone = useMemo(() =>
     getZoneConfig(currentZoneId),
@@ -200,6 +206,7 @@ export const useAudit = () => {
     setStartTime(null);
     setSelectedOptionalZones([]);
     setRestroomCount(1);
+    setRestroomNames([]);
     setCurrentZoneIndex(0);
     setZoneResults({});
     setConditionAlerts([]);
@@ -207,12 +214,14 @@ export const useAudit = () => {
     setZonePhotos({});
   }, []);
 
-  const beginAudit = useCallback((campusData, name, email, optionalZones, numRestrooms = 1) => {
+  const beginAudit = useCallback((campusData, name, email, optionalZones, numRestrooms = 1, namedRestrooms = []) => {
     setCampus(campusData);
     setAuditorName(name);
     setAuditorEmail(email);
     setSelectedOptionalZones(optionalZones);
-    setRestroomCount(numRestrooms);
+    setRestroomNames(namedRestrooms);
+    // If named restrooms provided, use their count; otherwise use the number
+    setRestroomCount(namedRestrooms.length > 0 ? namedRestrooms.length : numRestrooms);
     setStartTime(Date.now());
   }, []);
 

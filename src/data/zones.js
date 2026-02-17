@@ -17,10 +17,10 @@ export const RESTROOM_TEMPLATE = {
   ]
 };
 
-// Helper to generate restroom zone for a given number
-export const createRestroomZone = (num) => ({
+// Helper to generate restroom zone for a given number or named restroom
+export const createRestroomZone = (num, customName) => ({
   ...RESTROOM_TEMPLATE,
-  name: `Restroom ${num}`,
+  name: customName || `Restroom ${num}`,
 });
 
 export const ZONES = {
