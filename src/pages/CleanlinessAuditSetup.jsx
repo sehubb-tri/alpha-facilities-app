@@ -295,7 +295,7 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
             }} />
             <div>
               <div style={{ fontWeight: '600', color: '#dc2626' }}>{CLEANLINESS_RAG_RULES.red.description}</div>
-              <div style={{ fontSize: '13px', color: '#666' }}>Any restroom/safety/tour-ready failure, or 6+ defects</div>
+              <div style={{ fontSize: '13px', color: '#666' }}>Any restroom or safety/EHS failure, or 6+ non-critical defects</div>
             </div>
           </div>
         </div>
@@ -311,7 +311,7 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
             Important
           </div>
           <div style={{ fontSize: '14px', color: '#78350f' }}>
-            Items marked <strong>INSTANT RED IF NO</strong> cannot be Amber. This includes ALL restroom defects, safety hazards, and Tour Ready = No.
+            Items marked <strong>INSTANT RED IF NO</strong> cannot be Amber. This includes ALL restroom defects and safety/EHS hazards.
           </div>
           <div style={{ fontSize: '14px', color: '#78350f', marginTop: '8px' }}>
             Every "No" answer requires an explanation. Photo evidence required for restroom and safety items.

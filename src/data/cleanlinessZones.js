@@ -39,10 +39,9 @@ export const CLEANLINESS_RAG_RULES = {
   red: {
     description: 'Not Meeting Standard',
     criteria: [
-      'Any INSTANT RED item failed (restroom, safety, tour ready)',
+      'Any INSTANT RED item failed (restroom defect or safety/EHS hazard)',
       'More than 5 non-critical defects',
       'Repeat defect in same zone within 30 days',
-      '"Tour Ready" = No',
       'Defects not remediated within 7 days',
       'Vendor missed same task two consecutive nights',
       'Any missed task not corrected within SLA'
@@ -85,15 +84,18 @@ export const SLA_TIERS = {
 // NO answer = automatic RED, cannot be Amber
 // ============================================
 export const CLEANLINESS_INSTANT_RED_CHECKS = [
-  // Entry zone (parent-facing, 47-second arrival decision)
-  'entry_glass_clean',
-  'entry_floor_clean',
-  'tour_interior_glass_clean',
+  // Safety/EHS failures (zero tolerance)
   'entry_safe',
-  // Hallway safety
   'hall_safe',
-  // Commons safety
   'commons_safe',
+  'ehs_no_standing_water',
+  'ehs_no_blocked_exits',
+  'ehs_no_exposed_wiring',
+  'ehs_no_loose_cords',
+  'ehs_no_unsecured_chemicals',
+  'ehs_no_pest_evidence',
+  'ehs_no_mold_mildew',
+  'ehs_no_active_moisture',
   // Restroom failures (ANY restroom defect = instant red)
   'restroom_toilets_clean',
   'restroom_sinks_clean',
@@ -104,21 +106,7 @@ export const CLEANLINESS_INSTANT_RED_CHECKS = [
   'restroom_tp_stocked',
   'restroom_trash_empty',
   'restroom_odor_free',
-  'restroom_safe',
-  // Supply stockout during operating hours
-  'supply_stockout_check',
-  // Safety/EHS failures
-  'ehs_no_standing_water',
-  'ehs_no_blocked_exits',
-  'ehs_no_exposed_wiring',
-  'ehs_no_loose_cords',
-  'ehs_no_unsecured_chemicals',
-  'ehs_no_pest_evidence',
-  'ehs_no_mold_mildew',
-  'ehs_no_active_moisture',
-  'ehs_odor_free',
-  // Tour ready
-  'tour_ready'
+  'restroom_safe'
 ];
 
 // ============================================
@@ -126,10 +114,6 @@ export const CLEANLINESS_INSTANT_RED_CHECKS = [
 // Photos required for amber-ineligible or disputed items
 // ============================================
 export const CLEANLINESS_PHOTO_REQUIRED_CHECKS = [
-  // Entry zone
-  'entry_glass_clean',
-  'entry_floor_clean',
-  'tour_interior_glass_clean',
   // All restroom checks
   'restroom_toilets_clean',
   'restroom_sinks_clean',
@@ -141,9 +125,7 @@ export const CLEANLINESS_PHOTO_REQUIRED_CHECKS = [
   'restroom_trash_empty',
   'restroom_odor_free',
   'restroom_safe',
-  // Supply stockout
-  'supply_stockout_check',
-  // All EHS checks
+  // Safety/EHS checks
   'ehs_no_standing_water',
   'ehs_no_blocked_exits',
   'ehs_no_exposed_wiring',
@@ -195,18 +177,16 @@ export const CLEANLINESS_ZONES = {
             id: 'entry_glass_clean',
             text: 'Exterior door glass clean (no smudges, fingerprints, or streaks)?',
             helpText: '47-second arrival decision. Parent sees this first. Visible from normal standing position.',
-            tier: 'red',
-            instantRed: true,
-            photoRequired: true,
+            tier: 'amber',
+            photoRequired: false,
             slaTier: 2
           },
           {
             id: 'entry_floor_clean',
             text: 'Entry & lobby floor free of debris, spills, and stains?',
             helpText: 'Any single piece of visible debris = defect. Check walk paths, corners, edges.',
-            tier: 'red',
-            instantRed: true,
-            photoRequired: true,
+            tier: 'amber',
+            photoRequired: false,
             slaTier: 2
           },
           {
@@ -221,9 +201,8 @@ export const CLEANLINESS_ZONES = {
             id: 'tour_interior_glass_clean',
             text: 'Interior glass clean (no smudges or streaks)?',
             helpText: 'All glass visible from entrance-to-lobby sightline.',
-            tier: 'red',
-            instantRed: true,
-            photoRequired: true,
+            tier: 'amber',
+            photoRequired: false,
             slaTier: 2
           },
           {
@@ -575,11 +554,10 @@ export const CLEANLINESS_ZONES = {
           {
             id: 'supply_stockout_check',
             text: 'All dispensers across campus stocked and functional?',
-            helpText: 'TP present, soap dispenses, paper towels dispensing, sanitizer dispensing. Any stockout during operating hours = instant red.',
-            tier: 'red',
-            instantRed: true,
-            photoRequired: true,
-            slaTier: 1
+            helpText: 'TP present, soap dispenses, paper towels dispensing, sanitizer dispensing.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 2
           }
         ]
       },
@@ -667,8 +645,7 @@ export const CLEANLINESS_ZONES = {
             id: 'ehs_odor_free',
             text: 'No detectable odors in any zone you walked?',
             helpText: 'No sour, mildew, waste, or lingering odors. Detectable = can smell without leaning in.',
-            tier: 'red',
-            instantRed: true,
+            tier: 'amber',
             photoRequired: false,
             slaTier: 2
           }
@@ -703,8 +680,7 @@ export const CLEANLINESS_ZONES = {
             id: 'tour_ready',
             text: 'Is this campus tour ready right now?',
             helpText: 'Is there ANY condition you would want to explain, apologize for, avoid showing, or wish you had 5 minutes to fix before a visitor arrived? YES to any of those = Tour Ready is NO.',
-            tier: 'red',
-            instantRed: true,
+            tier: 'amber',
             photoRequired: false,
             slaTier: 2
           }
@@ -1730,11 +1706,6 @@ export const calculateCleanlinessZoneRating = (zoneId, results, issues = []) => 
  * @returns {string} 'GREEN', 'AMBER', or 'RED'
  */
 export const calculateOverallCleanlinessRating = (zoneRatings, tourReady) => {
-  // Tour Ready = No => automatic RED
-  if (tourReady === false) {
-    return 'RED';
-  }
-
   const ratings = Object.values(zoneRatings);
 
   // Any RED = overall RED
