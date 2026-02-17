@@ -89,6 +89,15 @@ export const SLA_TIERS = {
 // NO answer = automatic RED, cannot be Amber
 // ============================================
 export const CLEANLINESS_INSTANT_RED_CHECKS = [
+  // Entry zone (parent-facing, 47-second arrival decision)
+  'entry_glass_clean',
+  'entry_floor_clean',
+  'tour_interior_glass_clean',
+  'entry_safe',
+  // Hallway safety
+  'hall_safe',
+  // Commons safety
+  'commons_safe',
   // Restroom failures (ANY restroom defect = instant red)
   'restroom_toilets_clean',
   'restroom_sinks_clean',
@@ -100,6 +109,8 @@ export const CLEANLINESS_INSTANT_RED_CHECKS = [
   'restroom_trash_empty',
   'restroom_odor_free',
   'restroom_safe',
+  // Supply stockout during operating hours
+  'supply_stockout_check',
   // Safety/EHS failures
   'ehs_no_standing_water',
   'ehs_no_blocked_exits',
@@ -109,12 +120,9 @@ export const CLEANLINESS_INSTANT_RED_CHECKS = [
   'ehs_no_pest_evidence',
   'ehs_no_mold_mildew',
   'ehs_no_active_moisture',
+  'ehs_odor_free',
   // Tour ready
-  'tour_ready',
-  // Entry glass (47-second arrival decision)
-  'entry_glass_clean',
-  // Supply stockout during operating hours
-  'supply_stockout_check'
+  'tour_ready'
 ];
 
 // ============================================
@@ -122,6 +130,10 @@ export const CLEANLINESS_INSTANT_RED_CHECKS = [
 // Photos required for amber-ineligible or disputed items
 // ============================================
 export const CLEANLINESS_PHOTO_REQUIRED_CHECKS = [
+  // Entry zone
+  'entry_glass_clean',
+  'entry_floor_clean',
+  'tour_interior_glass_clean',
   // All restroom checks
   'restroom_toilets_clean',
   'restroom_sinks_clean',
@@ -132,6 +144,9 @@ export const CLEANLINESS_PHOTO_REQUIRED_CHECKS = [
   'restroom_tp_stocked',
   'restroom_trash_empty',
   'restroom_odor_free',
+  'restroom_safe',
+  // Supply stockout
+  'supply_stockout_check',
   // All EHS checks
   'ehs_no_standing_water',
   'ehs_no_blocked_exits',
@@ -140,10 +155,7 @@ export const CLEANLINESS_PHOTO_REQUIRED_CHECKS = [
   'ehs_no_pest_evidence',
   'ehs_no_mold_mildew',
   'ehs_no_active_moisture',
-  // Entry/tour route
-  'entry_glass_clean',
-  'entry_floor_clean',
-  // Deep clean verification
+  // Deep clean verification (monthly)
   'deep_grout_condition',
   'deep_carpet_condition',
   'deep_ceiling_tiles'
@@ -176,12 +188,22 @@ export const CLEANLINESS_ZONES = {
     timeNeeded: '20-30 minutes',
     sections: [
       // ----------------------------------------
-      // TOUR ROUTE - Surface Excellence
+      // ZONE 1: ENTRY & LOBBY
+      // Walk in the front door. Check everything before moving on.
       // ----------------------------------------
       {
-        name: 'Tour Route - Surface Excellence',
-        description: 'Walk the tour route (entry, hallway, commons). Check all visible surfaces against APPA Level 2.',
+        name: 'Entry & Lobby',
+        description: 'Start at the front door. 47-second arrival decision -- this is what parents see first.',
         checks: [
+          {
+            id: 'entry_glass_clean',
+            text: 'Exterior door glass clean (no smudges, fingerprints, or streaks)?',
+            helpText: '47-second arrival decision. Parent sees this first. Visible from normal standing position.',
+            tier: 'red',
+            instantRed: true,
+            photoRequired: true,
+            slaTier: 2
+          },
           {
             id: 'entry_floor_clean',
             text: 'Entry & lobby floor free of debris, spills, and stains?',
@@ -200,33 +222,75 @@ export const CLEANLINESS_ZONES = {
             slaTier: 2
           },
           {
-            id: 'entry_glass_clean',
-            text: 'Exterior door glass clean (no smudges, fingerprints, or streaks)?',
-            helpText: '47-second arrival decision. Parent sees this first. Visible from normal standing position.',
-            tier: 'red',
-            instantRed: true,
-            photoRequired: true,
-            slaTier: 2
-          },
-          {
             id: 'tour_interior_glass_clean',
-            text: 'Interior glass along tour route clean (no smudges or streaks)?',
-            helpText: 'All glass visible from entrance-to-lobby sightline and tour path.',
+            text: 'Interior glass clean (no smudges or streaks)?',
+            helpText: 'All glass visible from entrance-to-lobby sightline.',
             tier: 'red',
             instantRed: true,
             photoRequired: true,
             slaTier: 2
           },
           {
-            id: 'tour_floors_clean',
-            text: 'Hallway and commons floors free of debris, spills, and stains?',
-            helpText: 'Walk the full tour route. Any visible debris while walking = defect.',
+            id: 'entry_surfaces_clean',
+            text: 'Reception surfaces clean and dust-free (counters, desks, shelves)?',
+            helpText: 'No visible dust, sticky spots, residue, or fingerprints.',
             tier: 'amber',
             photoRequired: false,
             slaTier: 3
           },
           {
-            id: 'tour_floor_finish',
+            id: 'entry_high_touch_clean',
+            text: 'High-touch surfaces clean (door handles, counter edges)?',
+            helpText: 'No visible grime, residue, or moisture on any touched surface.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3
+          },
+          {
+            id: 'entry_trash_empty',
+            text: 'Trash cans empty with liners in place?',
+            helpText: 'Acceptable: 3 or fewer small items (tissue, wrapper). Not acceptable: food waste, multiple items.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3
+          },
+          {
+            id: 'entry_odor_free',
+            text: 'Free of bad odors?',
+            helpText: 'No mold, garbage, or musty smell. Detectable = can smell without leaning in.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 2
+          },
+          {
+            id: 'entry_safe',
+            text: 'Area is safe (no wet floors, loose items, or hazards)?',
+            helpText: 'No standing water, no loose items in walkways.',
+            tier: 'red',
+            instantRed: true,
+            photoRequired: false,
+            slaTier: 1
+          }
+        ]
+      },
+      // ----------------------------------------
+      // ZONE 2: HALLWAY / CORRIDOR
+      // Walk the hallway. Check everything here.
+      // ----------------------------------------
+      {
+        name: 'Hallway / Corridor',
+        description: 'Walk the full hallway. Check floors, walls, edges, and all surfaces.',
+        checks: [
+          {
+            id: 'hall_floor_clean',
+            text: 'Floor free of debris, spills, and stains?',
+            helpText: 'Walk the full corridor. Any visible debris while walking = defect.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3
+          },
+          {
+            id: 'hall_floor_finish',
             text: 'Floor finish uniform (no visible dull patches under normal lighting)?',
             helpText: 'Check under overhead lighting for inconsistent finish or wear patterns.',
             tier: 'amber',
@@ -234,139 +298,129 @@ export const CLEANLINESS_ZONES = {
             slaTier: 4
           },
           {
-            id: 'tour_edges_dust_free',
-            text: 'Edges, corners, and baseboards along tour route dust-free?',
+            id: 'hall_edges_dust_free',
+            text: 'Edges, corners, and baseboards dust-free?',
             helpText: 'Any visible film, patch, or line perceivable without touching = defect.',
             tier: 'amber',
             photoRequired: false,
             slaTier: 3
           },
           {
-            id: 'tour_walls_clean',
-            text: 'Walls along tour route free of scuff marks and damage?',
+            id: 'hall_walls_clean',
+            text: 'Walls free of scuff marks and damage?',
             helpText: 'No black marks, scrapes, or visible damage on corridor walls.',
             tier: 'amber',
             photoRequired: false,
             slaTier: 3
           },
           {
-            id: 'tour_high_touch_clean',
-            text: 'High-touch surfaces clean (handles, railings, switches, buttons)?',
+            id: 'hall_glass_clean',
+            text: 'Glass and doors clean (no smudges or fingerprints)?',
+            helpText: 'Visible from normal standing position under typical lighting.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3
+          },
+          {
+            id: 'hall_high_touch_clean',
+            text: 'High-touch surfaces clean (door handles, railings, light switches)?',
             helpText: 'No visible grime, residue, or moisture on any touched surface.',
             tier: 'amber',
             photoRequired: false,
             slaTier: 3
           },
           {
-            id: 'tour_furniture_arranged',
-            text: 'Furniture properly arranged per layout (chairs pushed in, not scattered)?',
-            helpText: 'Commons and lobby furniture should match intended arrangement.',
+            id: 'hall_trash_empty',
+            text: 'Trash cans empty with liners in place?',
+            helpText: 'No overflow. Fresh liner present.',
             tier: 'amber',
             photoRequired: false,
             slaTier: 3
           },
           {
-            id: 'tour_surfaces_clean',
-            text: 'Tables, counters, and reception surfaces clean and dust-free?',
-            helpText: 'No visible dust, sticky spots, residue, or fingerprints.',
-            tier: 'amber',
-            photoRequired: false,
-            slaTier: 3
-          }
-        ]
-      },
-      // ----------------------------------------
-      // TOUR ROUTE - Supply & Trash
-      // ----------------------------------------
-      {
-        name: 'Tour Route - Supply & Trash',
-        description: 'Check all trash receptacles and supply points along the tour route.',
-        checks: [
-          {
-            id: 'tour_trash_empty',
-            text: 'All trash cans along tour route empty with fresh liners?',
-            helpText: 'Acceptable: 3 or fewer small items (tissue, wrapper). Not acceptable: food waste, multiple items, or contents covering liner bottom.',
-            tier: 'amber',
-            photoRequired: false,
-            slaTier: 3
-          },
-          {
-            id: 'tour_reset_visible',
-            text: 'Visible signs of daily reset (liners tied, surfaces wiped, floors cleared)?',
-            helpText: 'Skipped or incomplete reset = not green.',
-            tier: 'amber',
-            photoRequired: false,
-            slaTier: 3
-          },
-          {
-            id: 'supply_closet_tp',
-            text: 'Supply closet: toilet paper sufficient for 1 week?',
-            helpText: 'CC determines what constitutes 1 week for their campus. When uncertain, overestimate.',
-            tier: 'amber',
-            photoRequired: false,
-            slaTier: 3,
-            isSupplyCheck: true
-          },
-          {
-            id: 'supply_closet_towels',
-            text: 'Supply closet: paper towels sufficient for 1 week?',
-            helpText: 'Running out is a failure, overstocking is not.',
-            tier: 'amber',
-            photoRequired: false,
-            slaTier: 3,
-            isSupplyCheck: true
-          },
-          {
-            id: 'supply_closet_soap',
-            text: 'Supply closet: soap and sanitizer sufficient for 1 week?',
-            helpText: 'Include both soap and hand sanitizer supplies.',
-            tier: 'amber',
-            photoRequired: false,
-            slaTier: 3,
-            isSupplyCheck: true
-          },
-          {
-            id: 'supply_closet_liners',
-            text: 'Supply closet: trash liners sufficient for 1 week?',
-            helpText: 'Enough liners for all cans across campus for the week.',
-            tier: 'amber',
-            photoRequired: false,
-            slaTier: 3,
-            isSupplyCheck: true
-          },
-          {
-            id: 'supply_closet_cleaning',
-            text: 'Supply closet: cleaning supplies present and stocked?',
-            helpText: 'Chemicals, mops, rags, and other cleaning materials available.',
-            tier: 'amber',
-            photoRequired: false,
-            slaTier: 3,
-            isSupplyCheck: true
-          },
-          {
-            id: 'supply_closet_organized',
-            text: 'Supply closet organized (items on shelves, walkway clear)?',
-            helpText: 'Nothing blocking walkway, items stored safely on shelves.',
-            tier: 'amber',
-            photoRequired: false,
-            slaTier: 3
-          },
-          {
-            id: 'supply_stockout_check',
-            text: 'All dispensers in inspected zones stocked and functional?',
-            helpText: 'TP present, soap dispenses, paper towels dispensing, sanitizer dispensing. Any stockout during operating hours = instant red.',
+            id: 'hall_safe',
+            text: 'Area is safe (no wet floors, obstacles, or hazards)?',
+            helpText: 'No standing water, loose cords, or trip hazards in walkway.',
             tier: 'red',
             instantRed: true,
-            photoRequired: true,
+            photoRequired: false,
             slaTier: 1
           }
         ]
       },
       // ----------------------------------------
-      // TOUR ROUTE - Restrooms
+      // ZONE 3: COMMONS AREA
+      // Check the commons / shared space.
       // ----------------------------------------
       {
-        name: 'Tour Route - Restrooms',
+        name: 'Commons Area',
+        description: 'Check all shared common spaces -- tables, furniture, floors, trash.',
+        checks: [
+          {
+            id: 'commons_floor_clean',
+            text: 'Floor free of debris, spills, and stains?',
+            helpText: 'Any visible debris while walking through = defect.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3
+          },
+          {
+            id: 'commons_tables_clean',
+            text: 'Tables and surfaces clean and dry (no sticky spots or residue)?',
+            helpText: 'No visible dust, sticky spots, residue, or fingerprints.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3
+          },
+          {
+            id: 'commons_furniture_arranged',
+            text: 'Furniture properly arranged per layout (chairs pushed in, not scattered)?',
+            helpText: 'Should match intended arrangement.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3
+          },
+          {
+            id: 'commons_high_touch_clean',
+            text: 'High-touch surfaces clean (door handles, table edges, chair backs)?',
+            helpText: 'No visible grime, residue, or buildup.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3
+          },
+          {
+            id: 'commons_trash_empty',
+            text: 'Trash cans empty with liners in place?',
+            helpText: 'No overflow. Fresh liner present.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3
+          },
+          {
+            id: 'commons_odor_free',
+            text: 'Free of bad odors (no food, mold, or garbage smell)?',
+            helpText: 'Detectable = can smell without leaning in.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3
+          },
+          {
+            id: 'commons_safe',
+            text: 'Area is safe (no wet floors, broken furniture, or hazards)?',
+            helpText: 'No safety concerns in commons area.',
+            tier: 'red',
+            instantRed: true,
+            photoRequired: false,
+            slaTier: 1
+          }
+        ]
+      },
+      // ----------------------------------------
+      // ZONE 4: RESTROOMS
+      // Check all restrooms on tour route. ALL defects = instant red.
+      // ----------------------------------------
+      {
+        name: 'Restrooms',
         description: 'Check all restrooms along the tour route. ANY restroom defect = instant red.',
         checks: [
           {
@@ -462,15 +516,88 @@ export const CLEANLINESS_ZONES = {
         ]
       },
       // ----------------------------------------
-      // ENVIRONMENTAL HEALTH & SAFETY
+      // ZONE 5: SUPPLY CLOSET
+      // Check supply levels and organization.
+      // ----------------------------------------
+      {
+        name: 'Supply Closet',
+        description: 'Check supply levels (1-week minimum) and closet organization.',
+        checks: [
+          {
+            id: 'supply_closet_tp',
+            text: 'Toilet paper sufficient for 1 week?',
+            helpText: 'CC determines what constitutes 1 week for their campus. When uncertain, overestimate.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3,
+            isSupplyCheck: true
+          },
+          {
+            id: 'supply_closet_towels',
+            text: 'Paper towels sufficient for 1 week?',
+            helpText: 'Running out is a failure, overstocking is not.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3,
+            isSupplyCheck: true
+          },
+          {
+            id: 'supply_closet_soap',
+            text: 'Soap and sanitizer sufficient for 1 week?',
+            helpText: 'Include both soap and hand sanitizer supplies.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3,
+            isSupplyCheck: true
+          },
+          {
+            id: 'supply_closet_liners',
+            text: 'Trash liners sufficient for 1 week?',
+            helpText: 'Enough liners for all cans across campus for the week.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3,
+            isSupplyCheck: true
+          },
+          {
+            id: 'supply_closet_cleaning',
+            text: 'Cleaning supplies present and stocked?',
+            helpText: 'Chemicals, mops, rags, and other cleaning materials available.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3,
+            isSupplyCheck: true
+          },
+          {
+            id: 'supply_closet_organized',
+            text: 'Closet organized (items on shelves, walkway clear)?',
+            helpText: 'Nothing blocking walkway, items stored safely on shelves.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3
+          },
+          {
+            id: 'supply_stockout_check',
+            text: 'All dispensers across campus stocked and functional?',
+            helpText: 'TP present, soap dispenses, paper towels dispensing, sanitizer dispensing. Any stockout during operating hours = instant red.',
+            tier: 'red',
+            instantRed: true,
+            photoRequired: true,
+            slaTier: 1
+          }
+        ]
+      },
+      // ----------------------------------------
+      // ZONE 6: ENVIRONMENTAL HEALTH & SAFETY
+      // Cross-cutting check based on everything you saw on the walk.
       // ----------------------------------------
       {
         name: 'Environmental Health & Safety',
-        description: 'Zero-tolerance standards for hazards, pests, moisture, and odor across all inspected zones.',
+        description: 'Based on your full walkthrough, check for hazards, pests, moisture, and odor across all zones.',
         checks: [
           {
             id: 'ehs_no_standing_water',
-            text: 'No standing water in any inspected zone?',
+            text: 'No standing water in any zone you walked?',
             helpText: 'Any pooling, dripping, or standing water = immediate safety concern.',
             tier: 'red',
             instantRed: true,
@@ -542,7 +669,7 @@ export const CLEANLINESS_ZONES = {
           },
           {
             id: 'ehs_odor_free',
-            text: 'No detectable odors in hallways, classrooms, or common areas?',
+            text: 'No detectable odors in any zone you walked?',
             helpText: 'No sour, mildew, waste, or lingering odors. Detectable = can smell without leaning in.',
             tier: 'red',
             instantRed: true,
@@ -552,7 +679,25 @@ export const CLEANLINESS_ZONES = {
         ]
       },
       // ----------------------------------------
-      // TOUR READY (Final Question)
+      // ZONE 7: DAILY RESET VERIFICATION
+      // Evidence that overnight vendor work was done.
+      // ----------------------------------------
+      {
+        name: 'Daily Reset Verification',
+        description: 'Confirm visible signs that overnight cleaning was completed.',
+        checks: [
+          {
+            id: 'reset_visible',
+            text: 'Visible signs of daily reset (fresh liners, wiped surfaces, cleared floors)?',
+            helpText: 'Skipped or incomplete reset = not green. Look for evidence across all zones.',
+            tier: 'amber',
+            photoRequired: false,
+            slaTier: 3
+          }
+        ]
+      },
+      // ----------------------------------------
+      // FINAL: TOUR READY
       // ----------------------------------------
       {
         name: 'Tour Ready',
