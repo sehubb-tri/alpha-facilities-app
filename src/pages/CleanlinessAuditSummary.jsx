@@ -171,6 +171,16 @@ export const CleanlinessAuditSummary = ({ cleanlinessAudit }) => {
               ? 'All checks passed! Campus is tour ready.'
               : `${issues.length} issue${issues.length > 1 ? 's' : ''} found`}
           </div>
+          {checklistType === 'weekly' && (
+            <div style={{
+              fontSize: '13px',
+              color: '#6b7280',
+              marginTop: '10px',
+              fontStyle: 'italic'
+            }}>
+              This rating is for your reference only. Dashboard status is set by the monthly audit.
+            </div>
+          )}
         </div>
 
         {/* Rating Criteria */}
