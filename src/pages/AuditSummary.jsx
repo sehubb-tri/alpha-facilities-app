@@ -226,7 +226,7 @@ export const AuditSummary = ({ audit }) => {
                 }}>
                   {defects === 0 ? '✓' : defects}
                 </span>
-                <span style={{ flex: 1, fontSize: '17px', color: '#374151' }}>{zone?.type === 'restroom' ? zone?.name : getZoneName(zoneId)}</span>
+                <span style={{ flex: 1, fontSize: '17px', color: '#374151' }}>{(zone?.type === 'restroom' || zone?.type === 'classroom') ? zone?.name : getZoneName(zoneId)}</span>
               </div>
             );
           })}

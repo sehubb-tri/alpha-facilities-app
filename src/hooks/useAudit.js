@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
-import { ZONES, TOUR_ROUTE_ZONE_IDS, FINAL_ZONE_IDS, createRestroomZone } from '../data/zones';
+import { ZONES, TOUR_ROUTE_ZONE_IDS, FINAL_ZONE_IDS, createRestroomZone, createClassroomZone } from '../data/zones';
 
 export const useAudit = () => {
   const [campus, setCampus] = useState(null);
@@ -9,6 +9,7 @@ export const useAudit = () => {
   const [selectedOptionalZones, setSelectedOptionalZones] = useState([]);
   const [restroomCount, setRestroomCount] = useState(1);
   const [restroomNames, setRestroomNames] = useState([]); // Named restrooms (e.g., ["Main Hallway Bathroom", "Carbon Room Bathroom"])
+  const [classroomNames, setClassroomNames] = useState([]); // Named classrooms (e.g., ["Neon Room", "Carbon Room"])
   const [currentZoneIndex, setCurrentZoneIndex] = useState(0);
   const [zoneResults, setZoneResults] = useState({});
   const [conditionAlerts, setConditionAlerts] = useState([]);
@@ -23,29 +24,43 @@ export const useAudit = () => {
     return Array.from({ length: restroomCount }, (_, i) => `restroom_${i + 1}`);
   }, [restroomCount, restroomNames]);
 
-  // All zones: tour route + optional + restrooms + final (Alpha Standard)
-  const allZones = useMemo(() =>
-    [...TOUR_ROUTE_ZONE_IDS, ...selectedOptionalZones, ...restroomZoneIds, ...FINAL_ZONE_IDS],
-    [selectedOptionalZones, restroomZoneIds]
-  );
+  // Generate classroom zone IDs based on named classrooms
+  const classroomZoneIds = useMemo(() => {
+    return classroomNames.map((_, i) => `classroom_${i + 1}`);
+  }, [classroomNames]);
+
+  // All zones: tour route + optional + named classrooms + restrooms + final (Alpha Standard)
+  // When named classrooms are used, filter out the generic 'classroom' from optional zones
+  const allZones = useMemo(() => {
+    const optionalFiltered = classroomNames.length > 0
+      ? selectedOptionalZones.filter(id => id !== 'classroom')
+      : selectedOptionalZones;
+    return [...TOUR_ROUTE_ZONE_IDS, ...optionalFiltered, ...classroomZoneIds, ...restroomZoneIds, ...FINAL_ZONE_IDS];
+  }, [selectedOptionalZones, classroomZoneIds, restroomZoneIds, classroomNames]);
+
 
   const currentZoneId = useMemo(() =>
     allZones[currentZoneIndex],
     [allZones, currentZoneIndex]
   );
 
-  // Get zone config - handles both static zones and dynamic restrooms
+  // Get zone config - handles static zones, dynamic restrooms, and dynamic classrooms
   const getZoneConfig = useCallback((zoneId) => {
     if (!zoneId) return null;
     // Check if it's a dynamic restroom zone
     if (zoneId.startsWith('restroom_')) {
       const num = parseInt(zoneId.split('_')[1]);
-      // Use named restroom if available, otherwise generic "Restroom N"
       const customName = restroomNames.length > 0 ? restroomNames[num - 1] : null;
       return createRestroomZone(num, customName);
     }
+    // Check if it's a dynamic classroom zone
+    if (zoneId.startsWith('classroom_')) {
+      const num = parseInt(zoneId.split('_')[1]);
+      const customName = classroomNames.length > 0 ? classroomNames[num - 1] : null;
+      return createClassroomZone(num, customName);
+    }
     return ZONES[zoneId];
-  }, [restroomNames]);
+  }, [restroomNames, classroomNames]);
 
   const currentZone = useMemo(() =>
     getZoneConfig(currentZoneId),
@@ -207,6 +222,7 @@ export const useAudit = () => {
     setSelectedOptionalZones([]);
     setRestroomCount(1);
     setRestroomNames([]);
+    setClassroomNames([]);
     setCurrentZoneIndex(0);
     setZoneResults({});
     setConditionAlerts([]);
@@ -214,12 +230,13 @@ export const useAudit = () => {
     setZonePhotos({});
   }, []);
 
-  const beginAudit = useCallback((campusData, name, email, optionalZones, numRestrooms = 1, namedRestrooms = []) => {
+  const beginAudit = useCallback((campusData, name, email, optionalZones, numRestrooms = 1, namedRestrooms = [], namedClassrooms = []) => {
     setCampus(campusData);
     setAuditorName(name);
     setAuditorEmail(email);
     setSelectedOptionalZones(optionalZones);
     setRestroomNames(namedRestrooms);
+    setClassroomNames(namedClassrooms);
     // If named restrooms provided, use their count; otherwise use the number
     setRestroomCount(namedRestrooms.length > 0 ? namedRestrooms.length : numRestrooms);
     setStartTime(Date.now());

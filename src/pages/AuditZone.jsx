@@ -124,7 +124,7 @@ export const AuditZone = ({ audit, camera }) => {
           </button>
           <div style={{ textAlign: 'center' }}>
             <h1 style={{ fontSize: '20px', fontWeight: '700', margin: 0 }}>
-              {currentZone?.type === 'restroom' ? currentZone?.name : getZoneName(currentZoneId)}
+              {(currentZone?.type === 'restroom' || currentZone?.type === 'classroom') ? currentZone?.name : getZoneName(currentZoneId)}
             </h1>
             <p style={{ fontSize: '15px', opacity: 0.8, margin: '4px 0 0 0' }}>
               {t('audit.walkthrough.zone')} {currentZoneIndex + 1} {t('audit.walkthrough.of')} {allZones.length}

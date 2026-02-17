@@ -23,6 +23,28 @@ export const createRestroomZone = (num, customName) => ({
   name: customName || `Restroom ${num}`,
 });
 
+// Classroom checklist template - used to generate dynamic classroom zones
+export const CLASSROOM_TEMPLATE = {
+  type: "classroom",
+  amberEligible: true,
+  cleanliness: [
+    "Floor is clean (no debris, spills, or stains)?",
+    "Edges, corners, and baseboards are dust-free (no buildup)?",
+    "Student desks and tables are clean (no writing, stickers, or residue)?",
+    "Teacher desk and surfaces are clean (no dust or clutter)?",
+    "Whiteboard area is clean (tray wiped, ledge dust-free)?",
+    "High-touch surfaces are clean (door handle, light switches)?",
+    "Trash cans are empty with liners in place (no overflow)?",
+    "Area is safe (no tripping hazards, loose wires, or broken items)?"
+  ]
+};
+
+// Helper to generate classroom zone for a given number or named room
+export const createClassroomZone = (num, customName) => ({
+  ...CLASSROOM_TEMPLATE,
+  name: customName || `Classroom ${num}`,
+});
+
 export const ZONES = {
   entry: {
     name: "Entry & Lobby",
