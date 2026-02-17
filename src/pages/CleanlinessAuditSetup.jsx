@@ -113,6 +113,24 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
           </div>
         </div>
 
+        {/* Timing Reminder for Weekly */}
+        {selectedType === 'weekly' && (
+          <div style={{
+            backgroundColor: 'rgba(219, 234, 254, 0.5)',
+            border: '1px solid #2563eb',
+            borderRadius: '12px',
+            padding: '14px 16px',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '10px'
+          }}>
+            <div style={{ fontSize: '18px', flexShrink: 0 }}>⏰</div>
+            <div style={{ fontSize: '14px', color: '#1e40af' }}>
+              <strong>Complete before staff and students arrive</strong> (typically 6:00-7:30 AM). This audit verifies overnight vendor work.
+            </div>
+          </div>
+        )}
+
         {/* Selected Checklist Preview */}
         {selectedZone && (
           <div style={{

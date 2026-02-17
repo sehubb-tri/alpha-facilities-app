@@ -162,7 +162,7 @@ export const CLEANLINESS_ZONES = {
     name: 'Weekly Audit',
     frequency: 'weekly',
     order: 1,
-    description: 'Tour route + assigned rooms from campus map. Must be completed 4x/month. All rooms covered at least 1x/month.',
+    description: 'Complete before staff and students arrive (typically 6:00-7:30 AM). Verifies overnight vendor work. Tour route + assigned rooms. Must be completed 4x/month.',
     timeNeeded: '20-30 minutes',
     sections: [
       // ----------------------------------------
