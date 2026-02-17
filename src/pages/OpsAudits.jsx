@@ -10,7 +10,9 @@ import {
   Cog,
   Globe,
   Clock,
-  ChevronRight
+  ChevronRight,
+  Sparkles,
+  Search
 } from 'lucide-react';
 
 const AUDIT_CATEGORIES = [
@@ -33,6 +35,14 @@ const AUDIT_CATEGORIES = [
     description: 'Detailed inspections of building systems and grounds',
     audits: [
       {
+        path: '/cleanliness?type=weekly',
+        Icon: Sparkles,
+        label: 'Cleanliness Audit',
+        description: 'Tour route + rotating room inspections',
+        color: '#2563eb',
+        time: '30-45 min'
+      },
+      {
         path: '/bg/setup',
         Icon: Building2,
         label: 'Building & Grounds',
@@ -54,6 +64,14 @@ const AUDIT_CATEGORIES = [
     title: 'Periodic Audits',
     description: 'Comprehensive compliance and quality reviews',
     audits: [
+      {
+        path: '/cleanliness?type=monthly',
+        Icon: Search,
+        label: 'Cleanliness Deep Dive',
+        description: 'Monthly deep inspection + 30-day review',
+        color: '#7c3aed',
+        time: '45-60 min'
+      },
       {
         path: '/security',
         Icon: Lock,

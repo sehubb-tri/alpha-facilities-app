@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CampusSelector } from '../components/CampusSelector';
 import { Header } from '../components/Header';
 import { CAMPUSES } from '../data/campuses';
@@ -7,13 +7,16 @@ import { CLEANLINESS_ZONES, CLEANLINESS_RAG_RULES, ROOM_AUDIT_TEMPLATES, getRoom
 import { getCampusRooms, hasCampusRooms } from '../data/campusRooms';
 
 const CHECKLIST_TYPES = [
+  { id: 'daily', name: 'Daily Cleanliness Check', icon: '✅', color: '#10b981', subtitle: 'Quick vendor verification', redirect: '/audit/setup' },
   { id: 'weekly', name: 'Weekly Cleanliness Audit', icon: '🧹', color: '#2563eb', subtitle: 'Tour route + assigned rooms' },
   { id: 'monthly', name: 'Monthly Deep Dive', icon: '🔍', color: '#7c3aed', subtitle: 'Deep inspection + 30-day review' }
 ];
 
 export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
   const navigate = useNavigate();
-  const [selectedType, setSelectedType] = useState(null);
+  const [searchParams] = useSearchParams();
+  const typeParam = searchParams.get('type');
+  const [selectedType, setSelectedType] = useState(typeParam && ['weekly', 'monthly'].includes(typeParam) ? typeParam : null);
   const [campusName, setCampusName] = useState('');
   const [auditorName, setAuditorName] = useState('');
   const [auditorEmail, setAuditorEmail] = useState('');
@@ -55,8 +58,8 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
     <div className="min-h-screen bg-gray-100">
       <Header
         title="Cleanliness Audit"
-        subtitle="14.12 Quality Bar - Weekly & Monthly"
-        onBack={() => navigate('/')}
+        subtitle="14.12 Quality Bar"
+        onBack={() => navigate('/ops-audits')}
       />
 
       <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -66,16 +69,22 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
           <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
             What are you checking? *
           </label>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
             {CHECKLIST_TYPES.map((type) => {
               const zone = CLEANLINESS_ZONES[type.id];
               const isSelected = selectedType === type.id;
               return (
                 <button
                   key={type.id}
-                  onClick={() => setSelectedType(type.id)}
+                  onClick={() => {
+                    if (type.redirect) {
+                      navigate(type.redirect);
+                      return;
+                    }
+                    setSelectedType(type.id);
+                  }}
                   style={{
-                    padding: '16px',
+                    padding: '14px 8px',
                     borderRadius: '12px',
                     border: isSelected ? `3px solid ${type.color}` : '2px solid #e5e7eb',
                     backgroundColor: isSelected ? `${type.color}10` : '#fff',
@@ -84,18 +93,18 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
                     transition: 'all 0.2s'
                   }}
                 >
-                  <div style={{ fontSize: '28px', marginBottom: '8px' }}>{type.icon}</div>
+                  <div style={{ fontSize: '24px', marginBottom: '6px' }}>{type.icon}</div>
                   <div style={{
-                    fontSize: '15px',
+                    fontSize: '13px',
                     fontWeight: '600',
                     color: isSelected ? type.color : '#333'
                   }}>
                     {type.name}
                   </div>
-                  <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
-                    {zone?.timeNeeded}
+                  <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+                    {zone?.timeNeeded || '15-20 min'}
                   </div>
-                  <div style={{ fontSize: '11px', color: '#999', marginTop: '2px' }}>
+                  <div style={{ fontSize: '10px', color: '#999', marginTop: '2px' }}>
                     {type.subtitle}
                   </div>
                 </button>
