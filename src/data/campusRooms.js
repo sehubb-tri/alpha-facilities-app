@@ -11,7 +11,7 @@
 
 export const CAMPUS_ROOMS = {
   "GT School": [
-    // Element-themed rooms (from floor plan)
+    // Element-themed learning spaces (from floor plan)
     { name: "Neon Room", type: "learning" },
     { name: "Platinum Room", type: "learning" },
     { name: "Gold Room", type: "learning" },
@@ -32,6 +32,17 @@ export const CAMPUS_ROOMS = {
     { name: "Boron Room", type: "learning" },
     // Front lobby
     { name: "Vestibule", type: "vestibule" },
+    // Restrooms - main hallway + in-classroom bathrooms
+    { name: "Main Hallway Bathroom", type: "restroom" },
+    { name: "Carbon Room Bathroom", type: "restroom" },
+    { name: "Oxygen Room Bathroom", type: "restroom" },
+    { name: "Nitrogen Room Bathroom", type: "restroom" },
+    { name: "Silver Room Bathroom", type: "restroom" },
+    { name: "Zinc Room Bathroom", type: "restroom" },
+    { name: "Copper Room Bathroom", type: "restroom" },
+    { name: "Iron Room Bathroom", type: "restroom" },
+    // Lithium bathroom converted to nursing/safe space
+    { name: "Lithium Room - Nursing/Safe Space", type: "other", note: "Converted from bathroom" },
   ]
 };
 
