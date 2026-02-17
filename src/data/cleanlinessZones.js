@@ -168,7 +168,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Exterior door glass clean (no smudges, fingerprints, or streaks)?',
             helpText: '47-second arrival decision. Parent sees this first. Visible from normal standing position.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 2
           },
           {
@@ -176,7 +176,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Entry & lobby floor free of debris, spills, and stains?',
             helpText: 'Any single piece of visible debris = defect. Check walk paths, corners, edges.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 2
           },
           {
@@ -184,7 +184,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Entry mat clean and flat (no curled edges or trip hazards)?',
             helpText: 'Mat should be clean and laying flat with no tripping risk.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 2
           },
           {
@@ -192,7 +192,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Interior glass clean (no smudges or streaks)?',
             helpText: 'All glass visible from entrance-to-lobby sightline.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 2
           },
           {
@@ -200,7 +200,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Reception surfaces clean and dust-free (counters, desks, shelves)?',
             helpText: 'No visible dust, sticky spots, residue, or fingerprints.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -208,7 +208,7 @@ export const CLEANLINESS_ZONES = {
             text: 'High-touch surfaces clean (door handles, counter edges)?',
             helpText: 'No visible grime, residue, or moisture on any touched surface.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -216,7 +216,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Trash cans empty with liners in place?',
             helpText: 'Acceptable: 3 or fewer small items (tissue, wrapper). Not acceptable: food waste, multiple items.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -224,7 +224,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Free of bad odors?',
             helpText: 'No mold, garbage, or musty smell. Detectable = can smell without leaning in.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 2
           },
           {
@@ -251,7 +251,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Floor free of debris, spills, and stains?',
             helpText: 'Walk the full corridor. Any visible debris while walking = defect.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -259,7 +259,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Floor finish uniform (no visible dull patches under normal lighting)?',
             helpText: 'Check under overhead lighting for inconsistent finish or wear patterns.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 4
           },
           {
@@ -267,7 +267,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Edges, corners, and baseboards dust-free?',
             helpText: 'Any visible film, patch, or line perceivable without touching = defect.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -275,7 +275,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Walls free of scuff marks and damage?',
             helpText: 'No black marks, scrapes, or visible damage on corridor walls.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -283,7 +283,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Glass and doors clean (no smudges or fingerprints)?',
             helpText: 'Visible from normal standing position under typical lighting.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -291,7 +291,7 @@ export const CLEANLINESS_ZONES = {
             text: 'High-touch surfaces clean (door handles, railings, light switches)?',
             helpText: 'No visible grime, residue, or moisture on any touched surface.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -299,7 +299,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Trash cans empty with liners in place?',
             helpText: 'No overflow. Fresh liner present.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -326,7 +326,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Floor free of debris, spills, and stains?',
             helpText: 'Any visible debris while walking through = defect.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -334,7 +334,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Tables and surfaces clean and dry (no sticky spots or residue)?',
             helpText: 'No visible dust, sticky spots, residue, or fingerprints.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -342,7 +342,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Furniture properly arranged per layout (chairs pushed in, not scattered)?',
             helpText: 'Should match intended arrangement.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -350,7 +350,7 @@ export const CLEANLINESS_ZONES = {
             text: 'High-touch surfaces clean (door handles, table edges, chair backs)?',
             helpText: 'No visible grime, residue, or buildup.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -358,7 +358,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Trash cans empty with liners in place?',
             helpText: 'No overflow. Fresh liner present.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -366,7 +366,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Free of bad odors (no food, mold, or garbage smell)?',
             helpText: 'Detectable = can smell without leaning in.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -538,7 +538,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Closet organized (items on shelves, walkway clear)?',
             helpText: 'Nothing blocking walkway, items stored safely on shelves.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -565,7 +565,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Visible signs of daily reset (fresh liners, wiped surfaces, cleared floors)?',
             helpText: 'Skipped or incomplete reset = not green. Look for evidence across all zones.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           }
         ]
@@ -618,7 +618,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Vents and air returns free of dust and debris?',
             helpText: 'No visible dust buildup on vent covers or grilles.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 4
           },
           {
@@ -626,7 +626,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Light fixtures and covers clean (no dead insects, dust, or discoloration)?',
             helpText: 'High dusting check. Look up at all fixture covers.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 4
           },
           {
@@ -634,7 +634,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Walls in good condition (no scuff marks, peeling paint, or damage)?',
             helpText: 'Check beyond tour route into classrooms, offices, and back areas.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 4
           },
           {
@@ -642,7 +642,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Baseboards deep cleaned (no grey buildup in corners)?',
             helpText: 'Run a finger along baseboard corners if needed. Should be free of buildup.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 4
           },
           {
@@ -650,7 +650,7 @@ export const CLEANLINESS_ZONES = {
             text: 'All corners free of cobwebs (including non-parent-facing areas)?',
             helpText: 'Check high corners in classrooms, offices, and storage areas.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 4
           }
         ]
@@ -667,7 +667,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Hard floor finish intact throughout (no excessive scuffing, peeling, or wear)?',
             helpText: 'Check for areas where floor finish has worn through or become dull.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 4
           },
           {
@@ -691,7 +691,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Areas under and behind furniture clean (no dust bunnies or debris)?',
             helpText: 'Spot check under desks, behind shelving units, and under heavy furniture.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 4
           },
           {
@@ -699,7 +699,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Soft seating and upholstered furniture clean (no stains or odors)?',
             helpText: 'Check common area couches, classroom soft seating, office chairs.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 4
           }
         ]
@@ -724,7 +724,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Chrome fixtures clean (no water spots, scale, or buildup)?',
             helpText: 'Check faucets, handles, flush valves for descaling needs.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 4
           },
           {
@@ -732,7 +732,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Exhaust fans clean and functional?',
             helpText: 'No dust buildup on fan covers. Fan pulls air when running.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 4
           },
           {
@@ -740,7 +740,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Stall partitions clean (no writing, stickers, or residue)?',
             helpText: 'Check both sides of all partitions and doors.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 4
           },
           {
@@ -748,7 +748,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Trash and recycle bins clean inside and out?',
             helpText: 'Bins should show no residue, staining, or odor from the bins themselves.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 4
           }
         ]
@@ -765,7 +765,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Vendor completed all nightly cleaning tasks this month (no misses)?',
             helpText: 'Check vendor logs. Any missed night = fail.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -773,7 +773,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Visible daily reset confirmed every morning this month?',
             helpText: 'Evidence of nightly work present each morning - fresh liners, clean surfaces.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -781,7 +781,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Weekly tasks completed on schedule this month?',
             helpText: 'Vendor weekly scope items executed per contract.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -790,7 +790,7 @@ export const CLEANLINESS_ZONES = {
             helpText: 'Same check failing in same zone within 30 days = repeat. Repeat = automatic red.',
             tier: 'red',
             instantRed: true,
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -798,7 +798,7 @@ export const CLEANLINESS_ZONES = {
             text: 'All defects resolved within SLA timelines?',
             helpText: 'Tier 1: same day. Tier 2: <24h. Tier 3: 5 days. Tier 4: per cycle.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -806,7 +806,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Vendor provides verifiable logs and documentation?',
             helpText: 'Vendor can produce evidence of completed work. Unverifiable logs = fail.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           }
         ]
@@ -823,7 +823,7 @@ export const CLEANLINESS_ZONES = {
             text: 'Were 90%+ of weekly audits this month Green?',
             helpText: 'Vendor monthly scorecard target: 90%+ of audits = Green.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -831,7 +831,7 @@ export const CLEANLINESS_ZONES = {
             text: 'No recurring defect patterns identified across weekly audits?',
             helpText: 'Same issue showing up in different weeks = pattern. Document and address.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -839,7 +839,7 @@ export const CLEANLINESS_ZONES = {
             text: 'All defects from previous month resolved or on track?',
             helpText: 'No carryover issues without documented plan and timeline.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -847,7 +847,7 @@ export const CLEANLINESS_ZONES = {
             text: 'No issues requiring escalation to VP-Ops Facilities?',
             helpText: 'Escalate if: same check fails 3+ times in 60 days, systemic pattern, beyond vendor scope, asset end-of-life, or contract issue.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           }
         ]
@@ -864,7 +864,7 @@ export const CLEANLINESS_ZONES = {
             text: 'No evidence of "audit-only cleaning" (zones degrade between QC windows)?',
             helpText: 'Zones should be consistently clean, not just during audit times.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -872,7 +872,7 @@ export const CLEANLINESS_ZONES = {
             text: 'No odor masking (chemical fragrance covering organic odor)?',
             helpText: 'Fragrance should not be used to mask underlying odor problems.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           },
           {
@@ -880,7 +880,7 @@ export const CLEANLINESS_ZONES = {
             text: 'No selective cleaning (high-touch clean but corners dusty)?',
             helpText: 'Smudge-free handles but dusty corners = selective cleaning pattern.',
             tier: 'amber',
-            photoRequired: false,
+            photoRequired: true,
             slaTier: 3
           }
         ]
@@ -906,7 +906,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Floor free of debris, spills, and stains?',
         helpText: 'Any visible debris while walking through = defect.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -914,7 +914,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Edges, corners, and baseboards dust-free?',
         helpText: 'Any visible film or line without touching = defect.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -922,7 +922,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Student desks and tables clean (no writing, stickers, or residue)?',
         helpText: 'All student work surfaces should be clean and clear.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -930,7 +930,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Teacher desk and surfaces clean (no dust or clutter)?',
         helpText: 'Teacher work area should be dust-free.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -938,7 +938,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Whiteboard area clean (tray wiped, ledge dust-free)?',
         helpText: 'Whiteboard tray and ledge should show no dust accumulation.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -946,7 +946,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'High-touch surfaces clean (door handle, light switches)?',
         helpText: 'No visible grime, residue, or buildup on touched surfaces.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -954,7 +954,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Trash cans empty with liners in place?',
         helpText: 'No overflow. Fresh liner present.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -963,7 +963,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         helpText: 'All cords secured, no loose items in walkways.',
         tier: 'red',
         instantRed: true,
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 1
       }
     ]
@@ -1073,7 +1073,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Floor free of debris, spills, and stains?',
         helpText: 'Any visible debris = defect.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1081,7 +1081,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Tables and surfaces clean and dry (no sticky spots or residue)?',
         helpText: 'All shared surfaces should be clean.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1089,7 +1089,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Furniture properly arranged (chairs pushed in, not scattered)?',
         helpText: 'Should match intended layout.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1097,7 +1097,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'High-touch surfaces clean (door handles, table edges, chair backs)?',
         helpText: 'No visible grime or residue.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1105,7 +1105,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Trash cans empty with liners in place?',
         helpText: 'No overflow. Fresh liner present.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1113,7 +1113,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Free of bad odors?',
         helpText: 'No food, mold, or garbage smell.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1122,7 +1122,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         helpText: 'No safety concerns.',
         tier: 'red',
         instantRed: true,
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 1
       }
     ]
@@ -1136,7 +1136,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Floor free of debris, spills, and stains?',
         helpText: 'Any visible debris = defect.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1144,7 +1144,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Desk and work surfaces dust-free?',
         helpText: 'No visible dust film or buildup.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1152,7 +1152,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'High-touch surfaces clean (door handles, light switches, shared equipment)?',
         helpText: 'No visible grime or residue.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1160,7 +1160,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Trash cans empty with liners in place?',
         helpText: 'No overflow.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1169,7 +1169,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         helpText: 'All cords secured, exits clear.',
         tier: 'red',
         instantRed: true,
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 1
       }
     ]
@@ -1183,7 +1183,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Floor free of debris, spills, and stains?',
         helpText: 'Any visible debris = defect.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1191,7 +1191,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Tables and seating clean and dry (no sticky spots or food residue)?',
         helpText: 'All eating surfaces must be clean.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1199,7 +1199,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Service and counter area clean (no crumbs, spills, or buildup)?',
         helpText: 'Food prep and service areas should be clean.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1207,7 +1207,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'High-touch surfaces clean (door handles, tray rails, chair backs)?',
         helpText: 'No visible grime or residue.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1215,7 +1215,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Trash cans empty with liners in place?',
         helpText: 'No overflow.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1223,7 +1223,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Free of bad odors (no spoiled food, garbage, or drain smell)?',
         helpText: 'No detectable food or waste odors.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1232,7 +1232,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         helpText: 'No safety concerns.',
         tier: 'red',
         instantRed: true,
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 1
       }
     ]
@@ -1246,7 +1246,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Floor free of debris, spills, and stains?',
         helpText: 'Any visible debris = defect.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 2
       },
       {
@@ -1254,7 +1254,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'All glass clean (no smudges, fingerprints, or streaks)?',
         helpText: 'Visible from normal standing position under typical lighting.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 2
       },
       {
@@ -1262,7 +1262,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Surfaces clean and dust-free?',
         helpText: 'Counters, shelves, and ledges.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 2
       },
       {
@@ -1270,7 +1270,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'High-touch surfaces clean (door handles, counter edges)?',
         helpText: 'No visible grime or residue.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 2
       },
       {
@@ -1279,7 +1279,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         helpText: 'No safety concerns.',
         tier: 'red',
         instantRed: true,
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 1
       }
     ]
@@ -1293,7 +1293,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Floor free of debris, spills, and stains?',
         helpText: 'Any visible debris = defect.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1301,7 +1301,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Edges, corners, and baseboards dust-free?',
         helpText: 'No visible dust buildup.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1309,7 +1309,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Walls free of scuff marks?',
         helpText: 'No black marks or scrapes.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1317,7 +1317,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Glass and doors clean (no smudges or fingerprints)?',
         helpText: 'Visible from normal standing position.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1325,7 +1325,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'High-touch surfaces clean (door handles, railings, light switches)?',
         helpText: 'No visible grime or residue.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1334,7 +1334,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         helpText: 'No safety concerns.',
         tier: 'red',
         instantRed: true,
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 1
       }
     ]
@@ -1348,7 +1348,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Storage area organized (items on shelves, walkway clear)?',
         helpText: 'Nothing blocking walkway, items stored safely.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1356,7 +1356,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Floor free of debris?',
         helpText: 'Walkable areas should be clean.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1365,7 +1365,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         helpText: 'All items stored safely. No chemicals accessible.',
         tier: 'red',
         instantRed: true,
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 1
       }
     ]
@@ -1379,7 +1379,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Floor free of debris, spills, and stains?',
         helpText: 'Any visible debris = defect.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1387,7 +1387,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Surfaces clean and dust-free?',
         helpText: 'All accessible surfaces.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1395,7 +1395,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         text: 'Trash cans empty with liners in place (if applicable)?',
         helpText: 'No overflow.',
         tier: 'amber',
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 3
       },
       {
@@ -1404,7 +1404,7 @@ export const ROOM_AUDIT_TEMPLATES = {
         helpText: 'No safety concerns.',
         tier: 'red',
         instantRed: true,
-        photoRequired: false,
+        photoRequired: true,
         slaTier: 1
       }
     ]

@@ -127,20 +127,27 @@ export const CleanlinessAuditSummary = ({ cleanlinessAudit }) => {
         <p style={{ fontSize: '14px', opacity: 0.8, margin: '4px 0 0 0' }}>
           {campus} - Completed by {auditor}
         </p>
-        {checklistDuration && (
+        {startTime && (
           <div style={{
             marginTop: '12px',
             backgroundColor: 'rgba(255,255,255,0.2)',
             borderRadius: '8px',
-            padding: '8px 16px',
-            display: 'inline-block'
+            padding: '10px 16px',
+            display: 'inline-block',
+            textAlign: 'left'
           }}>
-            <span style={{ fontSize: '14px', opacity: 0.9 }}>Duration: </span>
-            <span style={{ fontSize: '16px', fontWeight: '700' }}>
-              {checklistDuration.hours > 0
-                ? `${checklistDuration.hours}h ${checklistDuration.mins}m`
-                : `${checklistDuration.mins} minutes`}
-            </span>
+            <div style={{ fontSize: '13px', opacity: 0.85, marginBottom: '2px' }}>
+              Started: {new Date(startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              {' \u2192 '}
+              Finished: {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </div>
+            {checklistDuration && (
+              <div style={{ fontSize: '15px', fontWeight: '700', textAlign: 'center' }}>
+                {checklistDuration.hours > 0
+                  ? `${checklistDuration.hours}h ${checklistDuration.mins}m total`
+                  : `${checklistDuration.mins} minutes total`}
+              </div>
+            )}
           </div>
         )}
       </div>
