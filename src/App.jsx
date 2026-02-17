@@ -72,6 +72,13 @@ import { MechanicalSummary } from './pages/MechanicalSummary';
 import { MechanicalComplete } from './pages/MechanicalComplete';
 import { useMechanicalChecklist } from './hooks/useMechanicalChecklist';
 
+// Cleanliness Weekly/Monthly Audit Pages (14.12 Quality Bar)
+import { CleanlinessAuditSetup } from './pages/CleanlinessAuditSetup';
+import { CleanlinessAuditChecklist } from './pages/CleanlinessAuditChecklist';
+import { CleanlinessAuditSummary } from './pages/CleanlinessAuditSummary';
+import { CleanlinessAuditComplete } from './pages/CleanlinessAuditComplete';
+import { useCleanlinessAudit } from './hooks/useCleanlinessAudit';
+
 // Green Streak Walk Pages (CC Daily Oversight)
 import { GreenStreakSetup } from './pages/GreenStreakSetup';
 import { GreenStreakWalk } from './pages/GreenStreakWalk';
@@ -97,6 +104,7 @@ function App() {
   const foodSafetyChecklist = useFoodSafetyChecklist();
   const healthSafetyChecklist = useHealthSafetyChecklist();
   const mechanicalChecklist = useMechanicalChecklist();
+  const cleanlinessAudit = useCleanlinessAudit();
   const greenStreakWalk = useGreenStreakWalk();
 
   return (
@@ -200,6 +208,12 @@ function App() {
         <Route path="/mechanical/checklist" element={<MechanicalChecklist mechanicalChecklist={mechanicalChecklist} camera={camera} />} />
         <Route path="/mechanical/summary" element={<MechanicalSummary mechanicalChecklist={mechanicalChecklist} />} />
         <Route path="/mechanical/complete" element={<MechanicalComplete mechanicalChecklist={mechanicalChecklist} />} />
+
+        {/* Cleanliness Weekly/Monthly Audit Flow (14.12 Quality Bar - access via /cleanliness) */}
+        <Route path="/cleanliness" element={<CleanlinessAuditSetup cleanlinessAudit={cleanlinessAudit} />} />
+        <Route path="/cleanliness/checklist" element={<CleanlinessAuditChecklist cleanlinessAudit={cleanlinessAudit} camera={camera} />} />
+        <Route path="/cleanliness/summary" element={<CleanlinessAuditSummary cleanlinessAudit={cleanlinessAudit} />} />
+        <Route path="/cleanliness/complete" element={<CleanlinessAuditComplete cleanlinessAudit={cleanlinessAudit} />} />
 
         {/* Green Streak Walk Flow (CC Daily Oversight) */}
         <Route path="/green-streak" element={<GreenStreakSetup greenStreakWalk={greenStreakWalk} />} />
