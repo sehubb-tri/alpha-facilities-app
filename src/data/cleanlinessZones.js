@@ -592,300 +592,14 @@ export const CLEANLINESS_ZONES = {
 
   monthly: {
     id: 'monthly',
-    name: 'Monthly Deep Dive',
+    name: 'Monthly Cleanliness Audit',
     frequency: 'monthly',
     order: 2,
-    description: 'Deep inspection + 30-day review. Verifies 4 weekly audits completed. CC + Site Owner, 30-45 minutes. Failed items get 7 days to remediate.',
-    timeNeeded: '30-45 minutes',
-    sections: [
-      // ----------------------------------------
-      // DEEP CLEAN INSPECTION
-      // ----------------------------------------
-      {
-        name: 'Deep Clean - Vertical Surfaces',
-        description: 'Look up, look down. Check areas that nightly cleaning may miss over time.',
-        checks: [
-          {
-            id: 'deep_ceiling_tiles',
-            text: 'Ceiling tiles clean and intact (no stains, sagging, or damage)?',
-            helpText: 'Check for water stains, sagging, missing tiles, or visible dirt.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          },
-          {
-            id: 'deep_vents_clean',
-            text: 'Vents and air returns free of dust and debris?',
-            helpText: 'No visible dust buildup on vent covers or grilles.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          },
-          {
-            id: 'deep_light_fixtures',
-            text: 'Light fixtures and covers clean (no dead insects, dust, or discoloration)?',
-            helpText: 'High dusting check. Look up at all fixture covers.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          },
-          {
-            id: 'deep_walls_condition',
-            text: 'Walls in good condition (no scuff marks, peeling paint, or damage)?',
-            helpText: 'Check beyond tour route into classrooms, offices, and back areas.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          },
-          {
-            id: 'deep_baseboards_clean',
-            text: 'Baseboards deep cleaned (no grey buildup in corners)?',
-            helpText: 'Run a finger along baseboard corners if needed. Should be free of buildup.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          },
-          {
-            id: 'deep_cobwebs',
-            text: 'All corners free of cobwebs (including non-parent-facing areas)?',
-            helpText: 'Check high corners in classrooms, offices, and storage areas.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          }
-        ]
-      },
-      // ----------------------------------------
-      // DEEP CLEAN - Floors & Soft Surfaces
-      // ----------------------------------------
-      {
-        name: 'Deep Clean - Floors & Soft Surfaces',
-        description: 'Check floor condition, carpet extraction needs, and furniture surfaces.',
-        checks: [
-          {
-            id: 'deep_floor_finish',
-            text: 'Hard floor finish intact throughout (no excessive scuffing, peeling, or wear)?',
-            helpText: 'Check for areas where floor finish has worn through or become dull.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          },
-          {
-            id: 'deep_grout_condition',
-            text: 'Grout in restrooms and tiled areas clean (no discoloration or buildup)?',
-            helpText: 'Grout should be consistent color without dark lines or mold.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          },
-          {
-            id: 'deep_carpet_condition',
-            text: 'Carpeted areas clean and free of stains (extraction not needed)?',
-            helpText: 'Check for ground-in soil, stains, or areas needing hot water extraction.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          },
-          {
-            id: 'deep_under_furniture',
-            text: 'Areas under and behind furniture clean (no dust bunnies or debris)?',
-            helpText: 'Spot check under desks, behind shelving units, and under heavy furniture.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          },
-          {
-            id: 'deep_upholstery',
-            text: 'Soft seating and upholstered furniture clean (no stains or odors)?',
-            helpText: 'Check common area couches, classroom soft seating, office chairs.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          }
-        ]
-      },
-      // ----------------------------------------
-      // DEEP CLEAN - Restroom Deep Check
-      // ----------------------------------------
-      {
-        name: 'Deep Clean - Restroom Deep Check',
-        description: 'Beyond daily/weekly restroom checks. Focus on items that degrade over time.',
-        checks: [
-          {
-            id: 'deep_restroom_grout',
-            text: 'Restroom tile grout clean (no discoloration, mold, or buildup)?',
-            helpText: 'Machine scrub level check. Grout should be original color.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          },
-          {
-            id: 'deep_restroom_chrome',
-            text: 'Chrome fixtures clean (no water spots, scale, or buildup)?',
-            helpText: 'Check faucets, handles, flush valves for descaling needs.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          },
-          {
-            id: 'deep_restroom_exhaust',
-            text: 'Exhaust fans clean and functional?',
-            helpText: 'No dust buildup on fan covers. Fan pulls air when running.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          },
-          {
-            id: 'deep_restroom_partitions',
-            text: 'Stall partitions clean (no writing, stickers, or residue)?',
-            helpText: 'Check both sides of all partitions and doors.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          },
-          {
-            id: 'deep_trash_bins_clean',
-            text: 'Trash and recycle bins clean inside and out?',
-            helpText: 'Bins should show no residue, staining, or odor from the bins themselves.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 4
-          }
-        ]
-      },
-      // ----------------------------------------
-      // VENDOR PERFORMANCE / SYSTEM RELIABILITY
-      // ----------------------------------------
-      {
-        name: 'System Reliability - Vendor Performance',
-        description: 'Review vendor execution over the past 30 days. Check for missed tasks and repeat defects.',
-        checks: [
-          {
-            id: 'vendor_nightly_complete',
-            text: 'Vendor completed all nightly cleaning tasks this month (no misses)?',
-            helpText: 'Check vendor logs. Any missed night = fail.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 3
-          },
-          {
-            id: 'vendor_daily_reset',
-            text: 'Visible daily reset confirmed every morning this month?',
-            helpText: 'Evidence of nightly work present each morning - fresh liners, clean surfaces.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 3
-          },
-          {
-            id: 'vendor_weekly_tasks',
-            text: 'Weekly tasks completed on schedule this month?',
-            helpText: 'Vendor weekly scope items executed per contract.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 3
-          },
-          {
-            id: 'vendor_no_repeat_defects',
-            text: 'No repeat defects in same zone within 30 days?',
-            helpText: 'Same check failing in same zone within 30 days = repeat. Repeat = automatic red.',
-            tier: 'red',
-            instantRed: true,
-            photoRequired: true,
-            slaTier: 3
-          },
-          {
-            id: 'vendor_sla_compliance',
-            text: 'All defects resolved within SLA timelines?',
-            helpText: 'Tier 1: same day. Tier 2: <24h. Tier 3: 5 days. Tier 4: per cycle.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 3
-          },
-          {
-            id: 'vendor_documentation',
-            text: 'Vendor provides verifiable logs and documentation?',
-            helpText: 'Vendor can produce evidence of completed work. Unverifiable logs = fail.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 3
-          }
-        ]
-      },
-      // ----------------------------------------
-      // 30-DAY REVIEW METRICS
-      // ----------------------------------------
-      {
-        name: '30-Day Review',
-        description: 'CC + Site Owner review. Analyze patterns from the last 4 weekly audits.',
-        checks: [
-          {
-            id: 'review_green_percentage',
-            text: 'Were 90%+ of weekly audits this month Green?',
-            helpText: 'Vendor monthly scorecard target: 90%+ of audits = Green.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 3
-          },
-          {
-            id: 'review_no_patterns',
-            text: 'No recurring defect patterns identified across weekly audits?',
-            helpText: 'Same issue showing up in different weeks = pattern. Document and address.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 3
-          },
-          {
-            id: 'review_issues_resolved',
-            text: 'All defects from previous month resolved or on track?',
-            helpText: 'No carryover issues without documented plan and timeline.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 3
-          },
-          {
-            id: 'review_escalation_needed',
-            text: 'No issues requiring escalation to VP-Ops Facilities?',
-            helpText: 'Escalate if: same check fails 3+ times in 60 days, systemic pattern, beyond vendor scope, asset end-of-life, or contract issue.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 3
-          }
-        ]
-      },
-      // ----------------------------------------
-      // SILENT FAILURE CHECK
-      // ----------------------------------------
-      {
-        name: 'Silent Failure Indicators',
-        description: 'Check for evidence of vendor gaming rather than genuine compliance.',
-        checks: [
-          {
-            id: 'silent_no_audit_only_cleaning',
-            text: 'No evidence of "audit-only cleaning" (zones degrade between QC windows)?',
-            helpText: 'Zones should be consistently clean, not just during audit times.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 3
-          },
-          {
-            id: 'silent_no_odor_masking',
-            text: 'No odor masking (chemical fragrance covering organic odor)?',
-            helpText: 'Fragrance should not be used to mask underlying odor problems.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 3
-          },
-          {
-            id: 'silent_no_selective_cleaning',
-            text: 'No selective cleaning (high-touch clean but corners dusty)?',
-            helpText: 'Smudge-free handles but dusty corners = selective cleaning pattern.',
-            tier: 'amber',
-            photoRequired: true,
-            slaTier: 3
-          }
-        ]
-      }
-    ]
+    description: 'Comprehensive room-by-room deep inspection of every space in the facility. Walk the campus, inspect each room with expanded checks. Determines SLA rating (GREEN/AMBER/RED) visible to all leadership. Failed audits require site visit and sign-off within 7 days to return to GREEN.',
+    timeNeeded: '60-90 minutes',
+    // Sections are built dynamically in useCleanlinessAudit.js
+    // from: MONTHLY_TOUR_ROUTE_AREAS + all campus rooms (MONTHLY_ROOM_AUDIT_TEMPLATES) + MONTHLY_CAMPUS_SECTIONS
+    sections: []
   }
 };
 
@@ -1412,6 +1126,1689 @@ export const ROOM_AUDIT_TEMPLATES = {
 };
 
 // ============================================
+// MONTHLY ROOM AUDIT TEMPLATES
+// Used for the Monthly Cleanliness Audit
+// Combines weekly checks + expanded deep-dive checks per room type
+// No duplication -- monthly-specific checks add depth beyond weekly
+// ============================================
+export const MONTHLY_ROOM_AUDIT_TEMPLATES = {
+  learning: {
+    name: 'Learning Space',
+    checks: [
+      // --- Weekly-level checks (daily cleanliness baseline) ---
+      {
+        id: 'room_floor_clean',
+        text: 'Floor free of debris, spills, and stains?',
+        helpText: 'Any visible debris while walking through = defect.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_desks_clean',
+        text: 'Student desks and tables clean (no writing, stickers, or residue)?',
+        helpText: 'All student work surfaces should be clean and clear.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_teacher_clean',
+        text: 'Teacher desk and surfaces clean (no dust or clutter)?',
+        helpText: 'Teacher work area should be dust-free.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_whiteboard_clean',
+        text: 'Whiteboard area clean (tray wiped, ledge dust-free)?',
+        helpText: 'Whiteboard tray and ledge should show no dust accumulation.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_high_touch',
+        text: 'High-touch surfaces clean (door handle, light switches)?',
+        helpText: 'No visible grime, residue, or buildup on touched surfaces.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_trash_empty',
+        text: 'Trash cans empty with liners in place?',
+        helpText: 'No overflow. Fresh liner present.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      // --- Monthly deep-dive additions ---
+      {
+        id: 'monthly_ceiling_tiles',
+        text: 'Ceiling tiles clean and intact (no stains, sagging, or damage)?',
+        helpText: 'Check for water stains, sagging, missing tiles, or visible dirt.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_vents_clean',
+        text: 'Vents and air returns free of dust and debris?',
+        helpText: 'No visible dust buildup on vent covers or grilles.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_light_fixtures',
+        text: 'Light fixtures and covers clean (no dead insects, dust, or discoloration)?',
+        helpText: 'High dusting check. Look up at all fixture covers.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_walls_condition',
+        text: 'Walls in good condition (no scuff marks, peeling paint, or damage)?',
+        helpText: 'Check all walls including behind doors and furniture-adjacent areas.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_baseboards_clean',
+        text: 'Baseboards and edges deep cleaned (no grey buildup in corners)?',
+        helpText: 'Run a finger along baseboard corners if needed. Should be free of buildup.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_cobwebs',
+        text: 'All corners free of cobwebs?',
+        helpText: 'Check high corners, behind equipment, and window frames.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_floor_finish',
+        text: 'Hard floor finish intact (no excessive scuffing, peeling, or wear)?',
+        helpText: 'Check for areas where floor finish has worn through or become dull.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_carpet_condition',
+        text: 'Carpeted areas clean and free of stains (extraction not needed)?',
+        helpText: 'Check for ground-in soil, stains, or areas needing hot water extraction. N/A if no carpet.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_under_furniture',
+        text: 'Areas under and behind furniture clean (no dust bunnies or debris)?',
+        helpText: 'Spot check under desks, behind shelving units, and under heavy furniture.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_upholstery',
+        text: 'Soft seating and upholstered furniture clean (no stains or odors)?',
+        helpText: 'Check any soft seating, beanbags, or upholstered chairs. N/A if none present.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_windows_sills',
+        text: 'Window sills and ledges clean and dust-free?',
+        helpText: 'Check all window sills, ledges, and tracks for dust or debris buildup.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'room_safe',
+        text: 'Area is safe (no tripping hazards, loose wires, or broken items)?',
+        helpText: 'All cords secured, no loose items in walkways.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 1
+      }
+    ]
+  },
+
+  restroom: {
+    name: 'Restroom',
+    checks: [
+      // --- Weekly-level checks (all instant red) ---
+      {
+        id: 'room_restroom_toilets',
+        text: 'Toilets and urinals clean (no soil, stains, or residue)?',
+        helpText: 'All fixtures must be sanitary.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'room_restroom_sinks',
+        text: 'Sinks and counters dry and clean?',
+        helpText: 'No water spots or residue.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'room_restroom_mirrors',
+        text: 'Mirrors clean (no smudges or streaks)?',
+        helpText: 'Visible from normal standing position.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'room_restroom_floor',
+        text: 'Floor clean (no debris, water, or stains)?',
+        helpText: 'No standing water or visible debris.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'room_restroom_soap',
+        text: 'Soap dispensers working and stocked?',
+        helpText: 'Dispenser must dispense product.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'room_restroom_towels',
+        text: 'Paper towels or hand dryers working and stocked?',
+        helpText: 'Paper towels present and dispensing, or dryer functional.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'room_restroom_tp',
+        text: 'Toilet paper fully stocked?',
+        helpText: 'All stalls must have usable TP.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'room_restroom_trash',
+        text: 'Trash cans empty with liners in place?',
+        helpText: 'No overflow.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'room_restroom_odor',
+        text: 'Free of bad odors?',
+        helpText: 'Detectable from doorway = defect. Odor masking also = defect.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 2
+      },
+      // --- Monthly deep-dive additions ---
+      {
+        id: 'monthly_restroom_grout',
+        text: 'Tile grout clean (no discoloration, mold, or buildup)?',
+        helpText: 'Machine scrub level check. Grout should be original color.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_restroom_chrome',
+        text: 'Chrome fixtures clean (no water spots, scale, or buildup)?',
+        helpText: 'Check faucets, handles, flush valves for descaling needs.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_restroom_exhaust',
+        text: 'Exhaust fans clean and functional?',
+        helpText: 'No dust buildup on fan covers. Fan pulls air when running.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_restroom_partitions',
+        text: 'Stall partitions clean (no writing, stickers, or residue)?',
+        helpText: 'Check both sides of all partitions and doors.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_restroom_bins',
+        text: 'Trash and recycle bins clean inside and out?',
+        helpText: 'Bins should show no residue, staining, or odor from the bins themselves.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_ceiling_tiles',
+        text: 'Ceiling tiles clean and intact (no stains, sagging, or damage)?',
+        helpText: 'Check for water stains especially -- active leak indicator.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_vents_clean',
+        text: 'Vents and air returns free of dust and debris?',
+        helpText: 'No visible dust buildup on vent covers or grilles.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_light_fixtures',
+        text: 'Light fixtures and covers clean (no dead insects, dust, or discoloration)?',
+        helpText: 'High dusting check. Look up at all fixture covers.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_walls_condition',
+        text: 'Walls in good condition (no damage, peeling paint, or moisture marks)?',
+        helpText: 'Check behind doors and around fixtures. Moisture marks may indicate leak.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'room_restroom_safe',
+        text: 'Area is safe (no wet floors, broken fixtures, or hazards)?',
+        helpText: 'No standing water, broken fixtures, or trip hazards.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 1
+      }
+    ]
+  },
+
+  common: {
+    name: 'Common Area',
+    checks: [
+      // --- Weekly-level checks ---
+      {
+        id: 'room_floor_clean',
+        text: 'Floor free of debris, spills, and stains?',
+        helpText: 'Any visible debris = defect.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_tables_clean',
+        text: 'Tables and surfaces clean and dry (no sticky spots or residue)?',
+        helpText: 'All shared surfaces should be clean.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_furniture_arranged',
+        text: 'Furniture properly arranged (chairs pushed in, not scattered)?',
+        helpText: 'Should match intended layout.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_high_touch',
+        text: 'High-touch surfaces clean (door handles, table edges, chair backs)?',
+        helpText: 'No visible grime or residue.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_trash_empty',
+        text: 'Trash cans empty with liners in place?',
+        helpText: 'No overflow. Fresh liner present.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_odor_free',
+        text: 'Free of bad odors?',
+        helpText: 'No food, mold, or garbage smell.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      // --- Monthly deep-dive additions ---
+      {
+        id: 'monthly_ceiling_tiles',
+        text: 'Ceiling tiles clean and intact (no stains, sagging, or damage)?',
+        helpText: 'Check for water stains, sagging, missing tiles, or visible dirt.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_vents_clean',
+        text: 'Vents and air returns free of dust and debris?',
+        helpText: 'No visible dust buildup on vent covers or grilles.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_light_fixtures',
+        text: 'Light fixtures and covers clean (no dead insects, dust, or discoloration)?',
+        helpText: 'High dusting check. Look up at all fixture covers.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_walls_condition',
+        text: 'Walls in good condition (no scuff marks, peeling paint, or damage)?',
+        helpText: 'Check all walls including behind doors.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_baseboards_clean',
+        text: 'Baseboards and edges deep cleaned (no grey buildup in corners)?',
+        helpText: 'Run a finger along baseboard corners if needed. Should be free of buildup.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_cobwebs',
+        text: 'All corners free of cobwebs?',
+        helpText: 'Check high corners and behind furniture.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_floor_finish',
+        text: 'Hard floor finish intact (no excessive scuffing, peeling, or wear)?',
+        helpText: 'Check for areas where floor finish has worn through or become dull.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_under_furniture',
+        text: 'Areas under and behind furniture clean (no dust bunnies or debris)?',
+        helpText: 'Spot check under tables, behind shelving, and under heavy furniture.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_upholstery',
+        text: 'Soft seating and upholstered furniture clean (no stains or odors)?',
+        helpText: 'Check couches, soft seating, and fabric chairs. N/A if none present.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_windows_sills',
+        text: 'Window sills and ledges clean and dust-free?',
+        helpText: 'Check all window sills, ledges, and tracks for dust or debris buildup.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'room_safe',
+        text: 'Area is safe (no wet floors, broken furniture, or hazards)?',
+        helpText: 'No safety concerns.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 1
+      }
+    ]
+  },
+
+  office: {
+    name: 'Office / Workroom',
+    checks: [
+      // --- Weekly-level checks ---
+      {
+        id: 'room_floor_clean',
+        text: 'Floor free of debris, spills, and stains?',
+        helpText: 'Any visible debris = defect.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_desks_dust_free',
+        text: 'Desk and work surfaces dust-free?',
+        helpText: 'No visible dust film or buildup.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_high_touch',
+        text: 'High-touch surfaces clean (door handles, light switches, shared equipment)?',
+        helpText: 'No visible grime or residue.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_trash_empty',
+        text: 'Trash cans empty with liners in place?',
+        helpText: 'No overflow.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      // --- Monthly deep-dive additions ---
+      {
+        id: 'monthly_ceiling_tiles',
+        text: 'Ceiling tiles clean and intact (no stains, sagging, or damage)?',
+        helpText: 'Check for water stains, sagging, missing tiles, or visible dirt.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_vents_clean',
+        text: 'Vents and air returns free of dust and debris?',
+        helpText: 'No visible dust buildup on vent covers or grilles.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_light_fixtures',
+        text: 'Light fixtures and covers clean (no dead insects, dust, or discoloration)?',
+        helpText: 'High dusting check.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_walls_condition',
+        text: 'Walls in good condition (no scuff marks, peeling paint, or damage)?',
+        helpText: 'Check behind doors and furniture-adjacent areas.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_baseboards_clean',
+        text: 'Baseboards and edges deep cleaned (no grey buildup)?',
+        helpText: 'Run a finger along baseboard corners if needed.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_cobwebs',
+        text: 'All corners free of cobwebs?',
+        helpText: 'Check high corners and behind equipment.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_under_furniture',
+        text: 'Areas under and behind furniture clean (no dust bunnies or debris)?',
+        helpText: 'Spot check under desks and behind cabinets.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_windows_sills',
+        text: 'Window sills and ledges clean and dust-free?',
+        helpText: 'Check all window sills, ledges, and tracks.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'room_safe',
+        text: 'Area is safe (no tripping hazards, loose wires, or blocked exits)?',
+        helpText: 'All cords secured, exits clear.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 1
+      }
+    ]
+  },
+
+  kitchen: {
+    name: 'Kitchen / Cafeteria',
+    checks: [
+      // --- Weekly-level checks ---
+      {
+        id: 'room_floor_clean',
+        text: 'Floor free of debris, spills, and stains?',
+        helpText: 'Any visible debris = defect.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_tables_clean',
+        text: 'Tables and seating clean and dry (no sticky spots or food residue)?',
+        helpText: 'All eating surfaces must be clean.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_service_area_clean',
+        text: 'Service and counter area clean (no crumbs, spills, or buildup)?',
+        helpText: 'Food prep and service areas should be clean.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_high_touch',
+        text: 'High-touch surfaces clean (door handles, tray rails, chair backs)?',
+        helpText: 'No visible grime or residue.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_trash_empty',
+        text: 'Trash cans empty with liners in place?',
+        helpText: 'No overflow.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_odor_free',
+        text: 'Free of bad odors (no spoiled food, garbage, or drain smell)?',
+        helpText: 'No detectable food or waste odors.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      // --- Monthly deep-dive additions ---
+      {
+        id: 'monthly_ceiling_tiles',
+        text: 'Ceiling tiles clean and intact (no stains, sagging, or grease buildup)?',
+        helpText: 'Kitchen areas prone to grease film on ceiling. Check carefully.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_vents_clean',
+        text: 'Vents and exhaust hoods free of dust and grease buildup?',
+        helpText: 'No visible grease or dust buildup on vent covers, hoods, or grilles.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_light_fixtures',
+        text: 'Light fixtures and covers clean (no grease film, dead insects, or dust)?',
+        helpText: 'Kitchen lights accumulate grease film. Check covers.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_walls_condition',
+        text: 'Walls in good condition (no grease buildup, stains, or damage)?',
+        helpText: 'Check behind equipment and near cooking areas.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_floor_finish',
+        text: 'Floor finish intact (no excessive wear, grease buildup, or damaged grout)?',
+        helpText: 'Kitchen floors take heavy abuse. Check for safety hazards.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_under_furniture',
+        text: 'Areas under and behind equipment clean (no debris or pest attractants)?',
+        helpText: 'Spot check under tables, behind serving equipment, and along walls.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_windows_sills',
+        text: 'Window sills and ledges clean and dust-free?',
+        helpText: 'Check all window sills and ledges. N/A if no windows.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'room_safe',
+        text: 'Area is safe (no wet floors, broken chairs, or hazards)?',
+        helpText: 'No safety concerns.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 1
+      }
+    ]
+  },
+
+  vestibule: {
+    name: 'Vestibule / Lobby',
+    checks: [
+      // --- Weekly-level checks ---
+      {
+        id: 'room_floor_clean',
+        text: 'Floor free of debris, spills, and stains?',
+        helpText: 'Any visible debris = defect.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'room_glass_clean',
+        text: 'All glass clean (no smudges, fingerprints, or streaks)?',
+        helpText: 'Visible from normal standing position under typical lighting.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'room_surfaces_clean',
+        text: 'Surfaces clean and dust-free?',
+        helpText: 'Counters, shelves, and ledges.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'room_high_touch',
+        text: 'High-touch surfaces clean (door handles, counter edges)?',
+        helpText: 'No visible grime or residue.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 2
+      },
+      // --- Monthly deep-dive additions ---
+      {
+        id: 'monthly_ceiling_tiles',
+        text: 'Ceiling tiles clean and intact?',
+        helpText: 'Check for water stains, sagging, or visible dirt.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_light_fixtures',
+        text: 'Light fixtures and covers clean?',
+        helpText: 'No dead insects, dust, or discoloration.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_walls_condition',
+        text: 'Walls in good condition (no scuff marks or damage)?',
+        helpText: 'Parent-facing area -- must be pristine.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_floor_finish',
+        text: 'Floor finish intact (no excessive scuffing or wear)?',
+        helpText: 'High-traffic area -- check for wear patterns.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_mat_condition',
+        text: 'Entry mat in good condition (clean, flat, no wear-through)?',
+        helpText: 'Monthly check for mat replacement needs.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'room_safe',
+        text: 'Area is safe (no wet floors, loose items, or hazards)?',
+        helpText: 'No safety concerns.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 1
+      }
+    ]
+  },
+
+  hallway: {
+    name: 'Hallway / Corridor',
+    checks: [
+      // --- Weekly-level checks ---
+      {
+        id: 'room_floor_clean',
+        text: 'Floor free of debris, spills, and stains?',
+        helpText: 'Any visible debris = defect.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_glass_clean',
+        text: 'Glass and doors clean (no smudges or fingerprints)?',
+        helpText: 'Visible from normal standing position.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_high_touch',
+        text: 'High-touch surfaces clean (door handles, railings, light switches)?',
+        helpText: 'No visible grime or residue.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      // --- Monthly deep-dive additions ---
+      {
+        id: 'monthly_ceiling_tiles',
+        text: 'Ceiling tiles clean and intact (no stains, sagging, or damage)?',
+        helpText: 'Check for water stains, sagging, missing tiles, or visible dirt.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_vents_clean',
+        text: 'Vents and air returns free of dust and debris?',
+        helpText: 'No visible dust buildup on vent covers or grilles.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_light_fixtures',
+        text: 'Light fixtures and covers clean (no dead insects, dust, or discoloration)?',
+        helpText: 'High dusting check. Look up at all fixture covers.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_walls_condition',
+        text: 'Walls in good condition (no scuff marks, peeling paint, or damage)?',
+        helpText: 'Hallway walls take heavy traffic abuse. Check full length.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_baseboards_clean',
+        text: 'Baseboards and edges deep cleaned (no grey buildup in corners)?',
+        helpText: 'Run a finger along baseboard corners. Full corridor length.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_cobwebs',
+        text: 'All corners free of cobwebs?',
+        helpText: 'Check high corners along full corridor.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_floor_finish',
+        text: 'Floor finish intact throughout (no excessive scuffing, peeling, or wear)?',
+        helpText: 'High-traffic area. Check for wear patterns and dull spots.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'room_safe',
+        text: 'Area is safe (no wet floors, obstacles, or hazards)?',
+        helpText: 'No safety concerns.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 1
+      }
+    ]
+  },
+
+  storage: {
+    name: 'Storage',
+    checks: [
+      // --- Weekly-level checks ---
+      {
+        id: 'room_organized',
+        text: 'Storage area organized (items on shelves, walkway clear)?',
+        helpText: 'Nothing blocking walkway, items stored safely.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_floor_clean',
+        text: 'Floor free of debris?',
+        helpText: 'Walkable areas should be clean.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      // --- Monthly deep-dive additions ---
+      {
+        id: 'monthly_ceiling_tiles',
+        text: 'Ceiling tiles intact (no water stains or damage)?',
+        helpText: 'Storage areas often reveal leaks first.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_walls_condition',
+        text: 'Walls in good condition (no damage or moisture)?',
+        helpText: 'Check for moisture marks especially.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_cobwebs',
+        text: 'Corners free of cobwebs and pest evidence?',
+        helpText: 'Storage areas are common pest entry points. Check corners and shelving.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'room_safe',
+        text: 'Area is safe (no hazards, chemicals secured, exits clear)?',
+        helpText: 'All items stored safely. No chemicals accessible.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 1
+      }
+    ]
+  },
+
+  other: {
+    name: 'Other Space',
+    checks: [
+      // --- Weekly-level checks ---
+      {
+        id: 'room_floor_clean',
+        text: 'Floor free of debris, spills, and stains?',
+        helpText: 'Any visible debris = defect.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_surfaces_clean',
+        text: 'Surfaces clean and dust-free?',
+        helpText: 'All accessible surfaces.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'room_trash_empty',
+        text: 'Trash cans empty with liners in place (if applicable)?',
+        helpText: 'No overflow.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      // --- Monthly deep-dive additions ---
+      {
+        id: 'monthly_ceiling_tiles',
+        text: 'Ceiling tiles clean and intact?',
+        helpText: 'Check for water stains, sagging, or damage.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_vents_clean',
+        text: 'Vents and air returns free of dust?',
+        helpText: 'No visible dust buildup on vent covers.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_light_fixtures',
+        text: 'Light fixtures clean?',
+        helpText: 'No dead insects, dust, or discoloration.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_walls_condition',
+        text: 'Walls in good condition?',
+        helpText: 'No scuff marks, peeling paint, or damage.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_cobwebs',
+        text: 'Corners free of cobwebs?',
+        helpText: 'Check high corners.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'room_safe',
+        text: 'Area is safe (no hazards)?',
+        helpText: 'No safety concerns.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 1
+      }
+    ]
+  }
+};
+
+// ============================================
+// MONTHLY TOUR ROUTE AREAS
+// Static areas that are always part of the monthly audit
+// These represent the tour route zones checked as individual spaces
+// ============================================
+export const MONTHLY_TOUR_ROUTE_AREAS = [
+  {
+    name: 'Entry & Lobby',
+    type: 'entry',
+    description: '47-second arrival decision -- this is what parents see first.',
+    checks: [
+      {
+        id: 'monthly_entry_glass_clean',
+        text: 'Exterior door glass clean (no smudges, fingerprints, or streaks)?',
+        helpText: '47-second arrival decision. Parent sees this first.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'monthly_entry_floor_clean',
+        text: 'Entry & lobby floor free of debris, spills, and stains?',
+        helpText: 'Check walk paths, corners, edges.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'monthly_entry_mat_clean',
+        text: 'Entry mat clean and flat (no curled edges or trip hazards)?',
+        helpText: 'Mat should be clean and laying flat with no tripping risk.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'monthly_entry_interior_glass',
+        text: 'Interior glass clean (no smudges or streaks)?',
+        helpText: 'All glass visible from entrance-to-lobby sightline.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 2
+      },
+      {
+        id: 'monthly_entry_surfaces',
+        text: 'Reception surfaces clean and dust-free (counters, desks, shelves)?',
+        helpText: 'No visible dust, sticky spots, residue, or fingerprints.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'monthly_entry_high_touch',
+        text: 'High-touch surfaces clean (door handles, counter edges)?',
+        helpText: 'No visible grime, residue, or moisture.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'monthly_entry_trash',
+        text: 'Trash cans empty with liners in place?',
+        helpText: 'Acceptable: 3 or fewer small items.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'monthly_entry_odor',
+        text: 'Free of bad odors?',
+        helpText: 'No mold, garbage, or musty smell.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 2
+      },
+      // Monthly deep-dive additions
+      {
+        id: 'monthly_entry_ceiling',
+        text: 'Ceiling tiles clean and intact?',
+        helpText: 'Check for water stains, sagging, or visible dirt.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_entry_vents',
+        text: 'Vents and air returns free of dust?',
+        helpText: 'No visible dust buildup on vent covers.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_entry_lights',
+        text: 'Light fixtures and covers clean?',
+        helpText: 'No dead insects, dust, or discoloration.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_entry_walls',
+        text: 'Walls in good condition (no scuff marks or damage)?',
+        helpText: 'Parent-facing area -- must be pristine.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_entry_baseboards',
+        text: 'Baseboards deep cleaned (no grey buildup)?',
+        helpText: 'Run a finger along baseboard corners if needed.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_entry_floor_finish',
+        text: 'Floor finish intact (no excessive wear)?',
+        helpText: 'High-traffic area. Check for wear patterns.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_entry_mat_condition',
+        text: 'Entry mat in good condition (no wear-through, needs replacement)?',
+        helpText: 'Monthly check for mat replacement needs.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_entry_safe',
+        text: 'Area is safe and free of EHS hazards (no wet floors, blocked exits, pests, mold, exposed wiring, or chemicals)?',
+        helpText: 'Zero tolerance for safety issues in this zone.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 1
+      }
+    ]
+  },
+  {
+    name: 'Hallway / Corridor (Tour Route)',
+    type: 'hallway_tour',
+    description: 'Walk the full hallway. Deep inspection of floors, walls, edges, and all surfaces.',
+    checks: [
+      {
+        id: 'monthly_hall_floor',
+        text: 'Floor free of debris, spills, and stains?',
+        helpText: 'Walk the full corridor.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'monthly_hall_glass',
+        text: 'Glass and doors clean (no smudges or fingerprints)?',
+        helpText: 'Visible from normal standing position.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'monthly_hall_high_touch',
+        text: 'High-touch surfaces clean (door handles, railings, light switches)?',
+        helpText: 'No visible grime, residue, or moisture.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'monthly_hall_trash',
+        text: 'Trash cans empty with liners in place?',
+        helpText: 'No overflow. Fresh liner present.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      // Monthly deep-dive additions
+      {
+        id: 'monthly_hall_ceiling',
+        text: 'Ceiling tiles clean and intact?',
+        helpText: 'Check for water stains, sagging, missing tiles.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_hall_vents',
+        text: 'Vents and air returns free of dust?',
+        helpText: 'No visible dust buildup.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_hall_lights',
+        text: 'Light fixtures and covers clean?',
+        helpText: 'High dusting check along full corridor.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_hall_walls',
+        text: 'Walls in good condition (no scuff marks, peeling paint, or damage)?',
+        helpText: 'Hallway walls take heavy traffic. Check full length.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_hall_baseboards',
+        text: 'Baseboards deep cleaned (no grey buildup in corners)?',
+        helpText: 'Full corridor length. Run a finger along corners.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_hall_cobwebs',
+        text: 'All corners free of cobwebs?',
+        helpText: 'Check high corners along full corridor.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_hall_floor_finish',
+        text: 'Floor finish intact throughout (no excessive scuffing or wear)?',
+        helpText: 'High-traffic area. Check for wear patterns and dull spots.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_hall_safe',
+        text: 'Area is safe and free of EHS hazards?',
+        helpText: 'No wet floors, blocked exits, exposed wiring, pests, or mold.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 1
+      }
+    ]
+  },
+  {
+    name: 'Commons Area (Tour Route)',
+    type: 'commons_tour',
+    description: 'Deep inspection of all shared common spaces.',
+    checks: [
+      {
+        id: 'monthly_commons_floor',
+        text: 'Floor free of debris, spills, and stains?',
+        helpText: 'Any visible debris = defect.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'monthly_commons_tables',
+        text: 'Tables and surfaces clean and dry (no sticky spots or residue)?',
+        helpText: 'No visible dust, sticky spots, residue, or fingerprints.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'monthly_commons_furniture',
+        text: 'Furniture properly arranged per layout?',
+        helpText: 'Chairs pushed in, not scattered.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'monthly_commons_high_touch',
+        text: 'High-touch surfaces clean (door handles, table edges, chair backs)?',
+        helpText: 'No visible grime, residue, or buildup.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'monthly_commons_trash',
+        text: 'Trash cans empty with liners in place?',
+        helpText: 'No overflow. Fresh liner present.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'monthly_commons_odor',
+        text: 'Free of bad odors (no food, mold, or garbage smell)?',
+        helpText: 'Detectable = can smell without leaning in.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      // Monthly deep-dive additions
+      {
+        id: 'monthly_commons_ceiling',
+        text: 'Ceiling tiles clean and intact?',
+        helpText: 'Check for water stains, sagging, missing tiles.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_commons_vents',
+        text: 'Vents and air returns free of dust?',
+        helpText: 'No visible dust buildup on vent covers.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_commons_lights',
+        text: 'Light fixtures and covers clean?',
+        helpText: 'No dead insects, dust, or discoloration.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_commons_walls',
+        text: 'Walls in good condition (no scuff marks, damage)?',
+        helpText: 'Check all walls including behind furniture.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_commons_baseboards',
+        text: 'Baseboards deep cleaned (no grey buildup)?',
+        helpText: 'Run a finger along baseboard corners if needed.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_commons_cobwebs',
+        text: 'All corners free of cobwebs?',
+        helpText: 'Check high corners and behind furniture.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_commons_floor_finish',
+        text: 'Floor finish intact (no excessive scuffing or wear)?',
+        helpText: 'Check for areas where finish has worn through.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_commons_under_furniture',
+        text: 'Areas under and behind furniture clean?',
+        helpText: 'Spot check under tables, behind shelving.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_commons_upholstery',
+        text: 'Soft seating clean (no stains or odors)?',
+        helpText: 'Check couches and fabric chairs. N/A if none.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_commons_windows',
+        text: 'Window sills and ledges clean and dust-free?',
+        helpText: 'Check all window sills and ledges.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_commons_safe',
+        text: 'Area is safe and free of EHS hazards?',
+        helpText: 'No wet floors, blocked exits, exposed wiring, pests, or mold.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 1
+      }
+    ]
+  },
+  {
+    name: 'Supply Closet',
+    type: 'supply_closet',
+    description: 'Check supply levels (1-week minimum) and closet deep clean.',
+    checks: [
+      {
+        id: 'monthly_supply_tp',
+        text: 'Toilet paper sufficient for 1 week?',
+        helpText: 'CC determines what constitutes 1 week. When uncertain, overestimate.',
+        tier: 'amber',
+        photoRequired: false,
+        slaTier: 3,
+        isSupplyCheck: true
+      },
+      {
+        id: 'monthly_supply_towels',
+        text: 'Paper towels sufficient for 1 week?',
+        helpText: 'Running out is a failure, overstocking is not.',
+        tier: 'amber',
+        photoRequired: false,
+        slaTier: 3,
+        isSupplyCheck: true
+      },
+      {
+        id: 'monthly_supply_soap',
+        text: 'Soap and sanitizer sufficient for 1 week?',
+        helpText: 'Include both soap and hand sanitizer supplies.',
+        tier: 'amber',
+        photoRequired: false,
+        slaTier: 3,
+        isSupplyCheck: true
+      },
+      {
+        id: 'monthly_supply_liners',
+        text: 'Trash liners sufficient for 1 week?',
+        helpText: 'Enough liners for all cans across campus for the week.',
+        tier: 'amber',
+        photoRequired: false,
+        slaTier: 3,
+        isSupplyCheck: true
+      },
+      {
+        id: 'monthly_supply_cleaning',
+        text: 'Cleaning supplies present and stocked?',
+        helpText: 'Chemicals, mops, rags, and other cleaning materials available.',
+        tier: 'amber',
+        photoRequired: false,
+        slaTier: 3,
+        isSupplyCheck: true
+      },
+      {
+        id: 'monthly_supply_organized',
+        text: 'Closet organized (items on shelves, walkway clear)?',
+        helpText: 'Nothing blocking walkway, items stored safely on shelves.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      // Monthly deep-dive additions
+      {
+        id: 'monthly_supply_shelves_clean',
+        text: 'Shelving clean and dust-free?',
+        helpText: 'Shelves should be wiped down, no buildup.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_supply_floor_clean',
+        text: 'Floor clean (no spills, residue, or buildup)?',
+        helpText: 'Chemical residue on floor = defect.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_supply_walls',
+        text: 'Walls in good condition (no moisture, mold, or damage)?',
+        helpText: 'Supply closets can trap moisture. Check carefully.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 4
+      },
+      {
+        id: 'monthly_supply_safe',
+        text: 'Area is safe and free of EHS hazards (chemicals secured, no pests, mold, or moisture)?',
+        helpText: 'Cleaning chemicals must be locked or out of student reach. No signs of pests, no mold, no standing water.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 1
+      }
+    ]
+  }
+];
+
+// ============================================
+// MONTHLY CAMPUS-WIDE SECTIONS
+// These follow after all room-by-room inspections
+// ============================================
+export const MONTHLY_CAMPUS_SECTIONS = [
+  // ----------------------------------------
+  // VENDOR PERFORMANCE / SYSTEM RELIABILITY
+  // ----------------------------------------
+  {
+    name: 'System Reliability - Vendor Performance',
+    description: 'Review vendor execution over the past 30 days. Check for missed tasks and repeat defects.',
+    isCampusWide: true,
+    checks: [
+      {
+        id: 'vendor_nightly_complete',
+        text: 'Vendor completed all nightly cleaning tasks this month (no misses)?',
+        helpText: 'Check vendor logs. Any missed night = fail.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'vendor_daily_reset',
+        text: 'Visible daily reset confirmed every morning this month?',
+        helpText: 'Evidence of nightly work present each morning - fresh liners, clean surfaces.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'vendor_weekly_tasks',
+        text: 'Weekly tasks completed on schedule this month?',
+        helpText: 'Vendor weekly scope items executed per contract.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'vendor_no_repeat_defects',
+        text: 'No repeat defects in same zone within 30 days?',
+        helpText: 'Same check failing in same zone within 30 days = repeat. Repeat = automatic red.',
+        tier: 'red',
+        instantRed: true,
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'vendor_sla_compliance',
+        text: 'All defects resolved within SLA timelines?',
+        helpText: 'Tier 1: same day. Tier 2: <24h. Tier 3: 5 days. Tier 4: per cycle.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'vendor_documentation',
+        text: 'Vendor provides verifiable logs and documentation?',
+        helpText: 'Vendor can produce evidence of completed work. Unverifiable logs = fail.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      }
+    ]
+  },
+  // ----------------------------------------
+  // 30-DAY REVIEW METRICS
+  // ----------------------------------------
+  {
+    name: '30-Day Review',
+    description: 'CC + Site Owner review. Analyze patterns from the last 4 weekly audits.',
+    isCampusWide: true,
+    checks: [
+      {
+        id: 'review_green_percentage',
+        text: 'Were 90%+ of weekly audits this month Green?',
+        helpText: 'Vendor monthly scorecard target: 90%+ of audits = Green.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'review_no_patterns',
+        text: 'No recurring defect patterns identified across weekly audits?',
+        helpText: 'Same issue showing up in different weeks = pattern. Document and address.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'review_issues_resolved',
+        text: 'All defects from previous month resolved or on track?',
+        helpText: 'No carryover issues without documented plan and timeline.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'review_escalation_needed',
+        text: 'No issues requiring escalation to VP-Ops Facilities?',
+        helpText: 'Escalate if: same check fails 3+ times in 60 days, systemic pattern, beyond vendor scope, asset end-of-life, or contract issue.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      }
+    ]
+  },
+  // ----------------------------------------
+  // SILENT FAILURE CHECK
+  // ----------------------------------------
+  {
+    name: 'Silent Failure Indicators',
+    description: 'Check for evidence of vendor gaming rather than genuine compliance.',
+    isCampusWide: true,
+    checks: [
+      {
+        id: 'silent_no_audit_only_cleaning',
+        text: 'No evidence of "audit-only cleaning" (zones degrade between QC windows)?',
+        helpText: 'Zones should be consistently clean, not just during audit times.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'silent_no_odor_masking',
+        text: 'No odor masking (chemical fragrance covering organic odor)?',
+        helpText: 'Fragrance should not be used to mask underlying odor problems.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      },
+      {
+        id: 'silent_no_selective_cleaning',
+        text: 'No selective cleaning (high-touch clean but corners dusty)?',
+        helpText: 'Smudge-free handles but dusty corners = selective cleaning pattern.',
+        tier: 'amber',
+        photoRequired: true,
+        slaTier: 3
+      }
+    ]
+  },
+  // ----------------------------------------
+  // FINAL: TOUR READY
+  // ----------------------------------------
+  {
+    name: 'Tour Ready',
+    description: 'Final validation. Based on your full walkthrough, could a parent tour happen right now?',
+    isCampusWide: true,
+    checks: [
+      {
+        id: 'tour_ready',
+        text: 'Is this campus tour ready right now?',
+        helpText: 'Is there ANY condition you would want to explain, apologize for, avoid showing, or wish you had 5 minutes to fix before a visitor arrived? YES to any of those = Tour Ready is NO.',
+        tier: 'amber',
+        photoRequired: false,
+        slaTier: 2
+      }
+    ]
+  }
+];
+
+// ============================================
 // ROOM ROTATION HELPERS
 // Distributes campus rooms across 4 weeks
 // so every room gets checked at least 1x/month
@@ -1476,12 +2873,38 @@ export const getRoomsForWeek = (rooms, weekNum) => {
 };
 
 /**
- * Get the appropriate check template for a room type
+ * Get the appropriate check template for a room type (weekly)
  * @param {string} roomType - Room type from campusRooms.js
  * @returns {Object} Template with checks array
  */
 export const getTemplateForRoomType = (roomType) => {
   return ROOM_AUDIT_TEMPLATES[roomType] || ROOM_AUDIT_TEMPLATES.other;
+};
+
+/**
+ * Get the monthly deep-dive template for a room type
+ * Includes weekly checks + expanded deep-dive checks
+ * @param {string} roomType - Room type from campusRooms.js
+ * @returns {Object} Template with checks array
+ */
+export const getMonthlyTemplateForRoomType = (roomType) => {
+  return MONTHLY_ROOM_AUDIT_TEMPLATES[roomType] || MONTHLY_ROOM_AUDIT_TEMPLATES.other;
+};
+
+/**
+ * Generate monthly check IDs scoped to a specific room
+ * @param {Object} room - Room object from campus map
+ * @param {Object} template - Template from MONTHLY_ROOM_AUDIT_TEMPLATES
+ * @returns {Array} Checks with room-scoped IDs
+ */
+export const generateMonthlyRoomChecks = (room, template) => {
+  const roomSlug = room.name.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+  return template.checks.map(check => ({
+    ...check,
+    id: `${roomSlug}_${check.id}`,
+    roomName: room.name,
+    roomType: room.type
+  }));
 };
 
 /**
@@ -1533,14 +2956,32 @@ export const isCleanlinessInstantRed = (checkId) => {
 
   // Also check room-scoped IDs (e.g., "neon_room_room_restroom_toilets")
   // by checking if the base ID is in the restroom or safety template
-  const baseId = checkId.replace(/^[a-z0-9_]+?_(room_)/, 'room_');
+  const baseId = checkId.replace(/^[a-z0-9_]+?_(room_|monthly_)/, (match, p1) => p1);
   const restroomChecks = ROOM_AUDIT_TEMPLATES.restroom.checks;
   const isRestroomCheck = restroomChecks.some(c => c.id === baseId && c.instantRed);
   if (isRestroomCheck) return true;
 
-  // Check all templates for instantRed flags
+  // Check all weekly templates for instantRed flags
   for (const template of Object.values(ROOM_AUDIT_TEMPLATES)) {
     const match = template.checks.find(c => c.id === baseId);
+    if (match && match.instantRed) return true;
+  }
+
+  // Check all monthly templates for instantRed flags
+  for (const template of Object.values(MONTHLY_ROOM_AUDIT_TEMPLATES)) {
+    const match = template.checks.find(c => c.id === baseId);
+    if (match && match.instantRed) return true;
+  }
+
+  // Check monthly tour route areas
+  for (const area of MONTHLY_TOUR_ROUTE_AREAS) {
+    const match = area.checks.find(c => c.id === checkId);
+    if (match && match.instantRed) return true;
+  }
+
+  // Check monthly campus sections
+  for (const section of MONTHLY_CAMPUS_SECTIONS) {
+    const match = section.checks.find(c => c.id === checkId);
     if (match && match.instantRed) return true;
   }
 
@@ -1556,9 +2997,27 @@ export const isCleanlinessPhotoRequired = (checkId) => {
   if (CLEANLINESS_PHOTO_REQUIRED_CHECKS.includes(checkId)) return true;
 
   // Check room-scoped IDs
-  const baseId = checkId.replace(/^[a-z0-9_]+?_(room_)/, 'room_');
+  const baseId = checkId.replace(/^[a-z0-9_]+?_(room_|monthly_)/, (match, p1) => p1);
   for (const template of Object.values(ROOM_AUDIT_TEMPLATES)) {
     const match = template.checks.find(c => c.id === baseId);
+    if (match && match.photoRequired) return true;
+  }
+
+  // Check monthly templates
+  for (const template of Object.values(MONTHLY_ROOM_AUDIT_TEMPLATES)) {
+    const match = template.checks.find(c => c.id === baseId);
+    if (match && match.photoRequired) return true;
+  }
+
+  // Check monthly tour route areas
+  for (const area of MONTHLY_TOUR_ROUTE_AREAS) {
+    const match = area.checks.find(c => c.id === checkId);
+    if (match && match.photoRequired) return true;
+  }
+
+  // Check monthly campus sections
+  for (const section of MONTHLY_CAMPUS_SECTIONS) {
+    const match = section.checks.find(c => c.id === checkId);
     if (match && match.photoRequired) return true;
   }
 
@@ -1638,9 +3097,33 @@ export const getCheckSlaTier = (checkId) => {
     }
   }
 
-  // Check room templates
+  // Check weekly room templates
   for (const template of Object.values(ROOM_AUDIT_TEMPLATES)) {
     const check = template.checks.find(c => c.id === checkId);
+    if (check && check.slaTier) {
+      return SLA_TIERS[`tier${check.slaTier}`];
+    }
+  }
+
+  // Check monthly room templates
+  for (const template of Object.values(MONTHLY_ROOM_AUDIT_TEMPLATES)) {
+    const check = template.checks.find(c => c.id === checkId);
+    if (check && check.slaTier) {
+      return SLA_TIERS[`tier${check.slaTier}`];
+    }
+  }
+
+  // Check monthly tour route areas
+  for (const area of MONTHLY_TOUR_ROUTE_AREAS) {
+    const check = area.checks.find(c => c.id === checkId);
+    if (check && check.slaTier) {
+      return SLA_TIERS[`tier${check.slaTier}`];
+    }
+  }
+
+  // Check monthly campus sections
+  for (const section of MONTHLY_CAMPUS_SECTIONS) {
+    const check = section.checks.find(c => c.id === checkId);
     if (check && check.slaTier) {
       return SLA_TIERS[`tier${check.slaTier}`];
     }

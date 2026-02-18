@@ -3,14 +3,14 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CampusSelector } from '../components/CampusSelector';
 import { Header } from '../components/Header';
 import { CAMPUSES } from '../data/campuses';
-import { CLEANLINESS_ZONES, CLEANLINESS_RAG_RULES, ROOM_AUDIT_TEMPLATES, getRoomsForWeek } from '../data/cleanlinessZones';
+import { CLEANLINESS_ZONES, CLEANLINESS_RAG_RULES, ROOM_AUDIT_TEMPLATES, MONTHLY_ROOM_AUDIT_TEMPLATES, MONTHLY_TOUR_ROUTE_AREAS, MONTHLY_CAMPUS_SECTIONS, getRoomsForWeek } from '../data/cleanlinessZones';
 import { getCampusRooms, hasCampusRooms } from '../data/campusRooms';
 import { getWeeklyAuditCountThisMonth } from '../supabase/cleanlinessAuditService';
 
 const CHECKLIST_TYPES = [
   { id: 'daily', name: 'Daily Cleanliness Check', icon: '✅', color: '#10b981', subtitle: 'Quick vendor verification', redirect: '/audit/setup' },
   { id: 'weekly', name: 'Weekly Cleanliness Audit', icon: '🧹', color: '#2563eb', subtitle: 'Tour route + rooms (4x/month required)' },
-  { id: 'monthly', name: 'Monthly Deep Dive', icon: '🔍', color: '#7c3aed', subtitle: 'Deep inspection + 4 weekly completions reviewed' }
+  { id: 'monthly', name: 'Monthly Cleanliness Audit', icon: '🔍', color: '#7c3aed', subtitle: 'Every room, deep inspection, determines SLA rating' }
 ];
 
 export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
@@ -154,7 +154,7 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
         )}
 
         {/* Selected Checklist Preview */}
-        {selectedZone && (
+        {selectedZone && selectedType === 'weekly' && (
           <div style={{
             backgroundColor: 'rgba(194, 236, 253, 0.4)',
             border: '1px solid #47C4E6',
@@ -177,19 +177,67 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
                 </div>
               </div>
             ))}
-            {selectedType === 'weekly' && (
-              <div style={{
-                padding: '10px 0',
-                borderTop: '1px solid rgba(71, 196, 230, 0.3)'
-              }}>
-                <div style={{ fontWeight: '500', fontSize: '15px', color: '#2563eb' }}>
-                  + Assigned Rooms from Campus Map
-                </div>
-                <div style={{ fontSize: '13px', color: '#666', marginTop: '2px' }}>
-                  Rooms rotate weekly so all are checked at least 1x/month
-                </div>
+            <div style={{
+              padding: '10px 0',
+              borderTop: '1px solid rgba(71, 196, 230, 0.3)'
+            }}>
+              <div style={{ fontWeight: '500', fontSize: '15px', color: '#2563eb' }}>
+                + Assigned Rooms from Campus Map
               </div>
-            )}
+              <div style={{ fontSize: '13px', color: '#666', marginTop: '2px' }}>
+                Rooms rotate weekly so all are checked at least 1x/month
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Monthly Checklist Preview */}
+        {selectedType === 'monthly' && (
+          <div style={{
+            backgroundColor: 'rgba(194, 236, 253, 0.4)',
+            border: '1px solid #7c3aed',
+            borderRadius: '12px',
+            padding: '16px'
+          }}>
+            <div style={{ fontWeight: '600', color: '#092849', marginBottom: '4px' }}>
+              Monthly Cleanliness Audit - What You'll Check
+            </div>
+            <div style={{ fontSize: '13px', color: '#7c3aed', marginBottom: '12px' }}>
+              Room-by-room deep inspection of every space in the facility
+            </div>
+
+            <div style={{ fontWeight: '500', fontSize: '14px', color: '#333', marginBottom: '8px' }}>
+              Tour Route Areas:
+            </div>
+            {MONTHLY_TOUR_ROUTE_AREAS.map((area, idx) => (
+              <div key={idx} style={{
+                padding: '6px 0',
+                borderBottom: '1px solid rgba(124, 58, 237, 0.15)'
+              }}>
+                <div style={{ fontSize: '14px', color: '#333' }}>{area.name}</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>{area.checks.length} checks</div>
+              </div>
+            ))}
+
+            <div style={{ fontWeight: '500', fontSize: '14px', color: '#333', marginTop: '12px', marginBottom: '4px' }}>
+              + Every Campus Room (deep-dive template per room type)
+            </div>
+            <div style={{ fontSize: '12px', color: '#666', marginBottom: '8px' }}>
+              Weekly checks + ceiling tiles, vents, light fixtures, walls, baseboards, cobwebs, floor finish, carpet, under furniture, upholstery, window sills
+            </div>
+
+            <div style={{ fontWeight: '500', fontSize: '14px', color: '#333', marginTop: '8px', marginBottom: '4px' }}>
+              Campus-Wide Wrap-Up:
+            </div>
+            {MONTHLY_CAMPUS_SECTIONS.map((section, idx) => (
+              <div key={idx} style={{
+                padding: '6px 0',
+                borderBottom: idx < MONTHLY_CAMPUS_SECTIONS.length - 1 ? '1px solid rgba(124, 58, 237, 0.15)' : 'none'
+              }}>
+                <div style={{ fontSize: '14px', color: '#333' }}>{section.name}</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>{section.checks.length} checks</div>
+              </div>
+            ))}
           </div>
         )}
 
@@ -254,6 +302,55 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
           </div>
         )}
 
+        {/* Monthly Room List Preview */}
+        {selectedType === 'monthly' && campusName && (
+          <div style={{
+            backgroundColor: '#fff',
+            border: '1px solid #e5e7eb',
+            borderRadius: '12px',
+            padding: '16px'
+          }}>
+            <div style={{ fontWeight: '600', color: '#7c3aed', marginBottom: '4px' }}>
+              All Rooms to Inspect
+            </div>
+            <div style={{ fontSize: '12px', color: '#666', marginBottom: '12px' }}>
+              Every space in the facility will be checked with expanded deep-dive questions
+            </div>
+            {hasRooms ? (
+              <>
+                <div style={{ fontSize: '13px', color: '#666', marginBottom: '12px' }}>
+                  {campusRooms.length} room{campusRooms.length !== 1 ? 's' : ''} + {MONTHLY_TOUR_ROUTE_AREAS.length} tour route areas + {MONTHLY_CAMPUS_SECTIONS.length} campus-wide sections
+                </div>
+                {campusRooms.map((room, idx) => (
+                  <div key={idx} style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '8px 0',
+                    borderBottom: idx < campusRooms.length - 1 ? '1px solid #f3f4f6' : 'none'
+                  }}>
+                    <span style={{ fontSize: '14px', color: '#333' }}>{room.name}</span>
+                    <span style={{
+                      fontSize: '12px',
+                      color: '#666',
+                      backgroundColor: '#f3f4f6',
+                      padding: '2px 8px',
+                      borderRadius: '4px'
+                    }}>
+                      {MONTHLY_ROOM_AUDIT_TEMPLATES[room.type]?.name || ROOM_AUDIT_TEMPLATES[room.type]?.name || room.type}
+                    </span>
+                  </div>
+                ))}
+              </>
+            ) : (
+              <div style={{ fontSize: '13px', color: '#999', fontStyle: 'italic' }}>
+                No room map defined for this campus yet. Monthly audit will include tour route areas and campus-wide sections only.
+                Contact Campus Operations to add rooms.
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Name Input */}
         <div>
           <label style={{ display: 'block', fontSize: '17px', fontWeight: '600', color: '#333', marginBottom: '10px' }}>
@@ -310,6 +407,7 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
           </div>
           <div style={{ fontSize: '12px', color: '#666', marginBottom: '12px' }}>
             APPA Level 2 - Ordinary Tidiness
+            {selectedType === 'monthly' && ' | Determines campus SLA rating visible to all leadership'}
           </div>
 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
@@ -362,6 +460,11 @@ export const CleanlinessAuditSetup = ({ cleanlinessAudit }) => {
           <div style={{ fontSize: '14px', color: '#78350f', marginTop: '8px' }}>
             Every "No" answer requires an explanation. Photo evidence required for restroom and safety items.
           </div>
+          {selectedType === 'monthly' && (
+            <div style={{ fontSize: '14px', color: '#78350f', marginTop: '8px', fontWeight: '600' }}>
+              This audit determines the campus SLA rating (GREEN / AMBER / RED) visible to all leadership. If the campus fails this audit, a site visit and sign-off is required within 7 days to return to GREEN.
+            </div>
+          )}
         </div>
 
         {/* Begin Button */}

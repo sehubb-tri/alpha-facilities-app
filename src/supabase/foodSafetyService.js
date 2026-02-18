@@ -1,4 +1,5 @@
 import { supabase } from './config';
+import { uploadPhoto } from './services';
 
 // Save food safety audit to Supabase
 export const saveFoodSafetyAudit = async (auditData) => {
@@ -26,6 +27,25 @@ export const saveFoodSafetyAudit = async (auditData) => {
     foodVendor
   } = auditData;
 
+  // Upload issue photos to Supabase Storage (convert base64 to URLs)
+  const processedIssues = [];
+  for (const issue of (issues || [])) {
+    const uploadedPhotos = [];
+    for (const photo of (issue.photos || [])) {
+      if (photo && photo.startsWith('data:')) {
+        console.log('[saveFoodSafetyAudit] Uploading photo for issue:', issue.checkId);
+        const photoUrl = await uploadPhoto(photo, 'food-safety');
+        if (photoUrl) {
+          uploadedPhotos.push(photoUrl);
+        }
+      } else if (photo) {
+        // Already a URL, keep it
+        uploadedPhotos.push(photo);
+      }
+    }
+    processedIssues.push({ ...issue, photos: uploadedPhotos });
+  }
+
   const { data, error } = await supabase
     .from('food_safety_audits')
     .insert([{
@@ -40,7 +60,7 @@ export const saveFoodSafetyAudit = async (auditData) => {
       checklist_name: checklistName,
       check_results: checkResults,
       rating,
-      issues,
+      issues: processedIssues,
       total_issues: totalIssues,
       open_issues: openIssues,
       instant_red_issues: instantRedIssues,

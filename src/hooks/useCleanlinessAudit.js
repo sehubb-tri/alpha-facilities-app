@@ -6,8 +6,13 @@ import {
   isCleanlinessInstantRed,
   isCleanlinessPhotoRequired,
   ROOM_AUDIT_TEMPLATES,
+  MONTHLY_ROOM_AUDIT_TEMPLATES,
+  MONTHLY_TOUR_ROUTE_AREAS,
+  MONTHLY_CAMPUS_SECTIONS,
   getTemplateForRoomType,
+  getMonthlyTemplateForRoomType,
   generateRoomChecks,
+  generateMonthlyRoomChecks,
   getRoomsForWeek,
   getWeekOfMonth
 } from '../data/cleanlinessZones';
@@ -83,6 +88,7 @@ export const useCleanlinessAudit = () => {
   // auditNumber: for weekly, which audit this is (1-4) based on how many have been done this month
   const initChecklist = useCallback((campus, campusData, auditor, auditorEmail, checklistType, auditNumber) => {
     // For weekly, use audit number to determine room assignments
+    // For monthly, load ALL rooms (every space gets inspected)
     let assignedRooms = [];
     let weekNumber = null;
 
@@ -91,6 +97,9 @@ export const useCleanlinessAudit = () => {
       // Use the passed audit number (count-based), fall back to calendar week
       weekNumber = auditNumber || getWeekOfMonth();
       assignedRooms = getRoomsForWeek(allRooms, weekNumber);
+    } else if (checklistType === 'monthly') {
+      // Monthly: ALL campus rooms get inspected
+      assignedRooms = getCampusRooms(campus);
     }
 
     setState({
@@ -138,6 +147,53 @@ export const useCleanlinessAudit = () => {
       return {
         ...zone,
         sections: [...staticSections, ...roomSections, tourReadySection]
+      };
+    }
+
+    // For monthly, build sections dynamically:
+    // 1. Tour route areas (entry, hallway, commons, supply closet)
+    // 2. Every campus room with monthly deep-dive template
+    // 3. Campus-wide wrap-up sections (vendor, 30-day review, silent failures, tour ready)
+    if (state.checklistType === 'monthly') {
+      const allSections = [];
+
+      // 1. Tour route areas (static, always included)
+      MONTHLY_TOUR_ROUTE_AREAS.forEach(area => {
+        allSections.push({
+          name: area.name,
+          description: area.description,
+          isTourRoute: true,
+          checks: area.checks
+        });
+      });
+
+      // 2. Every campus room with monthly template
+      if (state.assignedRooms && state.assignedRooms.length > 0) {
+        state.assignedRooms.forEach(room => {
+          const template = getMonthlyTemplateForRoomType(room.type);
+          const checks = generateMonthlyRoomChecks(room, template);
+          allSections.push({
+            name: room.name,
+            description: `${template.name} - deep inspection`,
+            isAssignedRoom: true,
+            isMonthlyRoom: true,
+            roomName: room.name,
+            roomType: room.type,
+            checks
+          });
+        });
+      }
+
+      // 3. Campus-wide wrap-up sections
+      MONTHLY_CAMPUS_SECTIONS.forEach(section => {
+        allSections.push({
+          ...section
+        });
+      });
+
+      return {
+        ...zone,
+        sections: allSections
       };
     }
 
